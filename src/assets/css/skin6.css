@@ -1,0 +1,24 @@
+#header,#menuList,#menuList .el-menu,.el-menu--vertical .el-menu.el-menu--popup.el-menu--popup-right-start{
+    background: #304156
+}
+#menuList .router-link-active,
+.el-menu--popup .el-menu-item.is-active,
+.el-menu--popup a:hover {
+  color: #bfcbd9;
+}
+/* #menuList .router-link-active{
+    color:#409EFF;
+} */
+.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+    background: rgb(38, 52, 69) !important;
+  }
+  #menuList .el-menu-item.is-active,
+.el-menu--popup .el-menu-item.is-active,
+#menuList .el-menu-item:focus,
+#menuList .el-menu-item:hover,
+#menuList .el-submenu__title:hover,
+.el-menu--vertical .el-menu-item:hover{
+    background-color:rgb(38, 52, 69);
+  color: #bfcbd9;
+
+}

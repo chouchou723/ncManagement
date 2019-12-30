@@ -1,0 +1,31 @@
+#header,
+#menuList,
+#menuList .el-menu,
+.el-menu--vertical .el-menu.el-menu--popup.el-menu--popup-right-start {
+  background: #296683
+}
+
+#menuList .router-link-active,
+.el-menu--popup .el-menu-item.is-active,
+.el-menu--popup a:hover {
+  color: #bfcbd9;
+}
+
+/* #menuList .el-menu-item.is-active,.el-menu--popup .el-menu-item.is-active{
+background: #407d9a;
+} */
+/* 滚动条 */
+.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+  background: #407d9a !important;
+}
+
+#menuList .el-menu-item.is-active,
+.el-menu--popup .el-menu-item.is-active,
+#menuList .el-menu-item:focus,
+#menuList .el-menu-item:hover,
+#menuList .el-submenu__title:hover,
+.el-menu--vertical .el-menu-item:hover {
+  background-color: #407d9a;
+  color: #bfcbd9;
+
+}

@@ -1,0 +1,39 @@
+@charset 'utf-8';
+
+#header,#footer{
+	background-color:#8F90EF\9 !important;
+	background: -webkit-linear-gradient(left,rgba(80,84,248,1),rgba(80,84,248,0.5));
+	background:-moz-linear-gradient(left,rgba(80,84,248,1),rgba(80,84,248,0.5));
+	background: -ms-linear-gradient(left,rgba(80,84,248,1),rgba(80,84,248,0.5));
+	background: linear-gradient(left,rgba(80,84,248,1),rgba(80,84,248,0.5));
+	color: #ffffff !important;
+}
+
+/* 树形菜单 */
+.ivu-menu-vertical .ivu-menu-submenu-title:hover,
+.ivu-menu-submenu.ivu-menu-opened .ivu-menu-submenu-title{
+	background-color:#C9D0F3\9;
+	background: -webkit-linear-gradient(left	,rgba(81,110,255,0.5),rgba(81,110,255,0.1)) !important;
+	background: -moz-linear-gradient(left,rgba(81,110,255,0.5),rgba(81,110,255,0.1)) !important;
+	background: -ms-linear-gradient(left,rgba(81,110,255,0.5),rgba(81,110,255,0.1)) !important;
+	background: linear-gradient(left,rgba(81,110,255,0.5),rgba(81,110,255,0.1)) !important;
+}
+/* .ivu-menu-vertical .ivu-menu-item:hover{ background: transparent !important;} */
+.ivu-menu-item-active.ivu-menu-item-selected{
+	background-color: rgba(81,110,255,0.2) !important;
+    color: #3d3e04;
+}
+
+/* 表格 翻页 */
+.ivu-page-item-active{background-color: #1E9FFF !important;}
+
+
+
+/* 字体图标 */
+#menuList .iconfont,
+#menuList .ivu-menu-submenu-title-icon{color:#3685ff;}
+
+/* 滚动条 */
+.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{background: rgb(128, 146, 232) !important;}
+
+

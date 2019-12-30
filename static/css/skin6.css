@@ -1,0 +1,38 @@
+#header,
+#menuList,
+#menuList .el-menu,
+.el-menu--vertical .el-menu.el-menu--popup.el-menu--popup-right-start {
+  background: #304156
+}
+
+#menuList .router-link-active,
+.el-menu--popup .el-menu-item.is-active,
+.el-menu--popup a:hover {
+  color: #bfcbd9;
+}
+
+/* #menuList .router-link-active{
+    color:#409EFF;
+} */
+.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+  background: #4f6784 !important;
+}
+
+#menuList .el-menu-item.is-active,
+.el-menu--popup .el-menu-item.is-active,
+#menuList .el-menu-item:focus,
+#menuList .el-menu-item:hover,
+#menuList .el-submenu__title:hover,
+#menuList .el-menu--collapse .el-submenu.is-active,
+.el-menu--vertical .el-menu-item:hover {
+  background-color: #4f6784;
+  color: #bfcbd9;
+
+}
+#header::after{
+    background: #4e6a8c;
+}
+#content .tags-view-container .tags-view-wrapper .tags-view-item.active{
+    background-color: #4e6a8c;
+    border-color: #4e6a8c;
+}
