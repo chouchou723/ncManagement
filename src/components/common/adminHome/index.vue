@@ -367,7 +367,7 @@
         });
       },
       getFile() {
-        window.open(`/dcp/${this.detailSupport.uploadFiles[0].path}`)
+        window.open(`/api/${this.detailSupport.uploadFiles[0].path}`)
       },
       gotoList(data) {
         this.$store.commit('setFormData', data)

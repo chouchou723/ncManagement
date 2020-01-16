@@ -503,7 +503,7 @@
         // httpAjax(url, params).then((res) => {}).catch((err) => {
         //   console.log(err)
         // })
-        window.open(`/dcp/bigFile/download?fileName=${name}&path=${path}&uuid=${uuid}`)
+        window.open(`/api/bigFile/download?fileName=${name}&path=${path}&uuid=${uuid}`)
       },
       getIcon(type) {
         let img = ['jpeg', 'bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif', 'fpx', 'svg', 'psd', 'cdr', 'pcd',

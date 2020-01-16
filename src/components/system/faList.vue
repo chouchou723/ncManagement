@@ -86,7 +86,7 @@
             </el-input>
           </el-form-item>
           <el-form-item label="客户端证书：" :label-width="formLabelWidth" prop="clientCert">
-            <el-upload class="upload-demo" action="/dcp/system/uploadCerti" accept="file" ref="clientCert"
+            <el-upload class="upload-demo" action="/api/system/uploadCerti" accept="file" ref="clientCert"
               :data="{type:'client',id:aform.id,faIP:aform.faIP}" :on-remove="handleRemove" :on-success="handlesuccess"
               :on-error="handleError" :before-upload="beforeUpload" :auto-upload="false" :on-change="handleChange"
               :file-list="fileList">
@@ -99,7 +99,7 @@
             </el-input>
           </el-form-item>
           <el-form-item label="服务器端证书：" :label-width="formLabelWidth" prop="serverCert">
-            <el-upload class="upload-demo" action="/dcp/system/uploadCerti" accept="file" ref="serverCert"
+            <el-upload class="upload-demo" action="/api/system/uploadCerti" accept="file" ref="serverCert"
               :data="{type:'server',id:aform.id,faIP:aform.faIP}" :on-remove="handleRemoveS"
               :on-success="handlesuccessS" :on-error="handleErrorS" :before-upload="beforeUploadS" :auto-upload="false"
               :on-change="handleChangeS" :file-list="fileListS">
@@ -477,7 +477,7 @@
               memory: res.memory,
               disk: res.disk,
               virtualNum: res.virtualNum - 0,
-              description: res.description
+              description: res.resultDescription
             }
             if (res.clientCertFile) {
               this.clientRes = 'success'

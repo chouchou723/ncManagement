@@ -286,7 +286,7 @@
             <div v-if="aform.id&&aform.merCount">已分给云管理员的配额为：{{aform.merCount}}个</div>
           </el-form-item>
           <!-- <el-form-item label="上传商品图片：" :label-width="formLabelWidth">
-            <el-upload class="upload-demo" action="/dcp/uploader/upload" accept="images" ref="serverCert"
+            <el-upload class="upload-demo" action="/api/uploader/upload" accept="images" ref="serverCert"
               :data="{type:'merIcon',foreignId:aform.id}" :on-remove="handleRemove" :auto-upload="false"
               :on-success="handlesuccess" :on-change="handleChangeUpload" :file-list="fileList" :on-error="handleError">
               <el-button type="primary"><i class="el-icon-upload" style="margin-right:5px"></i>上传商品文件</el-button>

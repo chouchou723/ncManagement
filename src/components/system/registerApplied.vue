@@ -18,14 +18,14 @@
         </el-table-column> -->
         <el-table-column label="审批" width="200">
           <template slot-scope="scope">
-            <el-button @click="auditPass(scope.row)" type="primary" size="small">同意</el-button>
+            <el-button @click="auditPass(scope.row)" type="primary" size="small"  :loading="btnLoading&&(btnIndex===scope.row.id)">同意</el-button>
             <el-button @click="auditReject(scope.row)" type="danger" size="small"
               :loading="btnLoading&&(btnIndex===scope.row.id)">拒绝</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="userName" label="用户名">
         </el-table-column>
-        <el-table-column prop="type" label="用户类型">
+        <!-- <el-table-column prop="type" label="用户类型">
           <template slot-scope="scope">
             <div>
               {{scope.row.type==='intern'?'实习':scope.row.type==='outsource'?'外包':'正式'}}
@@ -42,7 +42,7 @@
         <el-table-column prop="telephoneNumber" label="手机号码" width="150">
         </el-table-column>
         <el-table-column prop="mail" label="邮箱" width="250">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="createTimeStr" label="创建时间" min-width="200">
           <!-- <template slot-scope="scope">
             <div>
@@ -66,7 +66,7 @@
       </div>
     </div>
     <!-- 选择OU -->
-    <el-dialog title="选择用户所在的部门" :visible.sync="dialogFormVisibleOu" :close-on-click-modal="no"
+    <!-- <el-dialog title="选择用户所在的部门" :visible.sync="dialogFormVisibleOu" :close-on-click-modal="no"
       custom-class='accountManageDialog' top='9%' width="40%" @close='resetD("aform")'>
       <el-form :model="oform" ref="oform">
         <el-form-item label="部门OU：" :label-width="formLabelWidth" prop="ou">
@@ -80,9 +80,9 @@
         <el-button type="primary" :loading="btnLoading" @click="addAccount('oform')">确 定</el-button>
         <el-button @click="dialogFormVisibleOu = false">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 用户类型 -->
-    <el-dialog title="用户类型" :visible.sync="dialogFormVisible" :close-on-click-modal="no" top='15%' width="30%"
+    <!-- <el-dialog title="用户类型" :visible.sync="dialogFormVisible" :close-on-click-modal="no" top='15%' width="30%"
       @close='resetD("aform")'>
       <el-form :model="aform" :rules="rules2" ref="aform">
         <el-form-item label="用户类型：" :label-width="formLabelWidth" prop="cpu">
@@ -101,7 +101,7 @@
         <el-button type="primary" :loading="btnLoading" @click="addAccount('aform')">确 定</el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!-- <psloading v-show="loadingState" :text="text"></psloading> -->
   </div>
 </template>
@@ -116,15 +116,15 @@
   } from 'api/common'
   export default {
     data() {
-      var nan32 = (rule, value, callback) => {
-        var reg =
-          /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
-        if (!reg.test(value)) {
-          callback('请按规范输入 IP 地址, 例如: 192.168.3.5')
-        } else {
-          callback()
-        }
-      }
+    //   var nan32 = (rule, value, callback) => {
+    //     var reg =
+    //       /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+    //     if (!reg.test(value)) {
+    //       callback('请按规范输入 IP 地址, 例如: 192.168.3.5')
+    //     } else {
+    //       callback()
+    //     }
+    //   }
       return {
         backData: '',
         ouSelectList: [],
@@ -176,65 +176,72 @@
     //   })
     // },
     methods: {
-      getouSelectList(type) { //选择ou
-        let url =
-          `merchandise/describeOuNameInfo`
-        httpAjax(url, {
-        //   faIp: this.backData.faIp || '172.16.6.5' //this.backData.faIp,
-        }).then((res) => {
-          if (res) {
-            this.ouSelectList = res.map(item => {
-              return {
-                value: item.id + "=" + item.ouName,
-                label: item.ouName
-              }
-            })
-            //   console.log(this.ouSelectList)
-            this.oform.ou = this.ouSelectList[0].value;
-          } else {
-            this.$message.error('通信错误')
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
+    //   getouSelectList(type) { //选择ou
+    //     let url =
+    //       `merchandise/describeOuNameInfo`
+    //     httpAjax(url, {
+    //     //   faIp: this.backData.faIp || '172.16.6.5' //this.backData.faIp,
+    //     }).then((res) => {
+    //       if (res) {
+    //         this.ouSelectList = res.map(item => {
+    //           return {
+    //             value: item.id + "=" + item.ouName,
+    //             label: item.ouName
+    //           }
+    //         })
+    //         //   console.log(this.ouSelectList)
+    //         this.oform.ou = this.ouSelectList[0].value;
+    //       } else {
+    //         this.$message.error('通信错误')
+    //       }
+    //     }).catch((err) => {
+    //       console.log(err)
+    //     })
+    //   },
+    //   addAccount() {
+    //     // if (!this.oform.ou) {
+    //     //   this.$message.error('请选择部门OU');
+    //     //   return
+    //     // }
+    //     this.btnLoading = true;
+    //     let para = {
+    //       id: this.backData.id,
+    //       status: 'pass',
+    //     //   ou: this.oform.ou
+    //     }
+    //     httpAjax('user/approve', para).then(res => {
+    //       if (res.result == "success") {
+    //         this.$message({
+    //           type: 'success',
+    //           message: '审批成功!'
+    //         });
+    //         this.multSelection = [];
+    //         this.getVmList();
+    //       } else {
+    //         this.$message({
+    //           type: 'error',
+    //           message: res.resultDesc
+    //         });
+    //       }
+    //       this.btnLoading = false;
+    //       this.dialogFormVisibleOu = false;
+    //       //   this.getVmList()
+    //     }).catch(() => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '审批失败!'
+    //       });
+    //       this.btnLoading = false;
+    //     })
+    //   },
+     auditReject(data) {
+        this.btnIndex = data.id
+        this.auditDesktop({
+          id: data.id,
+          status: 'reject'
+        });
       },
-      addAccount() {
-        if (!this.oform.ou) {
-          this.$message.error('请选择部门OU');
-          return
-        }
-        this.btnLoading = true;
-        let para = {
-          id: this.backData.id,
-          status: 'pass',
-          ou: this.oform.ou
-        }
-        httpAjax('user/approve', para).then(res => {
-          if (res.result == "success") {
-            this.$message({
-              type: 'success',
-              message: '审批成功!'
-            });
-            this.multSelection = [];
-            this.getVmList();
-          } else {
-            this.$message({
-              type: 'error',
-              message: res.desc
-            });
-          }
-          this.btnLoading = false;
-          this.dialogFormVisibleOu = false;
-          //   this.getVmList()
-        }).catch(() => {
-          this.$message({
-            type: 'error',
-            message: '审批失败!'
-          });
-          this.btnLoading = false;
-        })
-      },
-      auditDesktop(para) { //审批同意
+      auditDesktop(para) { //审批拒绝
         this.btnLoading = true;
         httpAjax('user/approve', para).then(res => {
           if (res.result == "success") {
@@ -247,7 +254,7 @@
           } else {
             this.$message({
               type: 'error',
-              message: res.desc
+              message: res.resultDesc
             });
           }
           this.btnLoading = false;
@@ -260,48 +267,72 @@
           this.btnLoading = false;
         })
       },
-      auditPass(data) {
-        // this.btnIndex = data.id
+      auditPass(data) {//审批同意
+        this.btnIndex = data.id;
+        this.btnLoading = true;
         this.backData = data;
-        this.getouSelectList();
-        this.dialogFormVisibleOu = true;
+        // this.getouSelectList();
+        // this.dialogFormVisibleOu = true;
         // this.auditDesktop({
         //   id: data.id,
         //   status: 'pass'
         // });
-      },
-      auditReject(data) {
-        this.btnIndex = data.id
-        this.auditDesktop({
+         let para = {
           id: data.id,
-          status: 'reject'
-        });
-      },
-      auditOrder() { //点击审批
-        this.$confirm('请确认是否同意该申请?', '审批用户', {
-          confirmButtonText: '同意',
-          confirmButtonClass: 'el-button--primary',
-          cancelButtonText: '拒绝',
-          cancelButtonClass: 'el-button--danger',
-          distinguishCancelAndClose: true,
-          type: 'warning'
-        }).then(() => { //非桌面申请时,比如增加磁盘之类
-          this.auditDesktop({
-            id: this.multSelection[0].id,
-            status: 'pass'
-          });
-          //   this.dialogFormVisible = true;
-        }).catch((action) => {
-          if (action === 'cancel') {
-            this.auditDesktop({
-              id: this.multSelection[0].id,
-              status: 'reject'
+          status: 'pass',
+        //   ou: this.oform.ou
+        }
+        httpAjax('user/approve', para).then(res => {
+          if (res.resultCode == "0") {
+            this.$message({
+              type: 'success',
+              message: '审批成功!'
             });
-
+            this.multSelection = [];
+            this.getVmList();
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.resultDesc
+            });
           }
-
-        });
+          this.btnLoading = false;
+        //   this.dialogFormVisibleOu = false;
+          //   this.getVmList()
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '审批失败!'
+          });
+          this.btnLoading = false;
+        })
       },
+     
+    //   auditOrder() { //点击审批
+    //     this.$confirm('请确认是否同意该申请?', '审批用户', {
+    //       confirmButtonText: '同意',
+    //       confirmButtonClass: 'el-button--primary',
+    //       cancelButtonText: '拒绝',
+    //       cancelButtonClass: 'el-button--danger',
+    //       distinguishCancelAndClose: true,
+    //       type: 'warning'
+    //     }).then(() => { //非桌面申请时,比如增加磁盘之类
+    //       this.auditDesktop({
+    //         id: this.multSelection[0].id,
+    //         status: 'pass'
+    //       });
+    //       //   this.dialogFormVisible = true;
+    //     }).catch((action) => {
+    //       if (action === 'cancel') {
+    //         this.auditDesktop({
+    //           id: this.multSelection[0].id,
+    //           status: 'reject'
+    //         });
+
+    //       }
+
+    //     });
+    //   },
       searchData() {
         this.getVmList('', 1)
       },

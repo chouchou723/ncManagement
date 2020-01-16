@@ -208,7 +208,7 @@
     //   },
       getDownload() {
             let  currentTime= this.valueCM2
-        window.open('/dcp/statistic/exportAppliedDesktop?currentTime='+currentTime)
+        window.open('/api/statistic/exportAppliedDesktop?currentTime='+currentTime)
             // window.open('dcp/statistic/exportQuitDesktop')
             
         // let para = {

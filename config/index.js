@@ -32,9 +32,9 @@ module.exports = {
 		assetsSubDirectory: 'static',
 		assetsPublicPath: '/',
 		proxyTable: {
-			'/dcp': {
+			'/api': {
                 // http://172.16.5.231:9090/
-			  target: 'http://172.16.6.18:9090',
+			  target: 'http://172.16.1.156:6060',
 			// target:'http://localhost:8080',
 			  changeOrigin: true,
 			}

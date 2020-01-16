@@ -340,7 +340,7 @@
           } else {
             this.$message({
               type: 'error',
-              message: res.desc
+              message: res.resultDesc
             });
           }
       this.btnLoading = false;

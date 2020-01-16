@@ -24,7 +24,7 @@ import router from '../router'
 // };
 
 
-// export  const webroot = 'http://172.16.5.231:9090/dcp/'; 
+// export  const webroot = 'http://172.16.5.231:9090/api/'; 
 // export const adminIndex = {
 //   index: 0
 // }
@@ -84,13 +84,13 @@ axios.interceptors.response.use(function (response) {
   } else {
     Message.error('通信错误!请联系管理员检查该问题')
   }
-  setTimeout(() => {
-    router.push('/login')
-  }, 500)
+//   setTimeout(() => {
+//     router.push('/login')
+//   }, 500)
   return Promise.reject(error);
 });
 
-export const webroot = '/dcp/'
+export const webroot = '/api/'
 
 export const httpAjax = (url, data) => {
   const params = data ? data : '';

@@ -99,9 +99,9 @@ created(){
         httpAjax('websocket/login',params).then(res=>{
             if (!websocket) {
               if ('WebSocket' in window) {
-                websocket = new WebSocket("ws://" + window.location.host + "/dcp/webSocketServer");
+                websocket = new WebSocket("ws://" + window.location.host + "/api/webSocketServer");
               } else if ('MozWebSocket' in window) {
-                websocket = new MozWebSocket("ws://" + window.location.host + "/dcp/webSocketServer");
+                websocket = new MozWebSocket("ws://" + window.location.host + "/api/webSocketServer");
               }
               this.initIm();
               websocket.onmessage = function (res) {
@@ -130,9 +130,9 @@ created(){
         //   success: function (data) {
         //     if (!websocket) {
         //       if ('WebSocket' in window) {
-        //         websocket = new WebSocket("ws://" + window.location.host + "/dcp/webSocketServer");
+        //         websocket = new WebSocket("ws://" + window.location.host + "/api/webSocketServer");
         //       } else if ('MozWebSocket' in window) {
-        //         websocket = new MozWebSocket("ws://" + window.location.host + "/dcp/webSocketServer");
+        //         websocket = new MozWebSocket("ws://" + window.location.host + "/api/webSocketServer");
         //       }
         //       that.initIm();
         //       websocket.onmessage = function (res) {

@@ -811,7 +811,7 @@
         this.getVmList()
       },
       exportData() {//导出
-        window.open('/dcp/desktop/userExport')
+        window.open('/api/desktop/userExport')
       },
       loginCloud() {//登录云桌面
         var params = {

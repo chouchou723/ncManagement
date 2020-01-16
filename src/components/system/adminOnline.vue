@@ -1,59 +1,69 @@
 <template>
   <div id="adminOnline" v-loading.fullscreen="loadingState" :element-loading-text="text">
     <div class="search-wrap">
-      <el-input placeholder="请输入使用人" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
+      <el-input placeholder="请输入IP地址" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
         @clear="clearData(1)">
       </el-input>
-      <el-input placeholder="请输入桌面名称" style="width:185px;" clearable v-model="applyTable"
-        @keyup.enter.native="clearData" @clear="clearData(2)">
-      </el-input>
-      <el-select style="width:190px;" placeholder="请选择运行状态" clearable v-model="applyState"
+        <el-select style="width:190px;" placeholder="请选择教室" clearable v-model="applyState"
         @keyup.enter.native="clearData" @change="clearData(3)">
         <el-option v-for="(item,index) in selectRunState" :key="index" :value="item.value" :label="item.label">
           {{item.label}}</el-option>
       </el-select>
+      <!-- <el-input placeholder="请输入桌面名称" style="width:185px;" clearable v-model="applyTable"
+        @keyup.enter.native="clearData" @clear="clearData(2)">
+      </el-input>
+    
       <el-select style="width:190px" placeholder="请选择登录状态" clearable v-model="applyLoginState"
         @keyup.enter.native="clearData" @change="clearData(4)">
         <el-option v-for="(item,index) in selectLoginState" :key="index" :value="item.value" :label="item.label">
           {{item.label}}</el-option>
-      </el-select>
+      </el-select> -->
       <el-button icon="el-icon-search" circle @click="searchData"></el-button>
     </div>
     <div class="table-wrap" id="table-wrap">
       <div class="newBtnWrap">
-        <!-- <Button type="primary">启动</Button> -->
         <el-button-group>
-
-          <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('start'))"
+          <!-- <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('start'))"
             @click="start" icon="el-icon-circle-check-outline">启动</el-button>
-             <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('stop'))"
+  <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('stop'))"
             @click="stop" icon="iconfont icon-zanting" >停止</el-button>
           <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('restart'))"
-            @click="restart" icon="el-icon-refresh">重启</el-button>
-          <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('edit'))"
-            @click="updateDesk" icon="el-icon-edit-outline">修改规格</el-button>
-          <el-button size="small" type="primary" :disabled="!multSelection[0].id" icon="el-icon-sort" @click="postpone">
+            @click="restart" icon="el-icon-refresh">重启</el-button> -->
+
+          <el-button size="small" type="primary" :disabled="multSelection.length===0" @click="updateDesk"
+            icon="el-icon-edit-outline">设置登录页</el-button>
+          <!-- <el-button size="small" type="primary" :disabled="!multSelection[0].id" @click="postpone" icon="el-icon-sort">
             资产转移
           </el-button>
           <el-button size="small" type="danger" :disabled="!(multSelection.length===1&&checkDisable('quit'))"
-            @click="detach" icon="el-icon-close">清退</el-button>
-          <!-- <el-button size="small" type="success" @click="loginCloud">云桌面登陆</el-button> -->
-        </el-button-group>
-        <el-button-group style="float:right;margin-top: 10px;margin-right: 10px;">
-
-          <el-button size="small" type="primary" @click="exportData" icon="el-icon-download">导出
-          </el-button>
-          <el-button icon="el-icon-refresh" size="small" type="primary" @click="refreshData">同步桌面
-          </el-button>
+            @click="detach" icon="el-icon-close">清退</el-button> -->
         </el-button-group>
 
+        <!-- <el-button-group style="float:right;margin-top: 10px;margin-right: 10px;">
+
+          <el-button size="small" type="primary" @click="exportData" icon="el-icon-download">导出</el-button>
+        </el-button-group> -->
       </div>
+      <!-- @select="checkSelect" -->
       <el-table ref="multipleTable" :data="tableData" v-loading="vmTableLoadingState" :height="tableHeight"
-        @row-click="rowClick" @select="checkSelect" stripe :header-cell-style="{'text-align':'center'}"
-        :cell-style="{'text-align':'center'}">
+        @row-click="rowClick" @selection-change="handleSelectionChangeMerge" stripe
+        :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}">
         <el-table-column type="selection" width="55">
         </el-table-column>
-        <el-table-column prop="user" label="使用人">
+        <el-table-column prop="ip" label="IP地址">
+        </el-table-column>
+        <el-table-column prop="所属教室" label="所属教室">
+          <template slot-scope="scope">
+            大教室1
+          </template>
+        </el-table-column>
+        <el-table-column prop="WiPlus登录方式" label="WiPlus登录方式">
+          <template slot-scope="scope">
+            {{scope.row.id%3===0?'教学桌面':scope.row.id%2===0?'教学桌面+个人桌面':'个人桌面'}}
+          </template>
+        </el-table-column>
+
+        <!-- <el-table-column prop="user" label="使用人">
         </el-table-column>
         <el-table-column prop="computerName" label="桌面名称" :min-width="150">
         </el-table-column>
@@ -61,10 +71,8 @@
              <template slot-scope="scope">
                  {{scope.row.merName||'(FA同步桌面)'}}
           </template>
-        </el-table-column>
-        <el-table-column prop="operatorAccount" label="所属管理员" width="100">  
-        </el-table-column>
-        <el-table-column prop="cpuRate" label="CPU使用率" width="100">
+        </el-table-column> -->
+        <!-- <el-table-column prop="cpuRate" label="CPU使用率" width="100">
              <template slot-scope="scope">
             <div>
               {{scope.row.cpuRate||'0%'}}
@@ -77,46 +85,40 @@
               {{scope.row.memoryRate||'0%'}}
             </div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- <el-table-column prop="networkDelays" label="网络延迟" width="100">
         </el-table-column> -->
-        <el-table-column prop="ip" label="IP地址" width="120">
-        </el-table-column>
         <!-- <el-table-column prop="operatorAccount" label="审批人" width="100">
         </el-table-column> -->
-        <el-table-column prop="deskType" label="桌面类型">
+        <!-- <el-table-column prop="deskType" label="桌面类型" width="120">
           <template slot-scope="scope">
             <div>
               {{clouldType(scope)||'未知'}}
             </div>
           </template>
-        </el-table-column>
-        <el-table-column prop="feature" label="CPU/内存/磁盘" width="150">
+        </el-table-column> -->
+        <!-- <el-table-column prop="feature" label="CPU/内存/磁盘" width="150">
           <template slot-scope="scope">
             <div>
-              <!-- <span style="width:120px;display:inline-block;text-align:right"> -->
               {{scope.row.feature}}
-              <!-- </span> -->
-              <!-- <el-button  size="mini" type="text" v-if="scope.row.runState!=='stopped'"
-                style="margin-left:10px" @click="updateDisk(scope.row)">修改</el-button> -->
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="runState" label="运行状态">
+        <el-table-column prop="runState" label="运行状态" width="100">
           <template slot-scope="scope">
             <div>
               {{runState(scope)}}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="loginState" label="登录状态">
+        <el-table-column prop="loginState" label="登录状态" width="100">
           <template slot-scope="scope">
             <div>
               {{loginState(scope)}}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="attachState" label="分配状态">
+        <el-table-column prop="attachState" label="分配状态" width="100">
           <template slot-scope="scope">
             <div>
               {{branchState(scope)}}
@@ -145,15 +147,15 @@
               {{scope.row.deadline}}
             </div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <!-- <Table  :height="tableHeight" :loading="vmTableLoadingState" :columns="tableHeader" :data="tableData"></Table> -->
     </div>
     <div class='bottomWrap' v-if="tableData.length">
-      <div class="total-wrap">
+      <!-- <div class="total-wrap">
         <label>总数：</label><span class="ps-blue ps-count">{{total}}</span>
         <label>CPU/内存/磁盘：</label><span class="ps-yellow ps-count">{{cpu}}个/{{memory}}G/{{disk}}G</span>
-      </div>
+      </div> -->
       <div class="page-wrap">
         <el-pagination @current-change="handleCurrentChange" @size-change="handleSizeChange"
           :current-page="currentPage4" :page-sizes="[10, 20, 30, 40]" :page-size="currentSize"
@@ -161,35 +163,25 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 修改规格 -->
-    <el-dialog title="修改规格" :visible.sync="dialogFormVisible" :close-on-click-modal="no"
-      custom-class='accountManageDialog' top='9%' width="40%" @close='resetD("aform")'>
+    <!-- 设置登录方式 -->
+    <el-dialog title="设置登录页" :visible.sync="dialogFormVisible" :close-on-click-modal="no"
+      custom-class='accountManageDialog' top='12%' width="40%" @close='resetD("aform")'>
       <el-form :model="aform" :rules="rules2" ref="aform">
-        <el-form-item label="CPU(核)：" :label-width="formLabelWidth" prop="cpu">
-          <el-input-number v-model="aform.cpu" controls-position="right" :min="multSelection[0].cpu" :max="16"
-            :style='{width:inputLabelWidth}'>
-          </el-input-number>
-          <!-- <el-input v-model="aform.cpu" placeholder='请输入1至16整数(单位G)' :style='{width:inputLabelWidth}'></el-input> -->
+        <el-form-item label="登录方式：" :label-width="formLabelWidth" prop="cpu">
+          <el-checkbox-group v-model="aform.login">
+            <el-checkbox-button v-for="login in loginLists" :label="login" :key="login">{{login}}</el-checkbox-button>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="内存(GB)：" :label-width="formLabelWidth" prop="memory">
-          <el-input-number v-model="aform.memory" controls-position="right" :min="multSelection[0].memory" :max="32"
-            :style='{width:inputLabelWidth}'>
-          </el-input-number>
-          <!-- <el-input v-model="aform.memory" placeholder='请输入1至32整数(单位G)' :style='{width:inputLabelWidth}'></el-input> -->
+        <el-form-item label="登录背景色：" :label-width="formLabelWidth" prop="specDes">
+          <el-color-picker v-model="aform.color" :predefine="predefineColors">
+          </el-color-picker>
         </el-form-item>
-        <el-form-item label="磁盘容量(GB)：" :label-width="formLabelWidth" prop="disk">
-          <el-input-number v-model="aform.disk" controls-position="right" :min="multSelection[0].disk" :max="1024"
-            :style='{width:inputLabelWidth}'>
-          </el-input-number>
-          <!-- <el-input v-model="dform.disk" placeholder='请输入10至1024整数(单位G)' :style='{width:inputLabelWidth}'></el-input> -->
+        <el-form-item label="登录页面文字：" :label-width="formLabelWidth" prop="disk">
+          <el-input v-model="aform.text" placeholder='请输入登录页面的文字' :style='{width:"250px"}'></el-input>
         </el-form-item>
-        <!-- <el-form-item label="描述：" :label-width="formLabelWidth" prop="specDes">
-          <el-input type="textarea" v-model="aform.specDes" :autosize="{minRows: 6, maxRows: 6 }"
-            placeholder='请输入描述,最多255个字' :style='{width:inputLabelWidth}'></el-input>
-        </el-form-item> -->
-        <el-form-item label="" :label-width="formLabelWidth">
+        <!-- <el-form-item label="" :label-width="formLabelWidth">
           <div style="color:#f10000;text-align: left;font-size: 12px;line-height: 20px;">修改成功之后需要重启</div>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="btnLoading" @click="addAccount('aform')">确 定</el-button>
@@ -201,7 +193,7 @@
       top='6%' @close='resetD("transformForm")'>
       <div class="search-wrap">
         <el-input placeholder="请输入移交人名称" v-model="queryUserName" style="width:185px;" clearable
-          @keydown.enter.native="queryUserList" @clear="queryUserList" />
+          @keyup.enter.native="queryUserList" @clear="queryUserList" />
         <el-button type="ghost" @click="queryUserList"><i class="el-icon-search"></i>查询</el-button>
       </div>
       <div class="table-wrap" id="table-wrapTran">
@@ -219,6 +211,7 @@
           :current-page="currentPage5" :page-sizes="[10, 20, 30, 40]" :page-size="currentSize1"
           layout="total, sizes, prev, pager, next" :total="countTran">
         </el-pagination>
+        <!-- <Page :total="count" size="small" show-total show-sizer @on-change="handleCurrentChange"></Page> -->
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="btnLoading" :disabled="multSelectionTran.length===0"
@@ -243,7 +236,7 @@
     </el-dialog>
     <!-- 同步桌面 -->
     <el-dialog title="同步桌面" :visible.sync="dialogFormVisibleSyn" :close-on-click-modal="no"
-      custom-class='accountManageDialog' top='15%' width="30%" @close='resetD("dform")'>
+      custom-class='accountManageDialog' top='15%' width="30%" @close='resetD("sform")'>
       <el-form :model="sform" :rules="rulesyn" ref="sform">
         <el-form-item label="请选择FA：" :label-width="formLabelWidth" prop="fa">
           <el-select style="width:190px;" placeholder="请选择FA" v-model="sform.fa">
@@ -304,12 +297,14 @@
         }
       }
       return {
+        loginLists: ['教学桌面', '个人桌面'],
         queryUserName: '',
         btnIndex: '',
         btnLoading: false,
         userListData: [],
         transformForm: false,
         loadingRadio: false,
+        radio3: '工作模式',
         no: false,
         tableData: [],
         count: 0,
@@ -323,12 +318,10 @@
         selectRunState,
         selectLoginState,
         currentPage4: 1,
-        currentSize: 10,
         currentPage5: 1,
+        currentSize: 10,
         currentSize1: 10,
-        multSelection: [{
-          disk: 0
-        }],
+        multSelection: [],
         multSelectionADD: [],
         multSelectionTran: [],
         applyUser: '',
@@ -339,11 +332,20 @@
         text: '请稍后',
         dialogFormVisible: false,
         aform: {
-          cpu: '',
-          memory: '',
-          disk: '',
-          specDes: ''
+          login: ['教学桌面'],
+          color: '#296683',
+          text: ''
         },
+        predefineColors: [
+          '#296683',
+          '#ff4500',
+          '#ff8c00',
+          '#ffd700',
+          '#90ee90',
+          '#00ced1',
+          '#1e90ff',
+          '#c71585',
+        ],
         rules2: {
           cpu: [{
             required: true,
@@ -400,7 +402,7 @@
         dialogFormVisibleSyn: false,
         sform: {
           fa: ''
-        }
+        },
       }
     },
     created() {
@@ -419,28 +421,6 @@
         this.currentSize1 = 10;
         this.postpone();
       },
-      rowClick(row, column, event) {
-        if (this.multSelection.length > 0 && this.multSelection[0].id !== row.id) {
-          this.$refs.multipleTable.toggleRowSelection(this.multSelection[0]);
-          this.multSelection = [row];
-        } else if (this.multSelection.length > 0 && this.multSelection[0].id === row.id) {
-          this.multSelection = [{
-            disk: 0
-          }];
-        } else {
-          this.multSelection = [row];
-        }
-        this.$refs.multipleTable.toggleRowSelection(row);
-      },
-      checkSelect(selection, row) {
-        //   if(selection.length===1){
-        //   }
-        if (selection.length > 1) {
-          this.$refs.multipleTable.toggleRowSelection(selection[0]);
-        }
-        this.multSelection = selection;
-        // console.log(selection, row)
-      },
       serviceConfirm() { //转移
         let data = this.multSelection[0]
         let params = {};
@@ -452,7 +432,7 @@
         params.computerName = data.computerName;
         this.btnLoading = true;
         httpAjax('desktop/migration', params).then(res => {
-          if (res.result == 'success') {
+          if (res.result == "success") {
             this.$message({
               type: 'success',
               message: '转移成功!'
@@ -465,7 +445,7 @@
           } else {
             this.$message({
               type: 'error',
-              message: res.desc || '通讯错误'
+              message: res.resultDesc || '通讯错误'
             });
           }
           this.btnLoading = false;
@@ -532,13 +512,13 @@
           data.row.opType = type;
         })
       },
-      synDesk(formName) {
+      synDesk(formName) { //同步桌面
         var params = {};
         params.faIp = this.sform.fa;
         this.text = '正在同步,请稍后...';
         this.loadingState = true;
         httpAjax('desktop/queryVmInfo', params).then(res => {
-          if (res.success == 'success') {
+          if (res.success == "success") {
             this.$message({
               type: 'success',
               message: '同步成功!'
@@ -567,7 +547,7 @@
           });
         })
       },
-      refreshData() {
+      refreshData() { //点击同步
         httpAjax('system/faList').then(res => {
           this.faList = res.data;
           this.sform.fa = res.data[0].faIP;
@@ -579,14 +559,13 @@
           });
         })
       },
-      resetD(formName) {
+      resetD(formName) { //重置
         switch (formName) {
           case 'aform':
             this.aform = {
-              cpu: '',
-              memory: '',
-              disk: '',
-              specDes: ''
+              login: ['教学桌面'],
+              color: '#296683',
+              text: ''
             }
             this.$refs['aform'].resetFields();
             break;
@@ -610,7 +589,7 @@
             break;
         }
       },
-      updateDisk(data) {
+      updateDisk(data) { //点击增加磁盘
         this.multSelectionADD = [data];
         this.dform.disk = data.disk;
         this.dialogFormVisibleDisk = true;
@@ -621,10 +600,10 @@
           let checkStatus = this.multSelectionADD[0]
           params.computerName = checkStatus.computerName;
           params.faIp = checkStatus.faIp;
-          params.disk = this.dform.disk;
           params.vmId = checkStatus.vmId;
           params.siteId = checkStatus.siteId;
           params.clusterId = checkStatus.clusterId;
+          params.disk = this.dform.disk;
           if (valid) {
             this.btnLoading = true;
             httpAjax('desktop/attachVolume', params).then(res => {
@@ -663,8 +642,8 @@
           let f = {
             ...this.aform
           };
-        //   f.disk = f.disk - this.multSelection[0].disk;
-          f.balance = f.disk-this.multSelection[0].disk;
+          //   f.disk = f.disk - this.multSelection[0].disk;
+          f.balance = f.disk - this.multSelection[0].disk;
           let checkStatus = this.multSelection[0]
           f.computerName = checkStatus.computerName;
           f.faIp = checkStatus.faIp;
@@ -672,7 +651,6 @@
           f.siteId = checkStatus.siteId;
           f.merId = checkStatus.merId;
           f.clusterId = checkStatus.clusterId;
-
           if (valid) {
             this.btnLoading = true;
             httpAjax('desktop/updateInstance', f).then(res => {
@@ -708,19 +686,18 @@
           }
         });
       },
-      updateDesk() {
-        this.aform.cpu = this.multSelection[0].cpu;
-        this.aform.memory = this.multSelection[0].memory;
-        this.aform.disk = this.multSelection[0].disk;
+      updateDesk() { //点击修改规格
+        // this.aform.cpu = this.multSelection[0].cpu;
+        // this.aform.memory = this.multSelection[0].memory;
+        // this.aform.disk = this.multSelection[0].disk;
         this.dialogFormVisible = true;
       },
-      start() {
+      start() { //启动
         let params = {};
         let checkStatus = this.multSelection[0]
         params.vmId = checkStatus.vmId;
         params.faIp = checkStatus.faIp;
         params.siteId = checkStatus.siteId;
-
         this.text = '正在启动虚机, 请稍后...'
         this.loadingState = true;
         httpAjax('desktop/start', params).then(res => {
@@ -756,7 +733,7 @@
           this.loadingState = false;
         })
       },
-       stop() {
+      stop() {
         this.$confirm('确定要停止该桌面?', '停止桌面', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -806,7 +783,7 @@
         })
 
       },
-      restart() {
+      restart() { //重启
         this.$confirm('确定要重启该桌面?', '重启桌面', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -856,7 +833,7 @@
         })
 
       },
-      detach() { //清退 周一
+      detach() { //清退
         this.$confirm('确定要清退该桌面?', '清退桌面', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -888,7 +865,7 @@
             } else {
               this.$message({
                 type: 'error',
-                message: res.resultDesc //'已经清退,请勿重复操作!'
+                message: res.resultDesc
               });
               // this.multSelection = [{disk:0}]
               // this.$alert('已经提交过，正在审核中!', '清退桌面', {
@@ -915,26 +892,26 @@
         this.getVmList('', 1)
       },
       exportData() {
-        window.open('/dcp/desktop/adminExport')
+        window.open('/api/desktop/cloudExport')
       },
-      loginCloud() {
-        var params = {
-          name: sessionStorage.getItem('username'),
-          initialPassword: sessionStorage.getItem('password'),
-          tenantDomain: sessionStorage.getItem('domain')
-        }
-        httpAjax('user/unsLogin', params).then(res => {
-          if (res.noLink) {
-            this.$message.error('请通知管理员配置UNS连接地址!');
-          } else {
-            window.open(res.link + "/servlet/TokenLoginServlet?tokenId=" + res.tokenId);
-          }
-        })
-      },
+      //   loginCloud() {
+      //     var params = {
+      //       name: sessionStorage.getItem('username'),
+      //       initialPassword: sessionStorage.getItem('password'),
+      //       tenantDomain: sessionStorage.getItem('domain')
+      //     }
+      //     httpAjax('user/unsLogin', params).then(res => {
+      //       if (res.noLink) {
+      //         this.$message.error('请通知管理员配置UNS连接地址!');
+      //       } else {
+      //         window.open(res.link + "/servlet/TokenLoginServlet?tokenId=" + res.tokenId);
+      //       }
+      //     })
+      //   },
       checkDisable(type) {
         if (type === 'start') {
           return this.multSelection[0].runState === 'stopped'
-        } else if (type === 'restart'||type==='stop') {
+        } else if (type === 'restart' || type === 'stop') {
           return this.multSelection[0].runState === 'running'
         } else if (type === 'quit') {
           return this.multSelection[0].id && this.multSelection[0].runState !== 'deleted'
@@ -944,6 +921,49 @@
       },
       // handleSelectionChange(val) {
       //   },
+      rowClick(row, column, event) {
+        // console.log(event)
+        if (event.target.localName === 'button' || event.target.parentNode.localName === 'button') {
+          return
+        }
+        if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length === 0) {
+          //   this.$refs.multipleTable.toggleRowSelection(row);
+          this.multSelection = [...this.multSelection, row];
+        } else if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length ===
+          1) {
+          this.multSelection = this.multSelection.filter(item => item.id !== row.id);
+        } else {
+          this.multSelection = [row];
+        }
+        // console.log(  this.multSelection)
+        this.$refs.multipleTable.toggleRowSelection(row);
+      },
+      handleSelectionChangeMerge(val) {
+        this.multSelection = val;
+      },
+      //   rowClick(row, column, event) {
+      //     if (this.multSelection.length > 0 && this.multSelection[0].id !== row.id) {
+      //       this.$refs.multipleTable.toggleRowSelection(this.multSelection[0]);
+      //       this.multSelection = [row];
+      //     } else if (this.multSelection.length > 0 && this.multSelection[0].id === row.id) {
+      //       this.multSelection = [{
+      //         disk: 0
+      //       }];
+      //     } else {
+      //       this.multSelection = [row];
+      //     }
+      //     this.$refs.multipleTable.toggleRowSelection(row);
+      //     console.log(this.multSelection);
+      //   },
+      checkSelect(selection, row) {
+        //   if(selection.length===1){
+        //   }
+        if (selection.length > 1) {
+          this.$refs.multipleTable.toggleRowSelection(selection[0]);
+        }
+        this.multSelection = selection;
+        // console.log(selection, row)
+      },
       rowClick1(row, column, event) {
         if (this.multSelectionTran.length > 0 && this.multSelectionTran[0].id !== row.id) {
           this.$refs.multipleTableTran.toggleRowSelection(this.multSelectionTran[0]);
@@ -1033,9 +1053,7 @@
         }
       },
       getVmList(first, page) {
-        this.multSelection = [{
-          disk: 0
-        }]
+        this.multSelection = []
         page ? this.currentPage4 = page : '';
         let para = {
           page: this.currentPage4,
@@ -1045,14 +1063,24 @@
           runState: this.applyState,
           loginState: this.applyLoginState
         }
-        const url = `desktop/adminResMonitor?${Math.random()}&online=1`
+        const url = `classroom/classroomList?${Math.random()}&online=1`
         httpGet(url, para).then((res) => {
           this.tableHeight = computedTableHeight()
           this.tableData = res.data;
+          this.tableData = [{
+            id: 1,
+            ip: '172.14.1.1'
+          }, {
+            id: 2,
+            ip: '172.14.1.2'
+          }, {
+            id: 3,
+            ip: '172.14.1.3'
+          }]
           this.vmTableLoadingState = false;
           this.count = res.count;
           this.$nextTick(() => {
-            this.setScrollBar('#table-wrap', false)
+            this.setScrollBar('#table-wrap')
           })
           this.getStatistics()
         }).catch((error) => {
@@ -1060,16 +1088,12 @@
         })
       },
       handleCurrentChange(val) {
-        this.multSelection = [{
-          disk: 0
-        }]
+        this.multSelection = []
         this.currentPage4 = val;
         this.getVmList()
       },
       handleSizeChange(val) {
-        this.multSelection = [{
-          disk: 0
-        }]
+        this.multSelection = []
         this.currentSize = val;
         this.getVmList()
       },
@@ -1100,9 +1124,9 @@
       //   let state = obj.opType
       //   return state == 'set' ? '维护模式' : '工作模式'
       // },
-      setScrollBar(dom, bool) {
+      setScrollBar(dom) {
         // if (this.tableData.length) {
-        addScrollBar(dom, bool)
+        addScrollBar(dom)
         // }
       },
     }
@@ -1118,17 +1142,25 @@
     height: 40px;
     background: white;
     display: flex;
-    justify-content: space-between;
+    justify-content:center;
     align-items: center;
     color: #606266;
   }
- 
 
 </style>
 <style>
-#adminOnline .iconfont{
-      font-size: 12px;
-      margin-right: 5px;
+  #adminOnline .el-table-column--selection.is-leaf .cell {
+    display: inline-block;
   }
-</style>
 
+  #adminOnline .iconfont {
+    font-size: 12px;
+    margin-right: 5px;
+  }
+
+  #adminOnline .el-color-picker__trigger {
+    height: 45px;
+    width: 195px;
+  }
+
+</style>

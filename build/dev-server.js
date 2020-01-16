@@ -30,7 +30,7 @@ const app = express()
 
 // apiRoutes.get('/getDiscList', function (req, res) {
 //   console.log(2222222)
-//   var url = 'http://172.16.1.167:8080/dcp/desktop/adminResMonitor'
+//   var url = 'http://172.16.1.167:8080/api/desktop/adminResMonitor'
 //   axios.get(url, {
 //     ithCredentials:true,
 //     headers: {

@@ -149,7 +149,7 @@
         // httpAjax(url, params).then((res) => {}).catch((err) => {
         //   console.log(err)
         // })
-        window.open(`/dcp/bigFile/download?fileName=${name}&path=${path}&uuid=${uuid}`)
+        window.open(`/api/bigFile/download?fileName=${name}&path=${path}&uuid=${uuid}`)
       },
       delFile(data){
           this.$confirm('确定删除该文件吗?', '删除文件', {

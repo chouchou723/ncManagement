@@ -1,62 +1,71 @@
 <template>
-  <div id="cloudOnline" v-loading.fullscreen="loadingState" :element-loading-text="text">
+  <div id="adminResource" v-loading.fullscreen="loadingState" :element-loading-text="text">
     <div class="search-wrap">
-      <el-input placeholder="请输入IP地址" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
+      <!-- <el-input placeholder="请输入IP地址" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
         @clear="clearData(1)">
-      </el-input>
+      </el-input> -->
+      <el-select style="width:190px;" placeholder="请选择老师" clearable v-model="applyUser"
+        @change="clearData(3)">
+        <el-option v-for="(item,index) in teacherList" :key="index" :value="item.label" :label="item.label">
+          {{item.label}}</el-option>
+      </el-select>
       <!-- <el-input placeholder="请输入桌面名称" style="width:185px;" clearable v-model="applyTable"
         @keyup.enter.native="clearData" @clear="clearData(2)">
       </el-input>
-      <el-select style="width:190px;" placeholder="请选择运行状态" clearable v-model="applyState"
-        @keyup.enter.native="clearData" @change="clearData(3)">
-        <el-option v-for="(item,index) in selectRunState" :key="index" :value="item.value" :label="item.label">
-          {{item.label}}</el-option>
-      </el-select>
+    
       <el-select style="width:190px" placeholder="请选择登录状态" clearable v-model="applyLoginState"
         @keyup.enter.native="clearData" @change="clearData(4)">
         <el-option v-for="(item,index) in selectLoginState" :key="index" :value="item.value" :label="item.label">
           {{item.label}}</el-option>
       </el-select> -->
       <el-button icon="el-icon-search" circle @click="searchData"></el-button>
+      <el-button type="primary" style="float:right;margin-right:10px;" @click="addClassroom"
+        icon="el-icon-circle-plus-outline">新增教室
+      </el-button>
     </div>
     <div class="table-wrap" id="table-wrap">
-      <div class="newBtnWrap">
-        <el-button-group>
-          <!-- <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('start'))"
+      <!-- <div class="newBtnWrap">
+        <el-button-group> -->
+      <!-- <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('start'))"
             @click="start" icon="el-icon-circle-check-outline">启动</el-button>
   <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('stop'))"
             @click="stop" icon="iconfont icon-zanting" >停止</el-button>
           <el-button size="small" type="primary" :disabled="!(multSelection.length===1&&checkDisable('restart'))"
             @click="restart" icon="el-icon-refresh">重启</el-button> -->
-
+      <!-- <el-button size="small" type="primary" @click="addClassroom" icon="el-icon-circle-check-outline">新增教室
+          </el-button>
           <el-button size="small" type="primary" :disabled="multSelection.length===0" @click="updateDesk"
-            icon="el-icon-edit-outline">设置登录页</el-button>
-          <!-- <el-button size="small" type="primary" :disabled="!multSelection[0].id" @click="postpone" icon="el-icon-sort">
+            icon="el-icon-edit-outline">设置登录页</el-button> -->
+      <!-- <el-button size="small" type="primary" :disabled="!multSelection[0].id" @click="postpone" icon="el-icon-sort">
             资产转移
           </el-button>
           <el-button size="small" type="danger" :disabled="!(multSelection.length===1&&checkDisable('quit'))"
             @click="detach" icon="el-icon-close">清退</el-button> -->
-        </el-button-group>
+      <!-- </el-button-group> -->
 
-        <!-- <el-button-group style="float:right;margin-top: 10px;margin-right: 10px;">
+      <!-- <el-button-group style="float:right;margin-top: 10px;margin-right: 10px;">
 
           <el-button size="small" type="primary" @click="exportData" icon="el-icon-download">导出</el-button>
         </el-button-group> -->
-      </div>
-      <!-- @select="checkSelect" -->
-      <el-table ref="multipleTable" :data="tableData" v-loading="vmTableLoadingState" :height="tableHeight"
-        @row-click="rowClick" @selection-change="handleSelectionChangeMerge" stripe
+      <!-- </div> -->
+      <!-- @select="checkSelect"  @row-click="rowClick" @selection-change="handleSelectionChangeMerge"  -->
+      <el-table ref="multipleTable" :data="tableData" v-loading="vmTableLoadingState" :height="tableHeight" stripe
         :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}">
-        <el-table-column type="selection" width="55">
-        </el-table-column>
-        <el-table-column prop="ipAddress" label="IP地址">
-        </el-table-column>
-        <el-table-column prop="roomName" label="所属教室">
+        <!-- <el-table-column type="selection" width="55">
+        </el-table-column> -->
+        <el-table-column prop="roomName" label="教室名称">
           <!-- <template slot-scope="scope">
             大教室1
           </template> -->
         </el-table-column>
-        <el-table-column prop="WiPlus登录方式" label="WiPlus登录方式">
+        <el-table-column prop="ipArea" label="IP地址区间">
+          <!-- <template slot-scope="scope">
+            172.16.1.1~172.16.1.18(共18个)
+          </template> -->
+        </el-table-column>
+        <el-table-column prop="teacher" label="教学老师">
+        </el-table-column>
+        <el-table-column prop="loginType" label="WiPlus登录方式">
           <template slot-scope="scope">
             {{scope.row.loginType.split(',').map(item=>{return loginObjR[item]}).join(',')}}
           </template>
@@ -70,6 +79,15 @@
           <!-- <template slot-scope="scope">
             考试机器
           </template> -->
+        </el-table-column>
+        <el-table-column label="操作" width="150">
+          <template slot-scope="scope">
+            <el-button @click="updateDesk(scope.row)" type="text" style="padding:0">修改</el-button>
+            <!-- <el-button @click="assignDesk(scope.row)" type="text" style="padding:0;color:#42b983">分配</el-button> -->
+            <el-button @click="handleClick(scope.row)" type="text" style="color:#f10000;padding:0"
+              :loading="btnLoadingD&&(btnIndex===scope.row.id)">{{btnLoadingD&&(btnIndex===scope.row.id)?'删除中':'删除'}}
+            </el-button>
+          </template>
         </el-table-column>
         <!-- <el-table-column prop="user" label="使用人">
         </el-table-column>
@@ -172,9 +190,9 @@
       </div>
     </div>
     <!-- 设置登录方式 -->
-    <el-dialog title="设置登录页" :visible.sync="dialogFormVisible" :close-on-click-modal="no"
+    <!-- <el-dialog title="设置登录页" :visible.sync="dialogFormVisible" :close-on-click-modal="no"
       custom-class='accountManageDialog' top='12%' width="40%" @close='resetD("aform")'>
-      <el-form :model="aform" ref="aform">
+      <el-form :model="aform" :rules="rules2" ref="aform">
         <el-form-item label="登录方式：" :label-width="formLabelWidth" prop="loginType">
           <el-checkbox-group v-model="aform.loginType">
             <el-checkbox-button v-for="login in loginLists" :label="login" :key="login">{{login}}</el-checkbox-button>
@@ -187,17 +205,86 @@
         <el-form-item label="登录页面文字：" :label-width="formLabelWidth" prop="prompt">
           <el-input v-model="aform.prompt" placeholder='请输入登录页面的文字' :style='{width:"250px"}'></el-input>
         </el-form-item>
-        <!-- <el-form-item label="" :label-width="formLabelWidth">
-          <div style="color:#f10000;text-align: left;font-size: 12px;line-height: 20px;">修改成功之后需要重启</div>
-        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="btnLoading" @click="addAccount('aform')">确 定</el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
       </div>
+    </el-dialog> -->
+    <!-- 新增修改教室  -->
+    <el-dialog :title="cform.id?'修改教室':'新增教室'" :visible.sync="transformForm" :close-on-click-modal="no" custom-class='accountManageDialog'
+      top='6%' @close='resetD("transformForm")'>
+      <el-form :model="cform" :rules="rules2" ref="cform">
+
+        <!-- <el-form-item label="创建教室个数：" :label-width="formLabelWidth" prop="num">
+          <el-input-number v-model="cform.num" controls-position="right" :min="1" :max="1024">
+          </el-input-number>
+        </el-form-item> -->
+        <el-form-item label="教室名称：" :label-width="formLabelWidth" prop="roomName">
+          <el-input v-model="cform.roomName" placeholder='请输入教室名称' :style='{width:"250px"}'></el-input>
+        </el-form-item>
+        <el-form-item label="分配IP区间：" :label-width="formLabelWidth" prop="ipArea">
+          <el-input v-model="cform.ipAreaF" placeholder='请输入起始的IP' :style='{width:"250px"}'></el-input>
+          <span>~</span>
+          <el-input v-model="cform.ipAreaL" placeholder='请输入结束的IP' :style='{width:"250px"}'></el-input>
+        </el-form-item>
+        <el-form-item label="教学老师：" :label-width="formLabelWidth" prop="teacher">
+          <el-select placeholder="请选择教学老师" :style='{width:"250px"}' v-model="cform.teacher">
+            <el-option v-for="(item,index) in teacherList" :key="index" :value="item.label" :label="item.label">
+              {{item.label}}</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="登录方式：" :label-width="formLabelWidth" prop="loginType">
+          <el-checkbox-group v-model="cform.loginType">
+            <el-checkbox-button v-for="login in loginLists" :label="login" :key="login">{{login}}</el-checkbox-button>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="登录背景色：" :label-width="formLabelWidth" prop="background">
+          <el-color-picker v-model="cform.background" :predefine="predefineColors">
+          </el-color-picker>
+        </el-form-item>
+        <el-form-item label="登录页面文字：" :label-width="formLabelWidth" prop="prompt">
+          <el-input v-model="cform.prompt" placeholder='请输入登录页面的文字' :style='{width:"250px"}'></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="" :label-width="formLabelWidth">
+          <div style="color:#f10000;text-align: left;font-size: 12px;line-height: 20px;">修改成功之后需要重启</div>
+        </el-form-item> -->
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="btnLoading" @click="serviceConfirm">确 定</el-button>
+        <el-button @click="transformForm = false">取 消</el-button>
+      </div>
     </el-dialog>
-  
-    <!-- <psloading v-show="loadingState" :text="text"></psloading> -->
+    <!-- 增加磁盘 -->
+    <!-- <el-dialog title="增加磁盘" :visible.sync="dialogFormVisibleDisk" :close-on-click-modal="no"
+      custom-class='accountManageDialog' top='15%' width="30%" @close='resetD("dform")'>
+      <el-form :model="dform" :rules="ruled" ref="dform">
+        <el-form-item label="磁盘容量(GB)：" :label-width="formLabelWidth" prop="disk">
+          <el-input-number v-model="dform.disk" controls-position="right" :min="10" :max="1024">
+          </el-input-number>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="btnLoading" @click="addDisk('dform')">确 定</el-button>
+        <el-button @click="dialogFormVisibleDisk = false">取 消</el-button>
+      </div>
+    </el-dialog> -->
+    <!-- 同步桌面 -->
+    <!-- <el-dialog title="同步桌面" :visible.sync="dialogFormVisibleSyn" :close-on-click-modal="no"
+      custom-class='accountManageDialog' top='15%' width="30%" @close='resetD("sform")'>
+      <el-form :model="sform" :rules="rulesyn" ref="sform">
+        <el-form-item label="请选择FA：" :label-width="formLabelWidth" prop="fa">
+          <el-select style="width:190px;" placeholder="请选择FA" v-model="sform.fa">
+            <el-option v-for="(item,index) in faList" :key="index" :value="item.faIP" :label="item.faName">
+              {{item.faName}}</el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="btnLoading" @click="synDesk('sform')">确 定</el-button>
+        <el-button @click="dialogFormVisibleSyn = false">取 消</el-button>
+      </div>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -209,10 +296,10 @@
     computedTableHeight,
     addScrollBar
   } from 'api/common'
-  import {
-    selectRunState,
-    selectLoginState
-  } from 'api/resources'
+  //   import {
+  //     selectRunState,
+  //     selectLoginState
+  //   } from 'api/resources'
   export default {
     data() {
     //   var nan16 = (rule, value, callback) => {
@@ -229,6 +316,32 @@
     //       callback('请输入正确的数字')
     //     }
     //   }
+    //   var subnetMaskFilter = (rule, value, callback) => {
+    //     var reg =
+    //       /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+
+    //     if (!reg.test(value)) {
+    //       callback(new Error('请按对应规范输入正确的值'))
+    //     }
+    //     callback()
+    //   }
+      var checkIp = (rule, value, callback) => {
+        var reg =
+          /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+
+        if (!reg.test(this.cform.ipAreaF) || !reg.test(this.cform.ipAreaL)) {
+          callback(new Error('请按对应规范输入正确的值'))
+        } else if ((this.cform.ipAreaF.replace(/\./g, '') - this.cform.ipAreaL.replace(/\./g, '')) > 0) {
+          callback(new Error('请按正确的IP起始结束值'))
+        } else {
+            let url = 'classroom/checkCrossIp'
+            httpAjax(url,{ipArea:this.cform.ipAreaF+'~'+this.cform.ipAreaL}).then(res=>{
+
+                callback(new Error('请按正确的IP起始结束值'))
+            })
+
+        }
+      }
     //   var nan1024 = (rule, value, callback) => {
     //     if (value && value % 1 === 0 && value <= 1024) {
     //       callback()
@@ -244,22 +357,18 @@
     //     }
     //   }
       return {
+          btnLoadingD:false,
         loginLists: ['教学桌面', '个人桌面'],
-        loginObj: {
-          '教学桌面': 'teaching',
-          '个人桌面': 'personal'
-        },
-        loginObjR: {
-          'teaching': '教学桌面',
-          'personal': '个人桌面'
-        },
+        loginObj:{'教学桌面':'teaching','个人桌面':'personal'},
+        loginObjR:{'teaching':'教学桌面','personal':'个人桌面'},
         queryUserName: '',
         btnIndex: '',
         btnLoading: false,
-        userListData: [],
+        // userListData: [],
+        teacherList: [],
         transformForm: false,
-        loadingRadio: false,
-        radio3: '工作模式',
+        // loadingRadio: false,
+        // radio3: '工作模式',
         no: false,
         tableData: [],
         count: 0,
@@ -270,22 +379,34 @@
         memory: 0,
         disk: 0,
         vmTableLoadingState: true,
-        selectRunState,
-        selectLoginState,
+        // selectRunState,
+        // selectLoginState,
         currentPage4: 1,
-        currentPage5: 1,
         currentSize: 10,
-        currentSize1: 10,
+        // currentPage5: 1,
+        // currentSize1: 10,
         multSelection: [],
-        multSelectionADD: [],
-        multSelectionTran: [],
+        // multSelectionADD: [],
+        // multSelectionTran: [],
         applyUser: '',
-        applyTable: '',
-        applyState: '',
-        applyLoginState: '',
+        // applyTable: '',
+        // applyState: '',
+        // applyLoginState: '',
         loadingState: false,
+
         text: '请稍后',
-        dialogFormVisible: false,
+        // dialogFormVisible: false,
+        cform: {
+          id: '',
+          //   num: 1,
+          roomName: '',
+          ipAreaF: '',
+          ipAreaL: '',
+          teacher: '',
+          loginType: ['教学桌面'],
+          background: '#296683',
+          prompt: ''
+        },
         aform: {
           loginType: ['教学桌面'],
           background: '#296683',
@@ -301,31 +422,55 @@
           '#1e90ff',
           '#c71585',
         ],
-        // rules2: {
-        //   cpu: [{
-        //     required: true,
-        //     validator: nan16,
-        //     trigger: 'blur'
-        //   }],
-        //   memory: [{
-        //     required: true,
-        //     validator: nan32,
-        //     trigger: 'blur'
-        //   }],
-        //   disk: [{
-        //     required: true,
-        //     validator: nan1024,
-        //     trigger: 'blur'
-        //   }],
-        //   specDes: [{
-        //     required: true,
-        //     validator: blow255,
-        //     trigger: 'blur'
-        //   }]
-        // },
+        rules2: {
+          roomName: [{
+            required: true,
+            message: '请输入教室名称',
+            // validator: nan32,
+            trigger: 'blur'
+          }],
+          ipArea: [{
+            required: true,
+            // message: '请输入IP地址',
+            validator: checkIp,
+            trigger: 'blur'
+          }],
+          teacher: [{
+            required: true,
+            message: '请选择老师',
+            // validator: nan32,
+            trigger: 'change'
+          }],
+          //   prompt: [{
+          //     // required: true,
+          //     message: '请输入教室名称',
+          //     // validator: nan32,
+          //     trigger: 'blur'
+          //   }],
+          //   cpu: [{
+          //     required: true,
+          //     validator: nan16,
+          //     trigger: 'blur'
+          //   }],
+          //   memory: [{
+          //     required: true,
+          //     validator: nan32,
+          //     trigger: 'blur'
+          //   }],
+          //   disk: [{
+          //     required: true,
+          //     validator: nan1024,
+          //     trigger: 'blur'
+          //   }],
+          //   specDes: [{
+          //     required: true,
+          //     validator: blow255,
+          //     trigger: 'blur'
+          //   }]
+        },
         formLabelWidth: '130px',
         inputLabelWidth: '300px',
-        dialogFormVisibleP: false,
+        // dialogFormVisibleP: false,
         // postform: {
         //   Ftime: ''
         // },
@@ -362,6 +507,7 @@
     },
     created() {
       this.getVmList(1)
+      this.getTeacherList()
     },
     mounted() {
       // this.$nextTick(() => {
@@ -369,6 +515,31 @@
       // })
     },
     methods: {
+      getTeacherList() {
+        let para = {
+          page: 1,
+          limit: 10000,
+          role: 'tenant',
+          //   tag: this.tagState,
+          //   ou: this.applyOu.length > 0 ? this.applyOu.slice(-1)[0] : ''
+          //   user: this.applyUser,
+          //   computerName: this.applyTable,
+          //   runState: this.applyState,
+          //   loginState: this.applyLoginState
+        }
+        const url = `user/adminUserList?${Math.random()}`
+        httpGet(url, para).then((res) => {
+          //   this.tableData = res.data;
+          this.teacherList = res.data.map(item => {
+            return {
+              label: item.name,
+              value: item.name
+            }
+          })
+        }).catch((error) => {
+          console.log(error)
+        })
+      },
     //   queryUserList() {
     //     this.$refs.multipleTableTran.toggleRowSelection(this.multSelectionTran[0]);
     //     this.multSelectionTran = [];
@@ -376,43 +547,52 @@
     //     this.currentSize1 = 10;
     //     this.postpone();
     //   },
-    //   serviceConfirm() { //转移
-    //     let data = this.multSelection[0]
-    //     let params = {};
-    //     params.newUser = this.multSelectionTran[0].domainUserName;
-    //     params.oldUser = data.computerName.split('\\')[0] + '\\' + data.user;
-    //     params.vmId = data.vmId;
-    //     params.siteId = data.siteId;
-    //     params.faIp = data.faIp;
-    //     params.computerName = data.computerName;
-    //     this.btnLoading = true;
-    //     httpAjax('desktop/migration', params).then(res => {
-    //       if (res.result == "success") {
-    //         this.$message({
-    //           type: 'success',
-    //           message: '转移成功!'
-    //         });
-    //         this.getVmList()
-    //         this.multSelection = [{
-    //           disk: 0
-    //         }]
-    //         this.transformForm = false;
-    //       } else {
-    //         this.$message({
-    //           type: 'error',
-    //           message: res.resultDesc || '通讯错误'
-    //         });
-    //       }
-    //       this.btnLoading = false;
-    //     }).catch(() => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '通讯错误,请刷新页面后访问。'
-    //       });
-    //       this.btnLoading = false;
+      serviceConfirm() { //新增教室
+        // let data = this.multSelection[0]
+        // let params = {};
+        // params.newUser = this.multSelectionTran[0].domainUserName;
+        // params.oldUser = data.computerName.split('\\')[0] + '\\' + data.user;
+        // params.vmId = data.vmId;
+        // params.siteId = data.siteId;
+        // params.faIp = data.faIp;
+        // params.computerName = data.computerName;
+        this.$refs['cform'].validate((valid) => {
+          if (valid) {
+            this.btnLoading = true;
+            let para = {...this.cform};
+            let lt = para.loginType.map(item=>{
+                return this.loginObj[item]
+            }).filter(item=>item)
+            // console.log(lt)
+            para.loginType = lt.join(',');
+            para.ipArea= para.ipAreaF+'~'+para.ipAreaL;
+            httpAjax('classroom/saveClassroom', para).then(res => {
+              if (res.resultCode == "0") {
+                this.$message({
+                  type: 'success',
+                  message: this.cform.id?'修改成功':'创建成功!'
+                });
+                this.getVmList()
+                this.transformForm = false;
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: res.resultDesc || '通讯错误'
+                });
+              }
+              this.btnLoading = false;
+            }).catch(() => {
+              this.$message({
+                type: 'error',
+                message: '通讯错误,请刷新页面后访问。'
+              });
+              this.btnLoading = false;
 
-    //     })
-    //   },
+            })
+
+          }
+        })
+      },
     //   postpone() { //获取转移名单
     //     let name = this.multSelection[0].user
     //     let url =
@@ -516,30 +696,28 @@
     //   },
       resetD(formName) { //重置
         switch (formName) {
-          case 'aform':
-            this.aform = {
+        //   case 'aform':
+        //     this.aform = {
+        //       id: '',
+        //       loginType: ['教学桌面'],
+        //       background: '#296683',
+        //       prompt: ''
+        //     }
+        //     this.$refs['aform'].resetFields();
+        //     break;
+          case 'transformForm':
+            this.cform = {
+              id: '',
+              //   num: 1,
+              roomName: '',
+              ipAreaF: '',
+              ipAreaL: '',
+              teacher: '',
               loginType: ['教学桌面'],
               background: '#296683',
               prompt: ''
             }
-            this.$refs['aform'].resetFields();
-            break;
-        //   case 'sform':
-        //     this.sform = {
-        //       fa: ''
-        //     }
-        //     this.$refs['sform'].resetFields();
-        //   case 'dform':
-        //     this.dform = {
-        //       disk: ''
-        //     }
-        //     this.$refs['dform'].resetFields();
-        //   case 'transformForm':
-        //     this.$refs.multipleTableTran.toggleRowSelection(this.multSelectionTran[0]);
-        //     this.multSelectionTran = []
-        //     this.userListData = [];
-        //     this.currentPage5 = 1;
-        //     this.currentSize1 = 10;
+            this.$refs['cform'].resetFields();
           default:
             break;
         }
@@ -592,63 +770,99 @@
     //       }
     //     });
     //   },
-      addAccount(formName) { //修改桌面方式
-        this.$refs[formName].validate((valid) => {
-        
-          this.btnLoading = true;
-          let para = {
-            ...this.aform
-          };
-          let lt = para.loginType.map(item => {
-            return this.loginObj[item]
-          }).filter(item => item)
-          // console.log(lt)
-          para.loginType = lt.join(',');
-          para.ids = this.multSelection.map(item=>item.id).join(',')
-          console.log(para)
-          if (valid) {
-            this.btnLoading = true;
-            httpAjax('classroom/updateIpsetting', para).then(res => {
-              if (res.resultCode == "0") {
-                this.dialogFormVisible = false;
-                this.$message({
-                  type: 'success',
-                  message: '修改成功,需要重启虚机!'
-                });
-                // this.$alert('修改成功,需要重启虚机!', '修改规格', {
-                //   confirmButtonText: '确定',
-                //   type: 'success',
-                //   callback: action => {
-                this.multSelection = [{
-                  disk: 0
-                }]
-                this.getVmList()
-                //   }
-                // });
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: res.resultDesc
-                });
-              }
-              this.btnLoading = false;
-            }).catch(() => {
-              this.btnLoading = false;
-            })
-          } else {
-            console.log('error submit!!');
-            return false;
+    //   addAccount(formName) { //修改规格
+    //     this.$refs[formName].validate((valid) => {
+    //       let f = {
+    //         ...this.aform
+    //       };
+    //       if (valid) {
+    //         this.btnLoading = true;
+    //         httpAjax('desktop/updateInstance', f).then(res => {
+    //           if (res.resultCode == "0") {
+    //             this.dialogFormVisible = false;
+    //             this.$message({
+    //               type: 'success',
+    //               message: '修改成功,需要重启虚机!'
+    //             });
+    //             // this.$alert('修改成功,需要重启虚机!', '修改规格', {
+    //             //   confirmButtonText: '确定',
+    //             //   type: 'success',
+    //             //   callback: action => {
+    //             this.multSelection = [{
+    //               disk: 0
+    //             }]
+    //             this.getVmList()
+    //             //   }
+    //             // });
+    //           } else {
+    //             this.$message({
+    //               type: 'error',
+    //               message: res.resultDesc
+    //             });
+    //           }
+    //           this.btnLoading = false;
+    //         }).catch(() => {
+    //           this.btnLoading = false;
+    //         })
+    //       } else {
+    //         console.log('error submit!!');
+    //         return false;
+    //       }
+    //     });
+    //   },
+    handleClick(data) { //删除
+        this.$confirm('确定删除该教室吗?', '删除教室', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.btnIndex = data.id
+          this.btnLoadingD = true;
+          let params = {
+            id: data.id
           }
-        });
+          httpAjax('classroom/deleteClassroom', params).then(res => {
+            if (res) {
+              this.$message({
+                type: 'success',
+                message: '删除成功'
+              });
+              this.getVmList();
+            } else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              });
+            }
+            this.btnLoadingD = false;
+          }).catch(() => {
+            this.$message({
+              type: 'error',
+              message: '删除失败!'
+            });
+            this.btnLoadingD = false;
+          })
+        }).catch(() => {
+
+        })
       },
-      updateDesk() { //点击修改规格
+      addClassroom() { //新增教室
+        this.transformForm = true;
+
+      },
+      updateDesk(data) { //设置登录页
         // this.aform.cpu = this.multSelection[0].cpu;
         // this.aform.memory = this.multSelection[0].memory;
         // this.aform.disk = this.multSelection[0].disk;
-         this.aform.loginType = this.multSelection[0].loginType.split(',').map(item=>{return this.loginObjR[item]});
-        this.aform.background = this.multSelection[0].background;
-        this.aform.prompt = this.multSelection[0].prompt;
-        this.dialogFormVisible = true;
+        this.cform.id = data.id;
+        this.cform.roomName = data.roomName;
+        this.cform.ipAreaF = data.ipArea?data.ipArea.split('~')[0]:'' ;
+        this.cform.ipAreaL = data.ipArea?data.ipArea.split('~')[1]:'' ;
+        this.cform.teacher = data.teacher;
+        this.cform.loginType = data.loginType.split(',').map(item=>{return this.loginObjR[item]});
+        this.cform.background = data.background;
+        this.cform.prompt = data.prompt;
+        this.transformForm = true;
       },
     //   start() { //启动
     //     let params = {};
@@ -849,9 +1063,9 @@
       clearData(num) {
         this.getVmList('', 1)
       },
-      exportData() {
-        window.open('/api/desktop/cloudExport')
-      },
+    //   exportData() {
+    //     window.open('/api/desktop/cloudExport')
+    //   },
       //   loginCloud() {
       //     var params = {
       //       name: sessionStorage.getItem('username'),
@@ -866,39 +1080,39 @@
       //       }
       //     })
       //   },
-      checkDisable(type) {
-        if (type === 'start') {
-          return this.multSelection[0].runState === 'stopped'
-        } else if (type === 'restart' || type === 'stop') {
-          return this.multSelection[0].runState === 'running'
-        } else if (type === 'quit') {
-          return this.multSelection[0].id && this.multSelection[0].runState !== 'deleted'
-        } else if (type === 'edit') {
-          return this.multSelection[0].deskType === 'copyClone'
-        }
-      },
+    //   checkDisable(type) {
+    //     if (type === 'start') {
+    //       return this.multSelection[0].runState === 'stopped'
+    //     } else if (type === 'restart' || type === 'stop') {
+    //       return this.multSelection[0].runState === 'running'
+    //     } else if (type === 'quit') {
+    //       return this.multSelection[0].id && this.multSelection[0].runState !== 'deleted'
+    //     } else if (type === 'edit') {
+    //       return this.multSelection[0].deskType === 'copyClone'
+    //     }
+    //   },
       // handleSelectionChange(val) {
       //   },
-      rowClick(row, column, event) {
-        // console.log(event)
-        if (event.target.localName === 'button' || event.target.parentNode.localName === 'button') {
-          return
-        }
-        if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length === 0) {
-          //   this.$refs.multipleTable.toggleRowSelection(row);
-          this.multSelection = [...this.multSelection, row];
-        } else if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length ===
-          1) {
-          this.multSelection = this.multSelection.filter(item => item.id !== row.id);
-        } else {
-          this.multSelection = [row];
-        }
-        // console.log(  this.multSelection)
-        this.$refs.multipleTable.toggleRowSelection(row);
-      },
-      handleSelectionChangeMerge(val) {
-        this.multSelection = val;
-      },
+    //   rowClick(row, column, event) {
+    //     // console.log(event)
+    //     if (event.target.localName === 'button' || event.target.parentNode.localName === 'button') {
+    //       return
+    //     }
+    //     if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length === 0) {
+    //       //   this.$refs.multipleTable.toggleRowSelection(row);
+    //       this.multSelection = [...this.multSelection, row];
+    //     } else if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length ===
+    //       1) {
+    //       this.multSelection = this.multSelection.filter(item => item.id !== row.id);
+    //     } else {
+    //       this.multSelection = [row];
+    //     }
+    //     // console.log(  this.multSelection)
+    //     this.$refs.multipleTable.toggleRowSelection(row);
+    //   },
+    //   handleSelectionChangeMerge(val) {
+    //     this.multSelection = val;
+    //   },
       //   rowClick(row, column, event) {
       //     if (this.multSelection.length > 0 && this.multSelection[0].id !== row.id) {
       //       this.$refs.multipleTable.toggleRowSelection(this.multSelection[0]);
@@ -942,85 +1156,23 @@
     //     this.multSelectionTran = selection;
     //     // console.log(selection, row)
     //   },
-    //   runState(params) {
-    //     let runState = params.row.runState
-    //     if (runState == 'running') {
-    //       return '运行中'
-    //     } else if (runState == 'creating') {
-    //       return '创建中'
-    //     } else if (runState == 'stopped') {
-    //       return '已停止'
-    //     } else if (runState == 'starting') {
-    //       return '启动中'
-    //     } else if (runState == 'stopping') {
-    //       return '停止中'
-    //     } else if (runState == 'fault-resuming') {
-    //       return '故障修复中'
-    //     } else if (runState == 'DeletedFailure') {
-    //       return '删除失败'
-    //     } else if (runState == 'Deleting') {
-    //       return '已删除'
-    //     } else {
-    //       return runState
-    //     }
-    //   },
-    //   loginState(params) {
-    //     let state = params.row.loginState
-    //     if (state == '23') {
-    //       return '断开连接'
-    //     } else if (state == '25') {
-    //       return '使用中'
-    //     } else if (state == '0') {
-    //       return '就绪'
-    //     } else if (state == '-3') {
-    //       return '未注册'
-    //     } else {
-    //       return '未知'
-    //     }
-    //   },
-    //   opTypeState(params) {
-    //     let opType = params.row.opType
-    //     if (opType == 'set') {
-    //       return '维护模式';
-    //     } else {
-    //       return '工作模式';
-    //     }
-    //   },
-    //   branchState(params) {
-    //     let state = params.row.attachState
-    //     if (state == 'ATTACHED') {
-    //       return '已分配'
-    //     } else if (state == 'ATTACHING') {
-    //       return '分配中'
-    //     } else if (state == 'UNATTACH') {
-    //       return '未分配'
-    //     } else if (state == 'DEATTACHED') {
-    //       return '已解分配'
-    //     } else {
-    //       return state
-    //     }
-    //   },
-    //   clouldType(params) {
-    //     let deskType = params.row.deskType
-    //     if (deskType == 'copyClone') {
-    //       return '完整复制'
-    //     } else if (deskType == 'linkedClone') {
-    //       return '链接克隆'
-    //     } else if (deskType == 'memoryClone') {
-    //       return '全内存'
-    //     }
-    //   },
+
       getVmList(first, page) {
         this.multSelection = []
         page ? this.currentPage4 = page : '';
         let para = {
           page: this.currentPage4,
           limit: this.currentSize,
+            teacher: this.applyUser,
+          //   computerName: this.applyTable,
+          //   runState: this.applyState,
+          //   loginState: this.applyLoginState
         }
-        const url = `classroom/ipSettingList`
+        const url = `classroom/classroomList`
         httpGet(url, para).then((res) => {
           this.tableHeight = computedTableHeight()
           this.tableData = res.data;
+
           this.vmTableLoadingState = false;
           this.count = res.count;
           this.$nextTick(() => {
@@ -1041,29 +1193,29 @@
         this.currentSize = val;
         this.getVmList()
       },
-      handleCurrentChange1(val) { //资产转移
-        this.multSelectionTran = []
-        this.currentPage5 = val;
-        this.postpone()
-      },
-      handleSizeChange1(val) { //资产转移
-        this.multSelectionTran = []
-        this.currentSize1 = val;
-        this.postpone()
-      },
-      getStatistics() {
-        const url = 'desktop/cloudStatistics?online=1'
-        httpAjax(url).then((res) => {
-          if (res.cpu) {
-            this.total = res.merCnt
-            this.cpu = res.cpu
-            this.memory = res.memory
-            this.disk = res.disk
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
+    //   handleCurrentChange1(val) { //资产转移
+    //     this.multSelectionTran = []
+    //     this.currentPage5 = val;
+    //     this.postpone()
+    //   },
+    //   handleSizeChange1(val) { //资产转移
+    //     this.multSelectionTran = []
+    //     this.currentSize1 = val;
+    //     this.postpone()
+    //   },
+    //   getStatistics() {
+    //     const url = 'desktop/adminStatistics?online=1'
+    //     httpAjax(url).then((res) => {
+    //       if (res.cpu) {
+    //         this.total = res.merCnt
+    //         this.cpu = res.cpu
+    //         this.memory = res.memory
+    //         this.disk = res.disk
+    //       }
+    //     }).catch((err) => {
+    //       console.log(err)
+    //     })
+    //   },
       // patternState(obj) {
       //   let state = obj.opType
       //   return state == 'set' ? '维护模式' : '工作模式'
@@ -1099,16 +1251,16 @@
 
 </style>
 <style>
-  #cloudOnline .el-table-column--selection.is-leaf .cell {
+  #adminResource .el-table-column--selection.is-leaf .cell {
     display: inline-block;
   }
 
-  #cloudOnline .iconfont {
+  #adminResource .iconfont {
     font-size: 12px;
     margin-right: 5px;
   }
 
-  #cloudOnline .el-color-picker__trigger {
+  #adminResource .el-color-picker__trigger {
     height: 45px;
     width: 195px;
   }

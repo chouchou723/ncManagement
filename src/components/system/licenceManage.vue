@@ -24,7 +24,7 @@
             </div>
           </el-form-item>
           <el-form-item label="" :label-width="formLabelWidth">
-            <el-upload class="upload-demo" action="/dcp/uploader/licenceUpload" accept="file"
+            <el-upload class="upload-demo" action="/api/uploader/licenceUpload" accept="file"
               :on-success="handlesuccess" :on-error="handleError" :before-upload="beforeUpload" :show-file-list="false">
               <el-button type="primary" :loading="btnLoading"><i class="el-icon-upload"
                   style="margin-right:5px"></i>上传Licence文件</el-button>

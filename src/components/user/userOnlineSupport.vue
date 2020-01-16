@@ -96,7 +96,7 @@
           </el-upload>
         </el-form-item> -->
         <el-form-item label="上传文件：" :label-width="formLabelWidth" prop="serverCert">
-          <el-upload class="upload-demo" action="/dcp/uploader/upload" accept="file" ref="serverCert"
+          <el-upload class="upload-demo" action="/api/uploader/upload" accept="file" ref="serverCert"
             :on-success="handlesuccess" :data="{type:'repair',foreignId:aform.id}" :on-remove="handleRemoveS"
             :on-error="handleErrorS" :auto-upload="false" :on-change="handleChangeS" :file-list="fileListS">
             <el-button type="primary">上传文件</el-button>
@@ -412,7 +412,7 @@
         }
       },
       getFile() {
-        window.open(`/dcp/${this.detailSupport.uploadFiles[0].path}`)
+        window.open(`/api/${this.detailSupport.uploadFiles[0].path}`)
       },
       handleErrorS(response, file, fileList) {
         this.$message.error('通信错误');

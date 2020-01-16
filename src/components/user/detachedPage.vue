@@ -271,9 +271,9 @@
     //   },
       getDownload() {
                      let  currentTime= this.valueCM2
-        window.open('/dcp/statistic/exportQuitDesktop?currentTime='+currentTime)
-            // window.open('/dcp/statistic/exportQuitDesktop')
-            // window.open('/dcp/statistic/exportAppliedDesktop')
+        window.open('/api/statistic/exportQuitDesktop?currentTime='+currentTime)
+            // window.open('/api/statistic/exportQuitDesktop')
+            // window.open('/api/statistic/exportAppliedDesktop')
             
         // let para = {
         //   start_date: this.valueCM2[0] ? new Date(this.valueCM2[0]).toLocaleDateString() : '',

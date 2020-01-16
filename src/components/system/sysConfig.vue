@@ -108,7 +108,7 @@
               
           </el-form-item> -->
             <el-form-item label="大屏Logo:" :label-width="formLabelWidth" prop="logo">
-              <el-upload class="avatar-uploader" action="/dcp/system/saveLogo" ref="clientCert"
+              <el-upload class="avatar-uploader" action="/api/system/saveLogo" ref="clientCert"
                 :on-remove="handleRemoveS" :on-change="beforeUpload" :file-list="fileList"
                 :on-success="handleAvatarSuccess" :auto-upload="false">
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
@@ -249,7 +249,7 @@
         this.fileList = [];
         if (file.raw) {
           if (this.fileListBack[0].path) {
-            this.imageUrl = '/dcp/' + this.fileListBack[0].path
+            this.imageUrl = '/api/' + this.fileListBack[0].path
             this.fileList = [...this.fileListBack];
           }
         } else {
@@ -272,7 +272,7 @@
           if (res.name) {
             this.fileList = [res];
             this.fileListBack = [...this.fileList]
-            this.imageUrl = '/dcp/' + res.path
+            this.imageUrl = '/api/' + res.path
           }
         })
       },
@@ -291,7 +291,7 @@
                 this.getlogo();
               }
             } else {
-              this.$message.error(res.desc)
+              this.$message.error(res.resultDesc)
             }
           })
         } else {

@@ -35,7 +35,7 @@
       <div class="right-wrap"></div>
     </div>
     <!-- 密码重置 -->
-    <el-dialog title="密码找回" :visible.sync="resetPass" :close-on-click-modal="no" custom-class="accountManageDialog"
+    <!-- <el-dialog title="密码找回" :visible.sync="resetPass" :close-on-click-modal="no" custom-class="accountManageDialog"
       top="15%" width="35%" @close="resetD('dform')">
       <el-form ref="dform" :model="dform" :rules="ruled">
         <el-form-item label="登录账号:" :label-width="formLabelWidth" prop="name">
@@ -49,21 +49,21 @@
         <el-button type="primary" :loading="btnLoading" @click="forgetPass('dform')">确 定</el-button>
         <el-button @click="resetPass = false">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 注册账号 -->
     <el-dialog title="注册账号" :visible.sync="userLogin" :close-on-click-modal="no" custom-class="accountManageDialog"
-      top="10%" width="35%" @close="resetL('lform')">
+      top="12%" width="35%" @close="resetL('lform')">
       <el-form ref="lform" :model="lform" :rules="ruleLogin">
-        <el-form-item label="账号类型:" :label-width="formLabelWidth" prop="type">
+        <!-- <el-form-item label="账号类型:" :label-width="formLabelWidth" prop="type">
           <el-radio-group v-model="lform.type">
             <el-radio label="intern">实习</el-radio>
             <el-radio label="outsource">外包</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="账号   :" :label-width="formLabelWidth" prop="userName">
           <!-- <span style="margin-right:5px;">{{lform.type==='intern'?'sx':'wb'}}</span> -->
           <el-input v-model="lform.userName" placeholder="请输入账号" :style="{width:inputLabelWidth}" :maxlength="22">
-            <template slot="prepend">{{lform.type==='intern'?'sx':'wb'}}</template>
+            <!-- <template slot="prepend">{{lform.type==='intern'?'sx':'wb'}}</template> -->
           </el-input>
         </el-form-item>
         <el-form-item label="密码:" :label-width="formLabelWidth" prop="password">
@@ -74,7 +74,7 @@
           <el-input v-model="lform.checkPassword" type="password" placeholder="请再次输入密码" :style="{width:inputLabelWidth}"
             :maxlength="30" autocomplete="new-password" />
         </el-form-item>
-        <el-form-item label="公司:" :label-width="formLabelWidth" prop="company" v-if="lform.type==='outsource'">
+        <!-- <el-form-item label="公司:" :label-width="formLabelWidth" prop="company" v-if="lform.type==='outsource'">
           <el-input v-model="lform.company" placeholder="请输入公司" :style="{width:inputLabelWidth}" />
         </el-form-item>
         <el-form-item label="学校:" :label-width="formLabelWidth" prop="school" v-if="lform.type==='intern'">
@@ -86,7 +86,7 @@
         </el-form-item>
         <el-form-item label="邮箱:" :label-width="formLabelWidth" prop="mail">
           <el-input v-model="lform.mail" placeholder="请输入邮箱,用于密码找回" :style="{width:inputLabelWidth}" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="btnLoading" @click="loginAccount('lform')">确 定</el-button>
@@ -144,7 +144,7 @@
         } else {
           //接口查重
           httpGet('user/findUser', {
-            name: this.lform.type === 'intern' ? 'sx' + value : 'wb' + value
+            name: value
           }).then(res => {
             if (res.id) {
               callback('用户名已经被注册');
@@ -225,39 +225,39 @@
         formLabelWidth: '110px',
         inputLabelWidth: '70%',
         no: false,
-        dform: {
-          name: '',
-          mail: ''
-        },
-        ruled: {
-          name: [{
-            required: true,
-            message: '请输入账号名',
-            // validator: nan16,
-            trigger: 'blur'
-          }],
-          mail: [{
-            required: true,
-            message: '请输入邮箱',
-            // validator: nan32,
-            trigger: 'blur'
-          }, {
-            required: true,
-            message: '请输入正确的邮箱',
-            // validator: nan32,
-            type: 'email',
-            trigger: 'blur'
-          }]
-        },
+        // dform: {
+        //   name: '',
+        //   mail: ''
+        // },
+        // ruled: {
+        //   name: [{
+        //     required: true,
+        //     message: '请输入账号名',
+        //     // validator: nan16,
+        //     trigger: 'blur'
+        //   }],
+        //   mail: [{
+        //     required: true,
+        //     message: '请输入邮箱',
+        //     // validator: nan32,
+        //     trigger: 'blur'
+        //   }, {
+        //     required: true,
+        //     message: '请输入正确的邮箱',
+        //     // validator: nan32,
+        //     type: 'email',
+        //     trigger: 'blur'
+        //   }]
+        // },
         lform: {
-          type: 'intern',
-          company: '',
-          school: '',
+        //   type: 'intern',
+        //   company: '',
+        //   school: '',
           userName: '',
           password: '',
           checkPassword: '',
-          telephoneNumber: '',
-          mail: ''
+        //   telephoneNumber: '',
+        //   mail: ''
         },
         ruleLogin: {
           userName: [{
@@ -276,43 +276,43 @@
             validator: validatePass2,
             trigger: 'blur'
           }],
-          company: [{
-            required: true,
-            message: '请输入公司',
-            // validator: notNan,
-            trigger: 'blur'
-          }],
-          school: [{
-            required: true,
-            message: '请输入学校',
-            // validator: notNan,
-            trigger: 'blur'
-          }],
-          telephoneNumber: [{
-            required: true,
-            validator: telP,
-            trigger: 'blur'
-          }],
-          mail: [{
-            required: true,
-            message: '请输入邮箱',
-            // validator: nan32,
-            trigger: 'blur'
-          }, {
-            required: true,
-            type: 'email',
-            message: '请输入正确的邮箱',
-            // validator: nan32,
-            trigger: ['blur', 'change']
-          }]
+        //   company: [{
+        //     required: true,
+        //     message: '请输入公司',
+        //     // validator: notNan,
+        //     trigger: 'blur'
+        //   }],
+        //   school: [{
+        //     required: true,
+        //     message: '请输入学校',
+        //     // validator: notNan,
+        //     trigger: 'blur'
+        //   }],
+        //   telephoneNumber: [{
+        //     required: true,
+        //     validator: telP,
+        //     trigger: 'blur'
+        //   }],
+        //   mail: [{
+        //     required: true,
+        //     message: '请输入邮箱',
+        //     // validator: nan32,
+        //     trigger: 'blur'
+        //   }, {
+        //     required: true,
+        //     type: 'email',
+        //     message: '请输入正确的邮箱',
+        //     // validator: nan32,
+        //     trigger: ['blur', 'change']
+        //   }]
         }
       }
     },
     created() {
       this.clearData()
       //   this.$store.commit('removeTab')
-      this.getNoticeData()
-      this.domainName()
+    //   this.getNoticeData()
+    //   this.domainName()
     },
     mounted() {
       // this.bannerMove();
@@ -327,13 +327,13 @@
         this.$store.commit('changeUse', 1) //移除side menu状态
         this.$store.commit('resetFileAll') //resetFileAll
       },
-      checkType() {
-        if (this.loginType === 'password') {
-          this.loginType = ''
-        } else {
-          this.loginType = 'password'
-        }
-      },
+    //   checkType() {
+    //     if (this.loginType === 'password') {
+    //       this.loginType = ''
+    //     } else {
+    //       this.loginType = 'password'
+    //     }
+    //   },
       resetD() {
         this.dform = {
           name: '',
@@ -345,12 +345,12 @@
         this.lform = {
           userName: '',
           password: '',
-          type: 'intern',
-          company: '',
-          school: '',
+        //   type: 'intern',
+        //   company: '',
+        //   school: '',
           checkPassword: '',
-          telephoneNumber: '',
-          mail: ''
+        //   telephoneNumber: '',
+        //   mail: ''
         }
         this.$refs.lform.resetFields()
       },
@@ -359,11 +359,11 @@
           let params = {
             ...this.lform
           }
-          params.userName = params.type === 'intern' ? 'sx' + params.userName : 'wb' + params.userName
+        //   params.userName = params.type === 'intern' ? 'sx' + params.userName : 'wb' + params.userName
           if (valid) {
             this.btnLoading = true
             httpAjax('user/register', params).then(res => {
-              if (res.result == "success") {
+              if (res.resultCode == "0") {
                 this.$message({
                   type: 'success',
                   message: '注册成功!请等待管理员审核'
@@ -380,7 +380,7 @@
               } else {
                 this.$message({
                   type: 'error',
-                  message: res.desc
+                  message: res.resultDesc
                 })
               }
               this.btnLoading = false
@@ -471,26 +471,26 @@
       //     moveFn()
       //   }, 10000)
       // },
-      domainName() {
-        const url = 'user/findDomainName'
-        httpAjax(url).then((res) => {
-          if (res.length) {
-            this.domainNameList = res
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
-      getNoticeData() {
-        httpAjax(`notice/list`).then((res) => {
-          this.noticeData = res.data.slice(0, 7)
-        }).catch((err) => {
-          this.$notify.error({
-            title: '公告模块',
-            message: '网络出错,请刷新页面后再访问！'
-          })
-        })
-      },
+    //   domainName() {
+    //     const url = 'user/findDomainName'
+    //     httpAjax(url).then((res) => {
+    //       if (res.length) {
+    //         this.domainNameList = res
+    //       }
+    //     }).catch((err) => {
+    //       console.log(err)
+    //     })
+    //   },
+    //   getNoticeData() {
+    //     httpAjax(`notice/list`).then((res) => {
+    //       this.noticeData = res.data.slice(0, 7)
+    //     }).catch((err) => {
+    //       this.$notify.error({
+    //         title: '公告模块',
+    //         message: '网络出错,请刷新页面后再访问！'
+    //       })
+    //     })
+    //   },
       // switchLoginState(index) {
       //   this.currentActive = index
       //   if (index == 0) {
@@ -507,10 +507,10 @@
           this.$message.warning('用户名密码不能为空')
           return;
         }
-        if (!this.domainNameList.length && this.loginForm.username !== 'admin') {
-          this.$message.info('正在连接FA，请稍等!')
-          return
-        }
+        // if (!this.domainNameList.length && this.loginForm.username !== 'admin') {
+        //   this.$message.info('正在连接FA，请稍等!')
+        //   return
+        // }
         // var path = "login"
         // if (this.currentActive) {
         //   params.operatorAccount = this.userName
@@ -520,7 +520,7 @@
         let params = {
           name: this.loginForm.username,
           initialPassword: this.loginForm.password,
-          tenantDomain: this.domainNameList[0]
+        //   tenantDomain: this.domainNameList[0]
         }
         // params.name = this.loginForm.username
         // params.initialPassword = this.loginForm.password
@@ -550,9 +550,21 @@
             sessionStorage.setItem('userId', res.id);
             sessionStorage.setItem('password', this.loginForm.password);
             sessionStorage.setItem('domain', this.domainNameList[0]);
-            this.$router.push({
-              path: '/dashboard'
-            })
+            if(res.role==='tenant'){
+                this.$router.push({
+                  path: '/studentManagement'
+                })
+
+            }else if(res.role==='admin'){
+                this.$router.push({
+                  path: '/classroomManagement'
+                })
+
+            }else{
+                 this.$router.push({
+                  path: '/desktopApply'
+                })
+            }
 
           } else {
             this.$message.error(res.resultDesc)

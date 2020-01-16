@@ -391,7 +391,7 @@
           } else {
             this.$message({
               type: 'error',
-              message: res.desc || '恢复失败!'
+              message: res.resultDesc || '恢复失败!'
             });
           }
           this.transformForm = false;

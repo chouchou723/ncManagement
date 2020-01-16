@@ -24,7 +24,7 @@
                 <div class="cardContent">
                   <span class="cardpadding"><span class="fw600">桌面名称：</span>{{item.name}}</span>
                   <span class="cardpadding"><span class="fw600">桌面命名后缀：</span>{{item.postfix||'暂无'}}</span>
-                  <span class="cardpadding"><span class="fw600">云管理员：</span>{{item.operatorAccount}}</span>
+                  <!-- <span class="cardpadding"><span class="fw600">云管理员：</span>{{item.operatorAccount}}</span> -->
                   <span class="cardpadding"><span class="fw600">IP分配方式：</span>{{item.ipDistri||'0.0.0.0'}}</span>
                   <span class="cardpadding"><span class="fw600">子网掩码：</span>{{item.subnetMask||'0.0.0.0'}}</span>
                   <span class="cardpadding"><span class="fw600">网关：</span>{{item.gateway||'0.0.0.0'}}</span>
@@ -63,7 +63,7 @@
             <img src="../../assets/img/Linux.png" alt="">
             <div>
               <p class="client-name">桌面名称 : <span>{{item.name}}</span></p>
-              <p class="tenant-name">云管理员 : <span>{{item.operatorAccount}}</span></p>
+              <!-- <p class="tenant-name">云管理员 : <span>{{item.operatorAccount}}</span></p> -->
             </div>
           </div>
           <div class="modalDes">
@@ -83,7 +83,7 @@
       </ul> -->
     </div>
     <!-- 桌面申请 -->
-    <el-dialog title="桌面申请" :visible.sync="modalState" :close-on-click-modal="no" custom-class='accountManageDialog'
+    <!-- <el-dialog title="桌面申请" :visible.sync="modalState" :close-on-click-modal="no" custom-class='accountManageDialog'
       top='5%' width="40%" @close='resetD("params")'>
       <el-form :model="params" :rules="rules2" ref="params">
         <el-form-item label="桌面名称:" :label-width="formLabelWidth" prop="name">
@@ -131,16 +131,15 @@
         </el-button>
         <el-button @click="modalState = false">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 待申请  -->
-    <el-dialog title="选择代申请人" :visible.sync="modalState1" :close-on-click-modal="no" custom-class='accountManageDialog'
+    <!-- <el-dialog title="选择代申请人" :visible.sync="modalState1" :close-on-click-modal="no" custom-class='accountManageDialog'
       top='8%' @close='resetD("b")'>
       <h4 slot="header">选择代申请人</h4>
       <div class="search-wrap">
         <el-input placeholder="请输入代申请人名称" v-model="queryUserName" style="width:185px;" clearable
           @keyup.enter.native="queryUserList('',1)" @clear="queryUserList('',1)" />
         <el-button type="ghost" @click="queryUserList('',1)"><i class="el-icon-search"></i>查询</el-button>
-        <!-- <el-button type="primary" @click="serviceConfirm">确定</el-button> -->
       </div>
       <div class="table-wrap" id="table-wrap">
         <el-table :data="userListData" height="260" ref="multipleTable" stripe
@@ -157,13 +156,12 @@
           :current-page="currentPage4" :page-sizes="[10, 20, 30, 40]" :page-size="currentSize"
           layout="total, sizes, prev, pager, next" :total="count">
         </el-pagination>
-        <!-- <Page :total="count" size="small" show-total show-sizer @on-change="handleCurrentChange"></Page> -->
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="serviceConfirm">确 定</el-button>
         <el-button @click="modalState1 = false">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!-- <psloading v-show="loadingState" text="正在提交 , 请稍后...."></psloading> -->
   </div>
 </template>
@@ -179,26 +177,26 @@
   export default {
     data() {
       return {
-          approvalNum:0,
-        approval: 'true',
+        //   approvalNum:0,
+        // approval: 'true',
         name: '',
         no: false,
         displayType: 'mul',
         commodityData: [],
-        modalState: false,
-        modalState1: false,
-        Tname: '',
+        // modalState: false,
+        // modalState1: false,
+        // Tname: '',
         loadingState: false,
-        queryUserName: '', //  查询用户名
+        // queryUserName: '', //  查询用户名
         // minTime,
         // cloneDeadline: '',
-        params: {
-          id: '', //  对应商品的 ID
-          dealPerson: '', //  对应商品所属云管理员账号
-          deadline: '', //  商品有效期
-          agentName: '', //  使用人名称
-          description: '' //  商品用途
-        },
+        // params: {
+        //   id: '', //  对应商品的 ID
+        //   dealPerson: '', //  对应商品所属云管理员账号
+        //   deadline: '', //  商品有效期
+        //   agentName: '', //  使用人名称
+        //   description: '' //  商品用途
+        // },
         // rules2:{
         //    cpu: [{
         //     required: true,
@@ -206,88 +204,88 @@
         //     trigger: 'blur'
         //   }],
         // },
-        count: 0,
+        // count: 0,
         formLabelWidth: '110px',
         inputLabelWidth: '300px',
-        userListData: [],
+        // userListData: [],
         // userConfigInfo: this.getUserConfig(),
-        applyState: false,
-        tableChecked: [],
-        pickerOptions2: {
-          disabledDate(time) {
-            return time.getTime() < Date.now();
-          }
-        },
-        currentPage4: 1,
-        currentSize: 10,
-        showcontent: true,
+        // applyState: false,
+        // tableChecked: [],
+        // pickerOptions2: {
+        //   disabledDate(time) {
+        //     return time.getTime() < Date.now();
+        //   }
+        // },
+        // currentPage4: 1,
+        // currentSize: 10,
+        // showcontent: true,
       }
     },
     created() {
       this.getCommodityData()
     },
     methods: {
-        getApprovalNum(){
-            let url = `user/findDomainUser`
-            httpAjax(url,{name:sessionStorage.getItem('username')}).then(res=>{
-                // console.log(res)
-                this.approvalNum = res.quota - res.usedQuota
-            })
-        },
-      clearName(val) {
-        if (!val) {
-          this.params.agentName = ''
-        }
-      },
+        // getApprovalNum(){
+        //     let url = `user/findDomainUser`
+        //     httpAjax(url,{name:sessionStorage.getItem('username')}).then(res=>{
+        //         // console.log(res)
+        //         this.approvalNum = res.quota - res.usedQuota
+        //     })
+        // },
+    //   clearName(val) {
+    //     if (!val) {
+    //       this.params.agentName = ''
+    //     }
+    //   },
       // selectionChange(val) {
       //   },
-      resetD(name) { //重置表单
-        if (name === 'params') {
-          this.applyState = false;
-          this.params = {
-            id: '', //  对应商品的 ID
-            dealPerson: '', //  对应商品所属云管理员账号
-            deadline: '', //  商品有效期
-            agentName: '', //  使用人名称
-            description: '' //  商品用途
-          }
-          this.$refs['params'].resetFields();
-        } else {
-          this.$refs.multipleTable.toggleRowSelection(this.tableChecked[0]);
-          this.tableChecked = [];
-          this.currentPage4 = 1;
-          this.currentSize = 10;
-          this.queryUserName = '';
-        }
-      },
-      rowClick(row, column, event) {
-        if (this.tableChecked.length > 0 && this.tableChecked[0].id !== row.id) {
-          this.$refs.multipleTable.toggleRowSelection(this.tableChecked[0]);
-          this.tableChecked = [row];
-        } else if (this.tableChecked.length > 0 && this.tableChecked[0].id === row.id) {
-          this.tableChecked = [];
-        } else {
-          this.tableChecked = [row];
-        }
-        this.$refs.multipleTable.toggleRowSelection(row);
-      },
-      checkSelect(selection, row) { //选待申请人
-        if (selection.length > 1) {
-          this.$refs.multipleTable.toggleRowSelection(selection[0]);
-        }
-        this.tableChecked = selection;
-        // console.log(selection, row)
-      },
-      handleCurrentChange(val) { //翻页
-        this.tableChecked = []
-        this.currentPage4 = val;
-        this.queryUserList()
-      },
-      handleSizeChange(val) { //切换size
-        this.tableChecked = []
-        this.currentSize = val;
-        this.queryUserList()
-      },
+    //   resetD(name) { //重置表单
+    //     if (name === 'params') {
+    //       this.applyState = false;
+    //       this.params = {
+    //         id: '', //  对应商品的 ID
+    //         dealPerson: '', //  对应商品所属云管理员账号
+    //         deadline: '', //  商品有效期
+    //         agentName: '', //  使用人名称
+    //         description: '' //  商品用途
+    //       }
+    //       this.$refs['params'].resetFields();
+    //     } else {
+    //       this.$refs.multipleTable.toggleRowSelection(this.tableChecked[0]);
+    //       this.tableChecked = [];
+    //       this.currentPage4 = 1;
+    //       this.currentSize = 10;
+    //       this.queryUserName = '';
+    //     }
+    //   },
+    //   rowClick(row, column, event) {
+    //     if (this.tableChecked.length > 0 && this.tableChecked[0].id !== row.id) {
+    //       this.$refs.multipleTable.toggleRowSelection(this.tableChecked[0]);
+    //       this.tableChecked = [row];
+    //     } else if (this.tableChecked.length > 0 && this.tableChecked[0].id === row.id) {
+    //       this.tableChecked = [];
+    //     } else {
+    //       this.tableChecked = [row];
+    //     }
+    //     this.$refs.multipleTable.toggleRowSelection(row);
+    //   },
+    //   checkSelect(selection, row) { //选待申请人
+    //     if (selection.length > 1) {
+    //       this.$refs.multipleTable.toggleRowSelection(selection[0]);
+    //     }
+    //     this.tableChecked = selection;
+    //     // console.log(selection, row)
+    //   },
+    //   handleCurrentChange(val) { //翻页
+    //     this.tableChecked = []
+    //     this.currentPage4 = val;
+    //     this.queryUserList()
+    //   },
+    //   handleSizeChange(val) { //切换size
+    //     this.tableChecked = []
+    //     this.currentSize = val;
+    //     this.queryUserList()
+    //   },
       changeType(num) { //改变列表格式
         // this.showcontent = false;
         if (num === 1) {
@@ -334,37 +332,83 @@
       //     description: '' //  商品用途
       //   }
       // },
-      applyDesktop(item) { //打开桌面申请
-      this.getApprovalNum();
-        this.params.id = item.id,
-          this.params.dealPerson = item.operatorAccount
-        this.Tname = item;
-        // console.log(this.Tname)
-        // this.approval = item.approval;
-        this.modalState = true
-      },
-
-      queryUserList(first, page) { //查询待申请人
-        // var page = typeof num == 'number' ? num : 1;
-        page ? this.currentPage4 = page : '';
-        var params = {
-          name: this.queryUserName,
-          page: this.currentPage4,
-          limit: this.currentSize,
-          role: 'user'
-        }
-        let url = `user/userList`
-        this.modalState1 = true
-        httpAjax(url, params).then((res) => {
-          this.userListData = res.data
-          this.count = res.count
-          this.$nextTick(() => {
-            this.setScroll('#table-wrap', true)
+    //   applyDesktop(item) { //打开桌面申请
+    //   this.getApprovalNum();
+    //     this.params.id = item.id,
+    //       this.params.dealPerson = item.operatorAccount
+    //     this.Tname = item;
+    //     // console.log(this.Tname)
+    //     // this.approval = item.approval;
+    //     this.modalState = true
+    //   },
+ applyDesktop(item) {
+        this.$confirm('确定要申请该桌面?', '申请桌面', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params = {};
+          params.name = sessionStorage.getItem('username');
+          params.id = item.id;
+          this.loadingState = true;
+          httpAjax('merchandise/saveOrder', params).then(res => {
+            this.loadingState = false;
+            if (res.resultCode == '0') {
+              this.$message.success('申请成功')
+              // this.$alert('启动需要一定的时间，请耐心等待!', '启动成功', {
+              //   confirmButtonText: '确定',
+              //   type: 'success',
+              //   callback: action => {
+              //     this.multSelection = [{disk:0}]
+              //     this.getVmList()
+              //     // this.$message({
+              //     //   type: 'info',
+              //     //   message: `action: ${ action }`
+              //     // });
+              //   }
+              // });
+              // layer.alert('请通知管理员配置UNS连接地址!', {
+              //     icon: 5
+              // });
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.resultDesc
+              });
+            }
+            this.multSelection = [{
+              disk: 0
+            }]
+            this.getVmList()
+          }).catch(() => {
+            this.loadingState = false;
           })
-        }).catch((err) => {
-          console.log(err)
+        }).catch(() => {
+
         })
+
       },
+    //   queryUserList(first, page) { //查询待申请人
+    //     // var page = typeof num == 'number' ? num : 1;
+    //     page ? this.currentPage4 = page : '';
+    //     var params = {
+    //       name: this.queryUserName,
+    //       page: this.currentPage4,
+    //       limit: this.currentSize,
+    //       role: 'user'
+    //     }
+    //     let url = `user/userList`
+    //     this.modalState1 = true
+    //     httpAjax(url, params).then((res) => {
+    //       this.userListData = res.data
+    //       this.count = res.count
+    //       this.$nextTick(() => {
+    //         this.setScroll('#table-wrap', true)
+    //       })
+    //     }).catch((err) => {
+    //       console.log(err)
+    //     })
+    //   },
       // handleCurrentChange(val) {
       //   this.queryUserList(val)
       // },
@@ -379,76 +423,76 @@
       //     },
       //   ]
       // },
-      applySubmitBtn(formName) { //提交表单
-        var params = this.params
-        if (this.applyState && params.agentName) {
-          var url = 'user/findTenantOnAD'
-          params.name = params.agentName
-          httpAjax(url, params).then((res) => {
-            if (res.resultCode == 1) {
-              this.saveOrder(params);
-            } else {
-              this.$message.warning({
-                title: '提示',
-                message: '待申请人名称不存在,请确认后在提交'
-              })
-            }
-          }).catch((err) => {
-            this.$message.error({
-              title: '提示',
-              message: '网络错误,请刷新页面再试'
-            })
-          })
-        } else {
-          params.name = ''
-          params.agentName = ''
-          this.saveOrder(params);
-        }
-      },
-      saveOrder(params) { //提交表单
-        this.loadingState = true
-        const url = 'desktop/saveOrder'
-        httpAjax(url, params).then((res) => {
-          this.loadingState = false
-          if (res.result == 'success') {
-            this.modalState = false;
-            this.getCommodityData()
-            this.$confirm('桌面申请成功', '提示', {
-              confirmButtonText: '查看申请状态',
-              cancelButtonText: '继续申请',
-              type: 'success'
-            }).then(() => {
-              this.$router.push('myOrder')
-            }).catch(() => {
-              this.modalState = false
-            });
-          }else{
-             this.$message({
-                    type: 'error',
-                    message: res.desc||'申请失败!'
-                  });
-          }
-        }).catch((err) => {
-          this.$message.error('通信错误')
-          this.loadingState = false
-        })
-      },
+    //   applySubmitBtn(formName) { //提交表单
+    //     var params = this.params
+    //     if (this.applyState && params.agentName) {
+    //       var url = 'user/findTenantOnAD'
+    //       params.name = params.agentName
+    //       httpAjax(url, params).then((res) => {
+    //         if (res.resultCode == 1) {
+    //           this.saveOrder(params);
+    //         } else {
+    //           this.$message.warning({
+    //             title: '提示',
+    //             message: '待申请人名称不存在,请确认后在提交'
+    //           })
+    //         }
+    //       }).catch((err) => {
+    //         this.$message.error({
+    //           title: '提示',
+    //           message: '网络错误,请刷新页面再试'
+    //         })
+    //       })
+    //     } else {
+    //       params.name = ''
+    //       params.agentName = ''
+    //       this.saveOrder(params);
+    //     }
+    //   },
+    //   saveOrder(params) { //提交表单
+    //     this.loadingState = true
+    //     const url = 'merchandise/saveOrder'
+    //     httpAjax(url, params).then((res) => {
+    //       this.loadingState = false
+    //       if (res.result == 'success') {
+    //         this.modalState = false;
+    //         this.getCommodityData()
+    //         this.$confirm('桌面申请成功', '提示', {
+    //           confirmButtonText: '查看申请状态',
+    //           cancelButtonText: '继续申请',
+    //           type: 'success'
+    //         }).then(() => {
+    //           this.$router.push('myOrder')
+    //         }).catch(() => {
+    //           this.modalState = false
+    //         });
+    //       }else{
+    //          this.$message({
+    //                 type: 'error',
+    //                 message: res.resultDesc||'申请失败!'
+    //               });
+    //       }
+    //     }).catch((err) => {
+    //       this.$message.error('通信错误')
+    //       this.loadingState = false
+    //     })
+    //   },
 
-      serviceConfirm() { //代申请人确认
-        // var len = this.tableChecked.length
-        // if (len >= 2 || len < 1) {
-        //   var title = len < 1 ? '请选择一位待申请人' : '只能选择一位待申请人'
-        //   this.$message.warning({
-        //     message: title
-        //   })
+    //   serviceConfirm() { //代申请人确认
+    //     // var len = this.tableChecked.length
+    //     // if (len >= 2 || len < 1) {
+    //     //   var title = len < 1 ? '请选择一位待申请人' : '只能选择一位待申请人'
+    //     //   this.$message.warning({
+    //     //     message: title
+    //     //   })
 
-        //   return
-        // } else {
-        //   }
-        this.params.agentName = this.tableChecked[0].name
-        // console.log( this.params.agentName)
-        this.modalState1 = false
-      },
+    //     //   return
+    //     // } else {
+    //     //   }
+    //     this.params.agentName = this.tableChecked[0].name
+    //     // console.log( this.params.agentName)
+    //     this.modalState1 = false
+    //   },
       setScroll(node, bool) {
         addScrollBar(node, bool)
       }

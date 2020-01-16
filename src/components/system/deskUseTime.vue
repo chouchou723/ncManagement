@@ -167,7 +167,7 @@
       getDownload() {
             let  opStartTime= this.opStartTime[0]
             let end = this.opStartTime[1]
-        window.open('/dcp/statistic/exportVmUsedHourInfo?startDate='+opStartTime+'enDate='+end)
+        window.open('/api/statistic/exportVmUsedHourInfo?startDate='+opStartTime+'enDate='+end)
       },
       searchData() {
         this.getVmList('', 1)

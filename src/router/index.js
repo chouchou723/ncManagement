@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../components/common/home'
 import Login from '../components/common/loginFinal'
+import wiplus from '../components/common/wiplus'
 import notFound from '../components/common/404'
 import { routerConfig } from './router'
 
@@ -20,6 +21,11 @@ const routes = [
         path:'/login',
         meta:{role:[]},
         component:Login,
+    },
+    {
+        path:'/wiplus',
+        meta:{role:[]},
+        component:wiplus,
     },
     {
         path:'/dashboard',

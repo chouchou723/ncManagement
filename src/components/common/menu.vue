@@ -9,7 +9,7 @@
                                 <i class="iconfont icon-arrow-fine-left"></i>
                             </div> -->
     <el-menu :default-active="$route.path" text-color="#bfcbd9" class="el-menu-vertical-demo" @select="refreshClick"
-      :collapse="showHide" router unique-opened>
+      :collapse="showHide" router :default-openeds='defaultOpeneds'>
       <!-- <el-menu-item index="/dashboard">
         <i class="el-icon-menu iconfont1" ref="menuColor"></i>
         <span slot="title" class="one-item">DCMPortal</span>
@@ -20,7 +20,7 @@
         <img src="../../assets/img/logoT.png" alt="" class="topImg">
       </div>
   <el-scrollbar wrap-class="scrollbar-wrapper" id="scrollWrap" >
-      <el-submenu :index="item.url" :name="item.id" v-for="(item,index) in menuConfig" :key="index" v-if="item.children"}>
+      <el-submenu :index="item.url" :name="item.id" v-for="(item,index) in menuConfig" :key="index">
         <template slot="title">
           <!-- <div style="display:flex"> -->
             <i :class="currClass(item)"></i>
@@ -35,14 +35,7 @@
           <!-- </router-link> -->
         </el-menu-item>
       </el-submenu>
-      <el-menu-item :index="item.url" :name="item.id" v-for="(item,index) in menuConfig" :key="index" >
-           <!-- <template slot="title"> -->
-          <!-- <div style="display:flex"> -->
-            <i :class="currClass(item)"></i>
-            <span  slot="title">{{item.text}}</span>
-          <!-- </div> -->
-        <!-- </template> -->
-      </el-menu-item>
+    
   </el-scrollbar>
        <!-- <el-menu-item> -->
            <!-- <div style="display:flex;justify-content:flex-end;align-items:center;height:100%;padding-right:20px;">
@@ -84,6 +77,7 @@
     data() {
       return {
         menuConfig: [],
+         defaultOpeneds: [],
         // showHide: false,
         openIndex: '1',
         defaultActive: '',
@@ -151,19 +145,23 @@
         //this.$store.state.stateCode
         switch (stateCode) {
           case 'admin':
-            this.menuConfig = adminConfig
+            this.menuConfig = adminConfig;
+            this.menuConfig.map(item => {
+                        this.defaultOpeneds.push(item.url);
+                    })
             break;
           case 'tenant':
-            this.menuConfig = tenantConfig
+            this.menuConfig = tenantConfig;
+              this.menuConfig.map(item => {
+                        this.defaultOpeneds.push(item.url);
+                    })
             break;
-            case 'asset':
-            this.menuConfig = assetConfig
-            break;
-             case 'support':
-            this.menuConfig = onlineConfig
-            break;
+         
           default:
-            this.menuConfig = userConfig
+            this.menuConfig = userConfig;
+              this.menuConfig.map(item => {
+                        this.defaultOpeneds.push(item.url);
+                    })
             break;
         }
         // this.defaultActive = '1-1'

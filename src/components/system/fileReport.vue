@@ -264,7 +264,7 @@
       //   },
     //   getDownload() {
     //     let currentTime = this.valueCM2
-    //     window.open('/dcp/statistic/exportUserLogin?currentTime=' + currentTime)
+    //     window.open('/api/statistic/exportUserLogin?currentTime=' + currentTime)
 
     //     // let para = {
     //     //   start_date: this.valueCM2[0] ? new Date(this.valueCM2[0]).toLocaleDateString() : '',

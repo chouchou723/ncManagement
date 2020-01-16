@@ -1,14 +1,15 @@
 export default [
   {
     'id': '1',
-    'text': '桌面申请',
+    'text': '桌面管理',
     'iconfont': 'el-icon-date',
-    'url': '/desktopApply',
-    // 'children': [{
-    //     'id': '1-1',
-    //     'text': '桌面申请',
-    //     'url': '/desktopApply',
-    //   }, {
+    'url': '/desktopM',
+    'children': [{
+        'id': '1-1',
+        'text': '桌面申请',
+        'url': '/desktopApply',
+      },
+    //    {
     //     'id': '1-3',
     //     'text': '我的申请',
     //     'url': '/myOrder',
@@ -23,7 +24,7 @@ export default [
     //     'text': '回收站',
     //     'url': '/deskRecycle',
     //   },
-    // ]
+    ]
   },
   // {
   //     'id':'3',
