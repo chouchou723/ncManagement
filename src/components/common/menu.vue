@@ -57,7 +57,7 @@
         </Submenu>
     </Menu> -->
     <!-- </div> -->
-    <div style="display:flex;justify-content:flex-end;align-items:center;height:56px;padding-right:20px;position:absolute;right:0;bottom:0;">
+    <div style="height:56px;padding-right:20px;position:absolute;right:0;bottom:0;line-height: 56px;">
         <i class="el-icon-back iconfont1 iconC" :style="$store.state.canUse?'transform: rotate(180deg);':'transform: rotate(0);'" @click="changeUse"></i>
 
            </div>
@@ -378,11 +378,13 @@
     } */
 .topTitle{
     height: 90px;
-    display: flex;
+    /* display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0 20px;
+    justify-content: center; */
+    padding: 15px 0;
     color: #bfcbd9;
+    box-sizing: border-box;
+    text-align: center;
 }
 .topImg{
     width: 60px;

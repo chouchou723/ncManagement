@@ -9,25 +9,32 @@
       <!-- <tags-view class="tagView" /> -->
     </div>
     <ul class="header-list fr">
-      <div style="margin-right:10px;color:#606266;">
-        Hi,{{new Date().getHours()>=12?'下午':'上午'}}好:
-      </div>
       <!-- <li class="li-header-item"><span>Hi,{{new Date().getHours()>=12?'下午':'上午'}}好:</span></li> -->
       <!-- <li class="li-header-item">
         <i class="iconfont icon-admin"></i><span class="user-name">{{username}}</span>
       </li> -->
+        <div class="skin-main" style="float:right">
+           <i class="iconfont icon-tuichu" style="color:#f56c6c;cursor:pointer;font-size:25px;" @click="quit"></i>
+        <!-- <i class="iconfont icon-bangzhuzhongxin" style="color:#296683;cursor:pointer;font-size:20px;" @click="getOnline"
+          v-if="localRole==='user'"></i> -->
+          <!-- <img src="../../assets/img/chat1.png"  v-if="localRole==='user'&&wsStatus" alt="" title="在线帮助" @click="getOnline" style="width:35px;height:35px;cursor:pointer"> -->
+          <!-- <img src="../../assets/img/chat2.png"  v-if="localRole==='user'&&(!wsStatus)" alt="" title="在线帮助" style="width:35px;height:35px;cursor:pointer"> -->
+      </div>
       <!-- <el-dropdown @command="handleCommand" @visible-change="statusChange" placement='top'> -->
-        <span class="el-dropdown-link">
+        <div class="el-dropdown-link" style="float:right;">
           <!-- <i class="iconfont icon-admin"></i> -->
-          <div style="display:flex;align-items:center;height: 100%;margin-right:15px;">
             <img src="~assets/img/avatar.png" alt="" width="30" height="30" class="userAvatar">
-            <span class="user-name">{{username||'chouchou723'}}
+          <div style="height: 100%;margin-right:15px;float:right;">
+            <span class="user-name">{{username||''}}
               <span
                 style="color:#489e77;font-size:16px;">[{{localRole==='admin'?'系统管理员':localRole==='tenant'?'老师':localRole==='user'?'学员':localRole==='troubleshooting'?'故障报修组':localRole==='support'?'在线支持组':'资产管理员'}}]</span>
 
             </span>
           </div>
-        </span>
+        </div>
+      <div style="margin-right:10px;color:#606266;float:right;">
+        Hi,{{new Date().getHours()>=12?'下午':'上午'}}好:
+      </div>
         <!-- <el-dropdown-menu slot="dropdown"> -->
           <!-- <el-dropdown-item icon="el-icon-edit" command="edit">修改密码</el-dropdown-item> -->
           <!-- <el-dropdown-item icon="el-icon-question" :disabled="true" v-show="wsStatus==''">连接中</el-dropdown-item> -->
@@ -48,13 +55,7 @@
               :style="{borderBottom:type===6?'2px solid #304156':'',color:'#304156'}">DarkBlue </span></span>
         </div>
       </div> -->
-      <div class="skin-main">
-           <i class="iconfont icon-tuichu" style="color:#f56c6c;cursor:pointer;font-size:25px;" @click="quit"></i>
-        <!-- <i class="iconfont icon-bangzhuzhongxin" style="color:#296683;cursor:pointer;font-size:20px;" @click="getOnline"
-          v-if="localRole==='user'"></i> -->
-          <!-- <img src="../../assets/img/chat1.png"  v-if="localRole==='user'&&wsStatus" alt="" title="在线帮助" @click="getOnline" style="width:35px;height:35px;cursor:pointer"> -->
-          <!-- <img src="../../assets/img/chat2.png"  v-if="localRole==='user'&&(!wsStatus)" alt="" title="在线帮助" style="width:35px;height:35px;cursor:pointer"> -->
-      </div>
+    
       <!-- <li class="li-header-item skin-main">
         <a ><i class="iconfont icon-mianxingtubiaohuanfu47"></i></a>
       </li> -->
@@ -607,8 +608,8 @@
     color: #bfcbd9;
     padding-right: 0px;
     background: #fff;
-    display: flex;
-    justify-content: space-between;
+    /* display: flex;
+    justify-content: space-between; */
     position: relative;
     /* border-bottom: 1px solid gainsboro;#42b983 */
   }
@@ -624,10 +625,10 @@
   }
 
   .logo {
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
     margin-left: 18px;
-    flex: 1;
+    /* flex: 1; */
     overflow: hidden;
     /* flex:0 0 calc(100% - 290px); */
     /* width: calc(100% - 290px); */
@@ -642,7 +643,7 @@
 
   .header-list {
     font-size: 16px;
-    display: flex;
+    /* display: flex; */
     height: 56px;
     /* padding: 0 20px; */
     /* flex:0 0 270px; */
@@ -664,7 +665,7 @@
     color: #606266;
     font-size: 18px;
     /* margin-right: 20px; */
-    cursor: pointer;
+    /* cursor: pointer; */
     height: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -672,8 +673,8 @@
   }
 
   .userAvatar {
-    cursor: pointer;
-
+    /* cursor: pointer; */
+margin-top: 12px;
   }
 
   .skin-main {
@@ -682,7 +683,7 @@
     margin-right: 10px;
   }
 
-  .skin-main:hover .skin-main-btn {
+  /* .skin-main:hover .skin-main-btn {
     opacity: 1;
     left: -170px;
   }
@@ -702,7 +703,7 @@
     background: #fff;
     border-radius: 4px;
     transition: all 1s;
-  }
+  } */
 
   .skin-main-btn span {
     float: left;

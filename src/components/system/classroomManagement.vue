@@ -1,10 +1,15 @@
 <template>
   <div id="adminResource" v-loading.fullscreen="loadingState" :element-loading-text="text">
     <div class="search-wrap">
-      <!-- <el-input placeholder="请输入IP地址" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
-        @clear="clearData(1)">
+      <!-- <el-input placeholder="请输入教室名称" style="width:185px;" clearable v-model="applyTable"
+        @keyup.enter.native="clearData" @clear="clearData(1)">
       </el-input> -->
-      <el-select style="width:190px;" placeholder="请选择老师" clearable v-model="applyUser"
+      <el-select style="width:190px;" placeholder="请选择教室" clearable v-model="applyTable" filterable
+        @keyup.enter.native="clearData" @change="clearData(3)">
+        <el-option v-for="(item,index) in roomlist" :key="index" :value="item.value" :label="item.label">
+          {{item.label}}</el-option>
+      </el-select>
+      <el-select style="width:190px;" placeholder="请选择老师" clearable v-model="applyUser" filterable
         @change="clearData(3)">
         <el-option v-for="(item,index) in teacherList" :key="index" :value="item.label" :label="item.label">
           {{item.label}}</el-option>
@@ -212,8 +217,8 @@
       </div>
     </el-dialog> -->
     <!-- 新增修改教室  -->
-    <el-dialog :title="cform.id?'修改教室':'新增教室'" :visible.sync="transformForm" :close-on-click-modal="no" custom-class='accountManageDialog'
-      top='6%' @close='resetD("transformForm")'>
+    <el-dialog :title="cform.id?'修改教室':'新增教室'" :visible.sync="transformForm" :close-on-click-modal="no"
+      custom-class='accountManageDialog' top='6%' @close='resetD("transformForm")'>
       <el-form :model="cform" :rules="rules2" ref="cform">
 
         <!-- <el-form-item label="创建教室个数：" :label-width="formLabelWidth" prop="num">
@@ -302,29 +307,29 @@
   //   } from 'api/resources'
   export default {
     data() {
-    //   var nan16 = (rule, value, callback) => {
-    //     if (value && value % 1 === 0 && value <= 16) {
-    //       callback()
-    //     } else {
-    //       callback('请输入正确的数字')
-    //     }
-    //   }
-    //   var nan32 = (rule, value, callback) => {
-    //     if (value && value % 1 === 0 && value <= 32) {
-    //       callback()
-    //     } else {
-    //       callback('请输入正确的数字')
-    //     }
-    //   }
-    //   var subnetMaskFilter = (rule, value, callback) => {
-    //     var reg =
-    //       /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+      //   var nan16 = (rule, value, callback) => {
+      //     if (value && value % 1 === 0 && value <= 16) {
+      //       callback()
+      //     } else {
+      //       callback('请输入正确的数字')
+      //     }
+      //   }
+      //   var nan32 = (rule, value, callback) => {
+      //     if (value && value % 1 === 0 && value <= 32) {
+      //       callback()
+      //     } else {
+      //       callback('请输入正确的数字')
+      //     }
+      //   }
+      //   var subnetMaskFilter = (rule, value, callback) => {
+      //     var reg =
+      //       /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
 
-    //     if (!reg.test(value)) {
-    //       callback(new Error('请按对应规范输入正确的值'))
-    //     }
-    //     callback()
-    //   }
+      //     if (!reg.test(value)) {
+      //       callback(new Error('请按对应规范输入正确的值'))
+      //     }
+      //     callback()
+      //   }
       var checkIp = (rule, value, callback) => {
         var reg =
           /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
@@ -334,34 +339,47 @@
         } else if ((this.cform.ipAreaF.replace(/\./g, '') - this.cform.ipAreaL.replace(/\./g, '')) > 0) {
           callback(new Error('请按正确的IP起始结束值'))
         } else {
-            let url = 'classroom/checkCrossIp'
-            httpAjax(url,{ipArea:this.cform.ipAreaF+'~'+this.cform.ipAreaL}).then(res=>{
+          let url = 'classroom/checkCrossIp'
+          httpAjax(url, {
+            ipArea: this.cform.ipAreaF + '~' + this.cform.ipAreaL
+          }).then(res => {
+            if (res.resultCode == '0') {
+              callback()
+            } else {
 
-                callback(new Error('请按正确的IP起始结束值'))
-            })
+              callback(new Error('IP段有冲突'))
+            }
+          })
 
         }
       }
-    //   var nan1024 = (rule, value, callback) => {
-    //     if (value && value % 1 === 0 && value <= 1024) {
-    //       callback()
-    //     } else {
-    //       callback('请输入正确的数字')
-    //     }
-    //   }
-    //   var blow255 = (rule, value, callback) => {
-    //     if (value && value.length <= 255) {
-    //       callback()
-    //     } else {
-    //       callback('请填写描述')
-    //     }
-    //   }
+      //   var nan1024 = (rule, value, callback) => {
+      //     if (value && value % 1 === 0 && value <= 1024) {
+      //       callback()
+      //     } else {
+      //       callback('请输入正确的数字')
+      //     }
+      //   }
+      //   var blow255 = (rule, value, callback) => {
+      //     if (value && value.length <= 255) {
+      //       callback()
+      //     } else {
+      //       callback('请填写描述')
+      //     }
+      //   }
       return {
-          btnLoadingD:false,
+        btnLoadingD: false,
         loginLists: ['教学桌面', '个人桌面'],
-        loginObj:{'教学桌面':'teaching','个人桌面':'personal'},
-        loginObjR:{'teaching':'教学桌面','personal':'个人桌面'},
-        queryUserName: '',
+        loginObj: {
+          '教学桌面': 'teaching',
+          '个人桌面': 'personal'
+        },
+        loginObjR: {
+          'teaching': '教学桌面',
+          'personal': '个人桌面'
+        },
+        // queryUserName: '',
+        roomlist:[],
         btnIndex: '',
         btnLoading: false,
         // userListData: [],
@@ -372,12 +390,12 @@
         no: false,
         tableData: [],
         count: 0,
-        countTran: 0,
+        // countTran: 0,
         tableHeight: 400,
         total: 0,
-        cpu: 0,
-        memory: 0,
-        disk: 0,
+        // cpu: 0,
+        // memory: 0,
+        // disk: 0,
         vmTableLoadingState: true,
         // selectRunState,
         // selectLoginState,
@@ -389,7 +407,7 @@
         // multSelectionADD: [],
         // multSelectionTran: [],
         applyUser: '',
-        // applyTable: '',
+        applyTable: '',
         // applyState: '',
         // applyLoginState: '',
         loadingState: false,
@@ -506,8 +524,9 @@
       }
     },
     created() {
-      this.getVmList(1)
+      this.getroomList()
       this.getTeacherList()
+      this.getVmList(1)
     },
     mounted() {
       // this.$nextTick(() => {
@@ -515,6 +534,25 @@
       // })
     },
     methods: {
+         getroomList(first, page) {
+        let para = {
+          page: 1,
+          limit: 10000
+          //   computerName: this.applyTable,
+          //   runState: this.applyState,
+          //   loginState: this.applyLoginState
+        }
+        const url = `classroom/classroomList`
+        httpGet(url, para).then((res) => {
+          this.roomlist = res.data.map(item=>{
+              return {label:item.roomName,value:item.roomName}
+          });
+
+          //   this.getStatistics()
+        }).catch((error) => {
+          console.log(error)
+        })
+      },
       getTeacherList() {
         let para = {
           page: 1,
@@ -540,13 +578,13 @@
           console.log(error)
         })
       },
-    //   queryUserList() {
-    //     this.$refs.multipleTableTran.toggleRowSelection(this.multSelectionTran[0]);
-    //     this.multSelectionTran = [];
-    //     this.currentPage5 = 1;
-    //     this.currentSize1 = 10;
-    //     this.postpone();
-    //   },
+      //   queryUserList() {
+      //     this.$refs.multipleTableTran.toggleRowSelection(this.multSelectionTran[0]);
+      //     this.multSelectionTran = [];
+      //     this.currentPage5 = 1;
+      //     this.currentSize1 = 10;
+      //     this.postpone();
+      //   },
       serviceConfirm() { //新增教室
         // let data = this.multSelection[0]
         // let params = {};
@@ -559,18 +597,20 @@
         this.$refs['cform'].validate((valid) => {
           if (valid) {
             this.btnLoading = true;
-            let para = {...this.cform};
-            let lt = para.loginType.map(item=>{
-                return this.loginObj[item]
-            }).filter(item=>item)
+            let para = {
+              ...this.cform
+            };
+            let lt = para.loginType.map(item => {
+              return this.loginObj[item]
+            }).filter(item => item)
             // console.log(lt)
             para.loginType = lt.join(',');
-            para.ipArea= para.ipAreaF+'~'+para.ipAreaL;
+            para.ipArea = para.ipAreaF + '~' + para.ipAreaL;
             httpAjax('classroom/saveClassroom', para).then(res => {
               if (res.resultCode == "0") {
                 this.$message({
                   type: 'success',
-                  message: this.cform.id?'修改成功':'创建成功!'
+                  message: this.cform.id ? '修改成功' : '创建成功!'
                 });
                 this.getVmList()
                 this.transformForm = false;
@@ -593,118 +633,118 @@
           }
         })
       },
-    //   postpone() { //获取转移名单
-    //     let name = this.multSelection[0].user
-    //     let url =
-    //       `user/adminUserList?&myself=${name}&${Math.random()}&page=${this.currentPage5}&limit=${this.currentSize1}&name=${this.queryUserName}`
-    //     httpGet(url).then((res) => {
-    //       if (res.data) {
-    //         this.userListData = res.data
-    //         this.countTran = res.count
-    //         this.transformForm = true
-    //         this.$nextTick(() => {
-    //           addScrollBar('#table-wrapTran', true)
-    //         })
-    //       } else {
-    //         this.$message.error('通信错误')
-    //       }
-    //     }).catch((err) => {
-    //       console.log(err)
-    //     })
-    //   },
-    //   maintain(data) { //维护模式
-    //     this.btnIndex = data.row.id;
-    //     let checkStatus = data.row;
-    //     let params = {};
-    //     params.vmId = checkStatus.vmId;
-    //     params.faIp = checkStatus.faIp;
-    //     params.siteId = checkStatus.siteId;
-    //     params.opType = checkStatus.opType;
-    //     let type = checkStatus.opType === 'set' ? 'unset' : 'set'
-    //     this.loadingRadio = true;
-    //     // var loadIngNode = psLoadIng('正在切换模式, 请稍后...')
-    //     httpAjax('desktop/maintainVM', params).then(res => {
-    //       if (res.resultCode == "0") {
-    //         this.$message({
-    //           type: 'success',
-    //           message: '操作成功!切换需要一定时间,请稍后确认'
-    //         });
-    //         this.getVmList()
-    //       } else {
-    //         data.row.opType = type;
-    //         this.$message({
-    //           type: 'error',
-    //           message: res.resultDesc || '通讯错误'
-    //         });
-    //       }
-    //       this.loadingRadio = false;
-    //     }).catch(() => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '通讯错误,请刷新页面后访问。'
-    //       });
-    //       this.loadingRadio = false;
-    //       data.row.opType = type;
-    //     })
-    //   },
-    //   synDesk(formName) { //同步桌面
-    //     var params = {};
-    //     params.faIp = this.sform.fa;
-    //     this.text = '正在同步,请稍后...';
-    //     this.loadingState = true;
-    //     httpAjax('desktop/queryVmInfo', params).then(res => {
-    //       if (res.success == "success") {
-    //         this.$message({
-    //           type: 'success',
-    //           message: '同步成功!'
-    //         });
-    //         // this.$alert('同步成功!', '同步桌面', {
-    //         //     confirmButtonText: '确定',
-    //         //     type: 'success',
-    //         //     callback: action => {
-    //         //         // this.multSelection = [{disk:0}]
-    //         this.getVmList()
-    //         //     }
-    //         // });
-    //       } else {
-    //         this.$message({
-    //           type: 'error',
-    //           message: '同步失败!'
-    //         });
-    //       }
-    //       this.loadingState = false;
-    //       this.dialogFormVisibleSyn = false;
-    //     }).catch(() => {
-    //       this.loadingState = false;
-    //       this.$message({
-    //         type: 'error',
-    //         message: '通讯错误,请刷新页面后访问。'
-    //       });
-    //     })
-    //   },
-    //   refreshData() { //点击同步
-    //     httpAjax('system/faList').then(res => {
-    //       this.faList = res.data;
-    //       this.sform.fa = res.data[0].faIP;
-    //       this.dialogFormVisibleSyn = true
-    //     }).catch(() => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '通讯错误,请刷新页面后访问。'
-    //       });
-    //     })
-    //   },
+      //   postpone() { //获取转移名单
+      //     let name = this.multSelection[0].user
+      //     let url =
+      //       `user/adminUserList?&myself=${name}&${Math.random()}&page=${this.currentPage5}&limit=${this.currentSize1}&name=${this.queryUserName}`
+      //     httpGet(url).then((res) => {
+      //       if (res.data) {
+      //         this.userListData = res.data
+      //         this.countTran = res.count
+      //         this.transformForm = true
+      //         this.$nextTick(() => {
+      //           addScrollBar('#table-wrapTran', true)
+      //         })
+      //       } else {
+      //         this.$message.error('通信错误')
+      //       }
+      //     }).catch((err) => {
+      //       console.log(err)
+      //     })
+      //   },
+      //   maintain(data) { //维护模式
+      //     this.btnIndex = data.row.id;
+      //     let checkStatus = data.row;
+      //     let params = {};
+      //     params.vmId = checkStatus.vmId;
+      //     params.faIp = checkStatus.faIp;
+      //     params.siteId = checkStatus.siteId;
+      //     params.opType = checkStatus.opType;
+      //     let type = checkStatus.opType === 'set' ? 'unset' : 'set'
+      //     this.loadingRadio = true;
+      //     // var loadIngNode = psLoadIng('正在切换模式, 请稍后...')
+      //     httpAjax('desktop/maintainVM', params).then(res => {
+      //       if (res.resultCode == "0") {
+      //         this.$message({
+      //           type: 'success',
+      //           message: '操作成功!切换需要一定时间,请稍后确认'
+      //         });
+      //         this.getVmList()
+      //       } else {
+      //         data.row.opType = type;
+      //         this.$message({
+      //           type: 'error',
+      //           message: res.resultDesc || '通讯错误'
+      //         });
+      //       }
+      //       this.loadingRadio = false;
+      //     }).catch(() => {
+      //       this.$message({
+      //         type: 'error',
+      //         message: '通讯错误,请刷新页面后访问。'
+      //       });
+      //       this.loadingRadio = false;
+      //       data.row.opType = type;
+      //     })
+      //   },
+      //   synDesk(formName) { //同步桌面
+      //     var params = {};
+      //     params.faIp = this.sform.fa;
+      //     this.text = '正在同步,请稍后...';
+      //     this.loadingState = true;
+      //     httpAjax('desktop/queryVmInfo', params).then(res => {
+      //       if (res.success == "success") {
+      //         this.$message({
+      //           type: 'success',
+      //           message: '同步成功!'
+      //         });
+      //         // this.$alert('同步成功!', '同步桌面', {
+      //         //     confirmButtonText: '确定',
+      //         //     type: 'success',
+      //         //     callback: action => {
+      //         //         // this.multSelection = [{disk:0}]
+      //         this.getVmList()
+      //         //     }
+      //         // });
+      //       } else {
+      //         this.$message({
+      //           type: 'error',
+      //           message: '同步失败!'
+      //         });
+      //       }
+      //       this.loadingState = false;
+      //       this.dialogFormVisibleSyn = false;
+      //     }).catch(() => {
+      //       this.loadingState = false;
+      //       this.$message({
+      //         type: 'error',
+      //         message: '通讯错误,请刷新页面后访问。'
+      //       });
+      //     })
+      //   },
+      //   refreshData() { //点击同步
+      //     httpAjax('system/faList').then(res => {
+      //       this.faList = res.data;
+      //       this.sform.fa = res.data[0].faIP;
+      //       this.dialogFormVisibleSyn = true
+      //     }).catch(() => {
+      //       this.$message({
+      //         type: 'error',
+      //         message: '通讯错误,请刷新页面后访问。'
+      //       });
+      //     })
+      //   },
       resetD(formName) { //重置
         switch (formName) {
-        //   case 'aform':
-        //     this.aform = {
-        //       id: '',
-        //       loginType: ['教学桌面'],
-        //       background: '#296683',
-        //       prompt: ''
-        //     }
-        //     this.$refs['aform'].resetFields();
-        //     break;
+          //   case 'aform':
+          //     this.aform = {
+          //       id: '',
+          //       loginType: ['教学桌面'],
+          //       background: '#296683',
+          //       prompt: ''
+          //     }
+          //     this.$refs['aform'].resetFields();
+          //     break;
           case 'transformForm':
             this.cform = {
               id: '',
@@ -722,95 +762,95 @@
             break;
         }
       },
-    //   updateDisk(data) { //点击增加磁盘
-    //     this.multSelectionADD = [data];
-    //     this.dform.disk = data.disk;
-    //     this.dialogFormVisibleDisk = true;
-    //   },
-    //   addDisk() { //增加磁盘
-    //     this.$refs['dform'].validate((valid) => {
-    //       let params = {};
-    //       let checkStatus = this.multSelectionADD[0]
-    //       params.computerName = checkStatus.computerName;
-    //       params.faIp = checkStatus.faIp;
-    //       params.vmId = checkStatus.vmId;
-    //       params.siteId = checkStatus.siteId;
-    //       params.clusterId = checkStatus.clusterId;
-    //       params.disk = this.dform.disk;
-    //       if (valid) {
-    //         this.btnLoading = true;
-    //         httpAjax('desktop/attachVolume', params).then(res => {
-    //           if (res.resultCode == "0") {
-    //             this.$message({
-    //               type: 'success',
-    //               message: '修改成功! 需要花费一些时间,请耐心等待!'
-    //             });
-    //             // this.$alert('修改成功! 需要花费一些时间,请耐心等待', '增加磁盘', {
-    //             //   confirmButtonText: '确定',
-    //             //   type: 'success',
-    //             //   callback: action => {
-    //             //     // this.multSelection = [{disk:0}]
-    //             this.getVmList()
-    //             //   }
-    //             // });
-    //           } else {
-    //             this.$message({
-    //               type: 'error',
-    //               message: res.resultDesc
-    //             });
-    //           }
-    //           this.dialogFormVisibleDisk = false;
-    //           this.btnLoading = false;
-    //         }).catch(() => {
-    //           this.btnLoading = false;
-    //         })
-    //       } else {
-    //         console.log('error submit!!');
-    //         return false;
-    //       }
-    //     });
-    //   },
-    //   addAccount(formName) { //修改规格
-    //     this.$refs[formName].validate((valid) => {
-    //       let f = {
-    //         ...this.aform
-    //       };
-    //       if (valid) {
-    //         this.btnLoading = true;
-    //         httpAjax('desktop/updateInstance', f).then(res => {
-    //           if (res.resultCode == "0") {
-    //             this.dialogFormVisible = false;
-    //             this.$message({
-    //               type: 'success',
-    //               message: '修改成功,需要重启虚机!'
-    //             });
-    //             // this.$alert('修改成功,需要重启虚机!', '修改规格', {
-    //             //   confirmButtonText: '确定',
-    //             //   type: 'success',
-    //             //   callback: action => {
-    //             this.multSelection = [{
-    //               disk: 0
-    //             }]
-    //             this.getVmList()
-    //             //   }
-    //             // });
-    //           } else {
-    //             this.$message({
-    //               type: 'error',
-    //               message: res.resultDesc
-    //             });
-    //           }
-    //           this.btnLoading = false;
-    //         }).catch(() => {
-    //           this.btnLoading = false;
-    //         })
-    //       } else {
-    //         console.log('error submit!!');
-    //         return false;
-    //       }
-    //     });
-    //   },
-    handleClick(data) { //删除
+      //   updateDisk(data) { //点击增加磁盘
+      //     this.multSelectionADD = [data];
+      //     this.dform.disk = data.disk;
+      //     this.dialogFormVisibleDisk = true;
+      //   },
+      //   addDisk() { //增加磁盘
+      //     this.$refs['dform'].validate((valid) => {
+      //       let params = {};
+      //       let checkStatus = this.multSelectionADD[0]
+      //       params.computerName = checkStatus.computerName;
+      //       params.faIp = checkStatus.faIp;
+      //       params.vmId = checkStatus.vmId;
+      //       params.siteId = checkStatus.siteId;
+      //       params.clusterId = checkStatus.clusterId;
+      //       params.disk = this.dform.disk;
+      //       if (valid) {
+      //         this.btnLoading = true;
+      //         httpAjax('desktop/attachVolume', params).then(res => {
+      //           if (res.resultCode == "0") {
+      //             this.$message({
+      //               type: 'success',
+      //               message: '修改成功! 需要花费一些时间,请耐心等待!'
+      //             });
+      //             // this.$alert('修改成功! 需要花费一些时间,请耐心等待', '增加磁盘', {
+      //             //   confirmButtonText: '确定',
+      //             //   type: 'success',
+      //             //   callback: action => {
+      //             //     // this.multSelection = [{disk:0}]
+      //             this.getVmList()
+      //             //   }
+      //             // });
+      //           } else {
+      //             this.$message({
+      //               type: 'error',
+      //               message: res.resultDesc
+      //             });
+      //           }
+      //           this.dialogFormVisibleDisk = false;
+      //           this.btnLoading = false;
+      //         }).catch(() => {
+      //           this.btnLoading = false;
+      //         })
+      //       } else {
+      //         console.log('error submit!!');
+      //         return false;
+      //       }
+      //     });
+      //   },
+      //   addAccount(formName) { //修改规格
+      //     this.$refs[formName].validate((valid) => {
+      //       let f = {
+      //         ...this.aform
+      //       };
+      //       if (valid) {
+      //         this.btnLoading = true;
+      //         httpAjax('desktop/updateInstance', f).then(res => {
+      //           if (res.resultCode == "0") {
+      //             this.dialogFormVisible = false;
+      //             this.$message({
+      //               type: 'success',
+      //               message: '修改成功,需要重启虚机!'
+      //             });
+      //             // this.$alert('修改成功,需要重启虚机!', '修改规格', {
+      //             //   confirmButtonText: '确定',
+      //             //   type: 'success',
+      //             //   callback: action => {
+      //             this.multSelection = [{
+      //               disk: 0
+      //             }]
+      //             this.getVmList()
+      //             //   }
+      //             // });
+      //           } else {
+      //             this.$message({
+      //               type: 'error',
+      //               message: res.resultDesc
+      //             });
+      //           }
+      //           this.btnLoading = false;
+      //         }).catch(() => {
+      //           this.btnLoading = false;
+      //         })
+      //       } else {
+      //         console.log('error submit!!');
+      //         return false;
+      //       }
+      //     });
+      //   },
+      handleClick(data) { //删除
         this.$confirm('确定删除该教室吗?', '删除教室', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -856,216 +896,218 @@
         // this.aform.disk = this.multSelection[0].disk;
         this.cform.id = data.id;
         this.cform.roomName = data.roomName;
-        this.cform.ipAreaF = data.ipArea?data.ipArea.split('~')[0]:'' ;
-        this.cform.ipAreaL = data.ipArea?data.ipArea.split('~')[1]:'' ;
+        this.cform.ipAreaF = data.ipArea ? data.ipArea.split('~')[0] : '';
+        this.cform.ipAreaL = data.ipArea ? data.ipArea.split('~')[1] : '';
         this.cform.teacher = data.teacher;
-        this.cform.loginType = data.loginType.split(',').map(item=>{return this.loginObjR[item]});
+        this.cform.loginType = data.loginType.split(',').map(item => {
+          return this.loginObjR[item]
+        });
         this.cform.background = data.background;
         this.cform.prompt = data.prompt;
         this.transformForm = true;
       },
-    //   start() { //启动
-    //     let params = {};
-    //     let checkStatus = this.multSelection[0]
-    //     params.vmId = checkStatus.vmId;
-    //     params.faIp = checkStatus.faIp;
-    //     params.siteId = checkStatus.siteId;
-    //     this.text = '正在启动虚机, 请稍后...'
-    //     this.loadingState = true;
-    //     httpAjax('desktop/start', params).then(res => {
-    //       this.loadingState = false;
-    //       if (res.resultCode == '0') {
-    //         this.$message.success('启动需要一定的时间，请耐心等待!')
-    //         // this.$alert('启动需要一定的时间，请耐心等待!', '启动成功', {
-    //         //   confirmButtonText: '确定',
-    //         //   type: 'success',
-    //         //   callback: action => {
-    //         //     this.multSelection = [{disk:0}]
-    //         //     this.getVmList()
-    //         //     // this.$message({
-    //         //     //   type: 'info',
-    //         //     //   message: `action: ${ action }`
-    //         //     // });
-    //         //   }
-    //         // });
-    //         // layer.alert('请通知管理员配置UNS连接地址!', {
-    //         //     icon: 5
-    //         // });
-    //       } else {
-    //         this.$message({
-    //           type: 'error',
-    //           message: res.resultDesc
-    //         });
-    //       }
-    //       this.multSelection = [{
-    //         disk: 0
-    //       }]
-    //       this.getVmList()
-    //     }).catch(() => {
-    //       this.loadingState = false;
-    //     })
-    //   },
-    //   stop() {
-    //     this.$confirm('确定要停止该桌面?', '停止桌面', {
-    //       confirmButtonText: '确定',
-    //       cancelButtonText: '取消',
-    //       type: 'warning'
-    //     }).then(() => {
-    //       let params = {};
-    //       let checkStatus = this.multSelection[0]
-    //       params.vmId = checkStatus.vmId;
-    //       params.faIp = checkStatus.faIp;
-    //       params.siteId = checkStatus.siteId;
-    //       this.text = '正在停止虚机, 请稍后...'
-    //       this.loadingState = true;
-    //       httpAjax('merchandise/stopInstance', params).then(res => {
-    //         this.loadingState = false;
-    //         if (res.resultCode == '0') {
-    //           this.$message.success('停止虚机成功')
-    //           // this.$alert('启动需要一定的时间，请耐心等待!', '启动成功', {
-    //           //   confirmButtonText: '确定',
-    //           //   type: 'success',
-    //           //   callback: action => {
-    //           //     this.multSelection = [{disk:0}]
-    //           //     this.getVmList()
-    //           //     // this.$message({
-    //           //     //   type: 'info',
-    //           //     //   message: `action: ${ action }`
-    //           //     // });
-    //           //   }
-    //           // });
-    //           // layer.alert('请通知管理员配置UNS连接地址!', {
-    //           //     icon: 5
-    //           // });
-    //         } else {
-    //           this.$message({
-    //             type: 'error',
-    //             message: res.resultDesc
-    //           });
-    //         }
-    //         this.multSelection = [{
-    //           disk: 0
-    //         }]
-    //         this.getVmList()
-    //       }).catch(() => {
-    //         this.loadingState = false;
-    //       })
-    //     }).catch(() => {
+      //   start() { //启动
+      //     let params = {};
+      //     let checkStatus = this.multSelection[0]
+      //     params.vmId = checkStatus.vmId;
+      //     params.faIp = checkStatus.faIp;
+      //     params.siteId = checkStatus.siteId;
+      //     this.text = '正在启动虚机, 请稍后...'
+      //     this.loadingState = true;
+      //     httpAjax('desktop/start', params).then(res => {
+      //       this.loadingState = false;
+      //       if (res.resultCode == '0') {
+      //         this.$message.success('启动需要一定的时间，请耐心等待!')
+      //         // this.$alert('启动需要一定的时间，请耐心等待!', '启动成功', {
+      //         //   confirmButtonText: '确定',
+      //         //   type: 'success',
+      //         //   callback: action => {
+      //         //     this.multSelection = [{disk:0}]
+      //         //     this.getVmList()
+      //         //     // this.$message({
+      //         //     //   type: 'info',
+      //         //     //   message: `action: ${ action }`
+      //         //     // });
+      //         //   }
+      //         // });
+      //         // layer.alert('请通知管理员配置UNS连接地址!', {
+      //         //     icon: 5
+      //         // });
+      //       } else {
+      //         this.$message({
+      //           type: 'error',
+      //           message: res.resultDesc
+      //         });
+      //       }
+      //       this.multSelection = [{
+      //         disk: 0
+      //       }]
+      //       this.getVmList()
+      //     }).catch(() => {
+      //       this.loadingState = false;
+      //     })
+      //   },
+      //   stop() {
+      //     this.$confirm('确定要停止该桌面?', '停止桌面', {
+      //       confirmButtonText: '确定',
+      //       cancelButtonText: '取消',
+      //       type: 'warning'
+      //     }).then(() => {
+      //       let params = {};
+      //       let checkStatus = this.multSelection[0]
+      //       params.vmId = checkStatus.vmId;
+      //       params.faIp = checkStatus.faIp;
+      //       params.siteId = checkStatus.siteId;
+      //       this.text = '正在停止虚机, 请稍后...'
+      //       this.loadingState = true;
+      //       httpAjax('merchandise/stopInstance', params).then(res => {
+      //         this.loadingState = false;
+      //         if (res.resultCode == '0') {
+      //           this.$message.success('停止虚机成功')
+      //           // this.$alert('启动需要一定的时间，请耐心等待!', '启动成功', {
+      //           //   confirmButtonText: '确定',
+      //           //   type: 'success',
+      //           //   callback: action => {
+      //           //     this.multSelection = [{disk:0}]
+      //           //     this.getVmList()
+      //           //     // this.$message({
+      //           //     //   type: 'info',
+      //           //     //   message: `action: ${ action }`
+      //           //     // });
+      //           //   }
+      //           // });
+      //           // layer.alert('请通知管理员配置UNS连接地址!', {
+      //           //     icon: 5
+      //           // });
+      //         } else {
+      //           this.$message({
+      //             type: 'error',
+      //             message: res.resultDesc
+      //           });
+      //         }
+      //         this.multSelection = [{
+      //           disk: 0
+      //         }]
+      //         this.getVmList()
+      //       }).catch(() => {
+      //         this.loadingState = false;
+      //       })
+      //     }).catch(() => {
 
-    //     })
+      //     })
 
-    //   },
-    //   restart() { //重启
-    //     this.$confirm('确定要重启该桌面?', '重启桌面', {
-    //       confirmButtonText: '确定',
-    //       cancelButtonText: '取消',
-    //       type: 'warning'
-    //     }).then(() => {
-    //       let params = {};
-    //       let checkStatus = this.multSelection[0]
-    //       params.vmId = checkStatus.vmId;
-    //       params.faIp = checkStatus.faIp;
-    //       params.siteId = checkStatus.siteId;
-    //       this.text = '正在重启虚机, 请稍后...'
-    //       this.loadingState = true;
-    //       httpAjax('desktop/reStart', params).then(res => {
-    //         this.loadingState = false;
-    //         if (res.resultCode == '0') {
-    //           this.$message.success('启动需要一定的时间，请耐心等待!')
-    //           // this.$alert('启动需要一定的时间，请耐心等待!', '启动成功', {
-    //           //   confirmButtonText: '确定',
-    //           //   type: 'success',
-    //           //   callback: action => {
-    //           //     this.multSelection = [{disk:0}]
-    //           //     this.getVmList()
-    //           //     // this.$message({
-    //           //     //   type: 'info',
-    //           //     //   message: `action: ${ action }`
-    //           //     // });
-    //           //   }
-    //           // });
-    //           // layer.alert('请通知管理员配置UNS连接地址!', {
-    //           //     icon: 5
-    //           // });
-    //         } else {
-    //           this.$message({
-    //             type: 'error',
-    //             message: res.resultDesc
-    //           });
-    //         }
-    //         this.multSelection = [{
-    //           disk: 0
-    //         }]
-    //         this.getVmList()
-    //       }).catch(() => {
-    //         this.loadingState = false;
-    //       })
-    //     }).catch(() => {
+      //   },
+      //   restart() { //重启
+      //     this.$confirm('确定要重启该桌面?', '重启桌面', {
+      //       confirmButtonText: '确定',
+      //       cancelButtonText: '取消',
+      //       type: 'warning'
+      //     }).then(() => {
+      //       let params = {};
+      //       let checkStatus = this.multSelection[0]
+      //       params.vmId = checkStatus.vmId;
+      //       params.faIp = checkStatus.faIp;
+      //       params.siteId = checkStatus.siteId;
+      //       this.text = '正在重启虚机, 请稍后...'
+      //       this.loadingState = true;
+      //       httpAjax('desktop/reStart', params).then(res => {
+      //         this.loadingState = false;
+      //         if (res.resultCode == '0') {
+      //           this.$message.success('启动需要一定的时间，请耐心等待!')
+      //           // this.$alert('启动需要一定的时间，请耐心等待!', '启动成功', {
+      //           //   confirmButtonText: '确定',
+      //           //   type: 'success',
+      //           //   callback: action => {
+      //           //     this.multSelection = [{disk:0}]
+      //           //     this.getVmList()
+      //           //     // this.$message({
+      //           //     //   type: 'info',
+      //           //     //   message: `action: ${ action }`
+      //           //     // });
+      //           //   }
+      //           // });
+      //           // layer.alert('请通知管理员配置UNS连接地址!', {
+      //           //     icon: 5
+      //           // });
+      //         } else {
+      //           this.$message({
+      //             type: 'error',
+      //             message: res.resultDesc
+      //           });
+      //         }
+      //         this.multSelection = [{
+      //           disk: 0
+      //         }]
+      //         this.getVmList()
+      //       }).catch(() => {
+      //         this.loadingState = false;
+      //       })
+      //     }).catch(() => {
 
-    //     })
+      //     })
 
-    //   },
-    //   detach() { //清退
-    //     this.$confirm('确定要清退该桌面?', '清退桌面', {
-    //       confirmButtonText: '确定',
-    //       cancelButtonText: '取消',
-    //       type: 'warning'
-    //     }).then(() => {
-    //       this.loadingState = true;
-    //       let params = {};
-    //       let checkStatus = this.multSelection[0]
-    //       params.computerName = checkStatus.computerName;
-    //       params.faIp = checkStatus.faIp;
-    //       params.vmId = checkStatus.vmId;
-    //       params.siteId = checkStatus.siteId;
-    //       this.text = '正在执行清退, 请稍后...'
-    //       httpAjax('desktop/detach', params).then(res => {
-    //         this.loadingState = false;
-    //         if (res.resultCode == "0") {
-    //           this.$message({
-    //             type: 'success',
-    //             message: '清退成功!'
-    //           });
-    //           //   this.$alert('请在我的订单中查看审批结果!', '清退桌面', {
-    //           //     confirmButtonText: '确定',
-    //           //     type: 'success',
-    //           //     callback: action => {
-    //           // this.multSelection = [{disk:0}]
-    //           // this.getVmList()
-    //           //     }
-    //           //   });
-    //         } else {
-    //           this.$message({
-    //             type: 'error',
-    //             message: res.resultDesc
-    //           });
-    //           // this.multSelection = [{disk:0}]
-    //           // this.$alert('已经提交过，正在审核中!', '清退桌面', {
-    //           //   confirmButtonText: '确定',
-    //           //   callback: action => {
-    //           //   }
-    //           // });
-    //         }
-    //         this.multSelection = [{
-    //           disk: 0
-    //         }]
-    //         this.getVmList()
-    //       }).catch(() => {
-    //         this.loadingState = false;
-    //       })
-    //     }).catch(() => { //取消
+      //   },
+      //   detach() { //清退
+      //     this.$confirm('确定要清退该桌面?', '清退桌面', {
+      //       confirmButtonText: '确定',
+      //       cancelButtonText: '取消',
+      //       type: 'warning'
+      //     }).then(() => {
+      //       this.loadingState = true;
+      //       let params = {};
+      //       let checkStatus = this.multSelection[0]
+      //       params.computerName = checkStatus.computerName;
+      //       params.faIp = checkStatus.faIp;
+      //       params.vmId = checkStatus.vmId;
+      //       params.siteId = checkStatus.siteId;
+      //       this.text = '正在执行清退, 请稍后...'
+      //       httpAjax('desktop/detach', params).then(res => {
+      //         this.loadingState = false;
+      //         if (res.resultCode == "0") {
+      //           this.$message({
+      //             type: 'success',
+      //             message: '清退成功!'
+      //           });
+      //           //   this.$alert('请在我的订单中查看审批结果!', '清退桌面', {
+      //           //     confirmButtonText: '确定',
+      //           //     type: 'success',
+      //           //     callback: action => {
+      //           // this.multSelection = [{disk:0}]
+      //           // this.getVmList()
+      //           //     }
+      //           //   });
+      //         } else {
+      //           this.$message({
+      //             type: 'error',
+      //             message: res.resultDesc
+      //           });
+      //           // this.multSelection = [{disk:0}]
+      //           // this.$alert('已经提交过，正在审核中!', '清退桌面', {
+      //           //   confirmButtonText: '确定',
+      //           //   callback: action => {
+      //           //   }
+      //           // });
+      //         }
+      //         this.multSelection = [{
+      //           disk: 0
+      //         }]
+      //         this.getVmList()
+      //       }).catch(() => {
+      //         this.loadingState = false;
+      //       })
+      //     }).catch(() => { //取消
 
-    //     })
-    //   },
+      //     })
+      //   },
       searchData() {
         this.getVmList('', 1)
       },
       clearData(num) {
         this.getVmList('', 1)
       },
-    //   exportData() {
-    //     window.open('/api/desktop/cloudExport')
-    //   },
+      //   exportData() {
+      //     window.open('/api/desktop/cloudExport')
+      //   },
       //   loginCloud() {
       //     var params = {
       //       name: sessionStorage.getItem('username'),
@@ -1080,39 +1122,39 @@
       //       }
       //     })
       //   },
-    //   checkDisable(type) {
-    //     if (type === 'start') {
-    //       return this.multSelection[0].runState === 'stopped'
-    //     } else if (type === 'restart' || type === 'stop') {
-    //       return this.multSelection[0].runState === 'running'
-    //     } else if (type === 'quit') {
-    //       return this.multSelection[0].id && this.multSelection[0].runState !== 'deleted'
-    //     } else if (type === 'edit') {
-    //       return this.multSelection[0].deskType === 'copyClone'
-    //     }
-    //   },
+      //   checkDisable(type) {
+      //     if (type === 'start') {
+      //       return this.multSelection[0].runState === 'stopped'
+      //     } else if (type === 'restart' || type === 'stop') {
+      //       return this.multSelection[0].runState === 'running'
+      //     } else if (type === 'quit') {
+      //       return this.multSelection[0].id && this.multSelection[0].runState !== 'deleted'
+      //     } else if (type === 'edit') {
+      //       return this.multSelection[0].deskType === 'copyClone'
+      //     }
+      //   },
       // handleSelectionChange(val) {
       //   },
-    //   rowClick(row, column, event) {
-    //     // console.log(event)
-    //     if (event.target.localName === 'button' || event.target.parentNode.localName === 'button') {
-    //       return
-    //     }
-    //     if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length === 0) {
-    //       //   this.$refs.multipleTable.toggleRowSelection(row);
-    //       this.multSelection = [...this.multSelection, row];
-    //     } else if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length ===
-    //       1) {
-    //       this.multSelection = this.multSelection.filter(item => item.id !== row.id);
-    //     } else {
-    //       this.multSelection = [row];
-    //     }
-    //     // console.log(  this.multSelection)
-    //     this.$refs.multipleTable.toggleRowSelection(row);
-    //   },
-    //   handleSelectionChangeMerge(val) {
-    //     this.multSelection = val;
-    //   },
+      //   rowClick(row, column, event) {
+      //     // console.log(event)
+      //     if (event.target.localName === 'button' || event.target.parentNode.localName === 'button') {
+      //       return
+      //     }
+      //     if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length === 0) {
+      //       //   this.$refs.multipleTable.toggleRowSelection(row);
+      //       this.multSelection = [...this.multSelection, row];
+      //     } else if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length ===
+      //       1) {
+      //       this.multSelection = this.multSelection.filter(item => item.id !== row.id);
+      //     } else {
+      //       this.multSelection = [row];
+      //     }
+      //     // console.log(  this.multSelection)
+      //     this.$refs.multipleTable.toggleRowSelection(row);
+      //   },
+      //   handleSelectionChangeMerge(val) {
+      //     this.multSelection = val;
+      //   },
       //   rowClick(row, column, event) {
       //     if (this.multSelection.length > 0 && this.multSelection[0].id !== row.id) {
       //       this.$refs.multipleTable.toggleRowSelection(this.multSelection[0]);
@@ -1127,35 +1169,35 @@
       //     this.$refs.multipleTable.toggleRowSelection(row);
       //     console.log(this.multSelection);
       //   },
-    //   checkSelect(selection, row) {
-    //     //   if(selection.length===1){
-    //     //   }
-    //     if (selection.length > 1) {
-    //       this.$refs.multipleTable.toggleRowSelection(selection[0]);
-    //     }
-    //     this.multSelection = selection;
-    //     // console.log(selection, row)
-    //   },
-    //   rowClick1(row, column, event) {
-    //     if (this.multSelectionTran.length > 0 && this.multSelectionTran[0].id !== row.id) {
-    //       this.$refs.multipleTableTran.toggleRowSelection(this.multSelectionTran[0]);
-    //       this.multSelectionTran = [row];
-    //     } else if (this.multSelectionTran.length > 0 && this.multSelectionTran[0].id === row.id) {
-    //       this.multSelectionTran = [];
-    //     } else {
-    //       this.multSelectionTran = [row];
-    //     }
-    //     this.$refs.multipleTableTran.toggleRowSelection(row);
-    //   },
-    //   checkSelect1(selection, row) {
-    //     //   if(selection.length===1){
-    //     //   }
-    //     if (selection.length > 1) {
-    //       this.$refs.multipleTableTran.toggleRowSelection(selection[0]);
-    //     }
-    //     this.multSelectionTran = selection;
-    //     // console.log(selection, row)
-    //   },
+      //   checkSelect(selection, row) {
+      //     //   if(selection.length===1){
+      //     //   }
+      //     if (selection.length > 1) {
+      //       this.$refs.multipleTable.toggleRowSelection(selection[0]);
+      //     }
+      //     this.multSelection = selection;
+      //     // console.log(selection, row)
+      //   },
+      //   rowClick1(row, column, event) {
+      //     if (this.multSelectionTran.length > 0 && this.multSelectionTran[0].id !== row.id) {
+      //       this.$refs.multipleTableTran.toggleRowSelection(this.multSelectionTran[0]);
+      //       this.multSelectionTran = [row];
+      //     } else if (this.multSelectionTran.length > 0 && this.multSelectionTran[0].id === row.id) {
+      //       this.multSelectionTran = [];
+      //     } else {
+      //       this.multSelectionTran = [row];
+      //     }
+      //     this.$refs.multipleTableTran.toggleRowSelection(row);
+      //   },
+      //   checkSelect1(selection, row) {
+      //     //   if(selection.length===1){
+      //     //   }
+      //     if (selection.length > 1) {
+      //       this.$refs.multipleTableTran.toggleRowSelection(selection[0]);
+      //     }
+      //     this.multSelectionTran = selection;
+      //     // console.log(selection, row)
+      //   },
 
       getVmList(first, page) {
         this.multSelection = []
@@ -1163,7 +1205,8 @@
         let para = {
           page: this.currentPage4,
           limit: this.currentSize,
-            teacher: this.applyUser,
+          teacher: this.applyUser,
+          roomName: this.applyTable
           //   computerName: this.applyTable,
           //   runState: this.applyState,
           //   loginState: this.applyLoginState
@@ -1193,29 +1236,29 @@
         this.currentSize = val;
         this.getVmList()
       },
-    //   handleCurrentChange1(val) { //资产转移
-    //     this.multSelectionTran = []
-    //     this.currentPage5 = val;
-    //     this.postpone()
-    //   },
-    //   handleSizeChange1(val) { //资产转移
-    //     this.multSelectionTran = []
-    //     this.currentSize1 = val;
-    //     this.postpone()
-    //   },
-    //   getStatistics() {
-    //     const url = 'desktop/adminStatistics?online=1'
-    //     httpAjax(url).then((res) => {
-    //       if (res.cpu) {
-    //         this.total = res.merCnt
-    //         this.cpu = res.cpu
-    //         this.memory = res.memory
-    //         this.disk = res.disk
-    //       }
-    //     }).catch((err) => {
-    //       console.log(err)
-    //     })
-    //   },
+      //   handleCurrentChange1(val) { //资产转移
+      //     this.multSelectionTran = []
+      //     this.currentPage5 = val;
+      //     this.postpone()
+      //   },
+      //   handleSizeChange1(val) { //资产转移
+      //     this.multSelectionTran = []
+      //     this.currentSize1 = val;
+      //     this.postpone()
+      //   },
+      //   getStatistics() {
+      //     const url = 'desktop/adminStatistics?online=1'
+      //     httpAjax(url).then((res) => {
+      //       if (res.cpu) {
+      //         this.total = res.merCnt
+      //         this.cpu = res.cpu
+      //         this.memory = res.memory
+      //         this.disk = res.disk
+      //       }
+      //     }).catch((err) => {
+      //       console.log(err)
+      //     })
+      //   },
       // patternState(obj) {
       //   let state = obj.opType
       //   return state == 'set' ? '维护模式' : '工作模式'

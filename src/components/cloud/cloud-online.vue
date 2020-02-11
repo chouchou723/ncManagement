@@ -1,9 +1,19 @@
 <template>
   <div id="cloudOnline" v-loading.fullscreen="loadingState" :element-loading-text="text">
     <div class="search-wrap">
-      <el-input placeholder="请输入IP地址" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
+      <!-- <el-input placeholder="请输入IP地址" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
         @clear="clearData(1)">
-      </el-input>
+      </el-input> -->
+        <el-select style="width:190px;" placeholder="请选择IP地址" clearable v-model="applyUser"
+        @keyup.enter.native="clearData" @change="clearData(3)">
+        <el-option v-for="(item,index) in iplist" :key="index" :value="item.value" :label="item.label">
+          {{item.label}}</el-option>
+      </el-select>
+        <el-select style="width:190px;" placeholder="请选择教室" clearable v-model="applyTable"
+        @keyup.enter.native="clearData" @change="clearData(3)">
+        <el-option v-for="(item,index) in roomlist" :key="index" :value="item.value" :label="item.label">
+          {{item.label}}</el-option>
+      </el-select>
       <!-- <el-input placeholder="请输入桌面名称" style="width:185px;" clearable v-model="applyTable"
         @keyup.enter.native="clearData" @clear="clearData(2)">
       </el-input>
@@ -209,10 +219,10 @@
     computedTableHeight,
     addScrollBar
   } from 'api/common'
-  import {
-    selectRunState,
-    selectLoginState
-  } from 'api/resources'
+//   import {
+//     selectRunState,
+//     selectLoginState
+//   } from 'api/resources'
   export default {
     data() {
     //   var nan16 = (rule, value, callback) => {
@@ -253,36 +263,38 @@
           'teaching': '教学桌面',
           'personal': '个人桌面'
         },
-        queryUserName: '',
+        // queryUserName: '',
         btnIndex: '',
         btnLoading: false,
         userListData: [],
+        iplist:[],
         transformForm: false,
-        loadingRadio: false,
-        radio3: '工作模式',
+        // loadingRadio: false,
+        // radio3: '工作模式',
         no: false,
         tableData: [],
+        roomlist:[],
         count: 0,
-        countTran: 0,
+        // countTran: 0,
         tableHeight: 400,
         total: 0,
-        cpu: 0,
-        memory: 0,
-        disk: 0,
+        // cpu: 0,
+        // memory: 0,
+        // disk: 0,
         vmTableLoadingState: true,
-        selectRunState,
-        selectLoginState,
+        // selectRunState,
+        // selectLoginState,
         currentPage4: 1,
-        currentPage5: 1,
-        currentSize: 10,
-        currentSize1: 10,
+        // currentPage5: 1,
+        currentSize: 30,
+        // currentSize1: 10,
         multSelection: [],
-        multSelectionADD: [],
-        multSelectionTran: [],
+        // multSelectionADD: [],
+        // multSelectionTran: [],
         applyUser: '',
         applyTable: '',
-        applyState: '',
-        applyLoginState: '',
+        // applyState: '',
+        // applyLoginState: '',
         loadingState: false,
         text: '请稍后',
         dialogFormVisible: false,
@@ -325,7 +337,7 @@
         // },
         formLabelWidth: '130px',
         inputLabelWidth: '300px',
-        dialogFormVisibleP: false,
+        // dialogFormVisibleP: false,
         // postform: {
         //   Ftime: ''
         // },
@@ -361,6 +373,8 @@
       }
     },
     created() {
+        this.getiplist()
+        this.getroomList()
       this.getVmList(1)
     },
     mounted() {
@@ -369,6 +383,26 @@
       // })
     },
     methods: {
+        getroomList(first, page) {
+        let para = {
+          page: 1,
+          limit: 10000,
+            teacher: sessionStorage.getItem('username')||'',
+          //   computerName: this.applyTable,
+          //   runState: this.applyState,
+          //   loginState: this.applyLoginState
+        }
+        const url = `classroom/classroomList`
+        httpGet(url, para).then((res) => {
+          this.roomlist = res.data.map(item=>{
+              return {label:item.roomName,value:item.roomName}
+          });
+
+          //   this.getStatistics()
+        }).catch((error) => {
+          console.log(error)
+        })
+      },
     //   queryUserList() {
     //     this.$refs.multipleTableTran.toggleRowSelection(this.multSelectionTran[0]);
     //     this.multSelectionTran = [];
@@ -849,9 +883,9 @@
       clearData(num) {
         this.getVmList('', 1)
       },
-      exportData() {
-        window.open('/api/desktop/cloudExport')
-      },
+    //   exportData() {
+    //     window.open('/api/desktop/cloudExport')
+    //   },
       //   loginCloud() {
       //     var params = {
       //       name: sessionStorage.getItem('username'),
@@ -866,17 +900,17 @@
       //       }
       //     })
       //   },
-      checkDisable(type) {
-        if (type === 'start') {
-          return this.multSelection[0].runState === 'stopped'
-        } else if (type === 'restart' || type === 'stop') {
-          return this.multSelection[0].runState === 'running'
-        } else if (type === 'quit') {
-          return this.multSelection[0].id && this.multSelection[0].runState !== 'deleted'
-        } else if (type === 'edit') {
-          return this.multSelection[0].deskType === 'copyClone'
-        }
-      },
+    //   checkDisable(type) {
+    //     if (type === 'start') {
+    //       return this.multSelection[0].runState === 'stopped'
+    //     } else if (type === 'restart' || type === 'stop') {
+    //       return this.multSelection[0].runState === 'running'
+    //     } else if (type === 'quit') {
+    //       return this.multSelection[0].id && this.multSelection[0].runState !== 'deleted'
+    //     } else if (type === 'edit') {
+    //       return this.multSelection[0].deskType === 'copyClone'
+    //     }
+    //   },
       // handleSelectionChange(val) {
       //   },
       rowClick(row, column, event) {
@@ -1016,6 +1050,8 @@
         let para = {
           page: this.currentPage4,
           limit: this.currentSize,
+          ipAddress:this.applyUser,
+          roomName:this.applyTable
         }
         const url = `classroom/ipSettingList`
         httpGet(url, para).then((res) => {
@@ -1031,6 +1067,22 @@
           console.log(error)
         })
       },
+      getiplist(){
+            let para = {
+          page: 1,
+          limit:10000,
+        }
+        const url = `classroom/ipSettingList`
+        httpGet(url, para).then((res) => {
+          this.iplist = res.data.map(item=>{
+              return {value:item.ipAddress,label:item.ipAddress}
+          });
+          //   this.getStatistics()
+        }).catch((error) => {
+          console.log(error)
+        })
+          
+      },
       handleCurrentChange(val) {
         this.multSelection = []
         this.currentPage4 = val;
@@ -1041,29 +1093,29 @@
         this.currentSize = val;
         this.getVmList()
       },
-      handleCurrentChange1(val) { //资产转移
-        this.multSelectionTran = []
-        this.currentPage5 = val;
-        this.postpone()
-      },
-      handleSizeChange1(val) { //资产转移
-        this.multSelectionTran = []
-        this.currentSize1 = val;
-        this.postpone()
-      },
-      getStatistics() {
-        const url = 'desktop/cloudStatistics?online=1'
-        httpAjax(url).then((res) => {
-          if (res.cpu) {
-            this.total = res.merCnt
-            this.cpu = res.cpu
-            this.memory = res.memory
-            this.disk = res.disk
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      },
+    //   handleCurrentChange1(val) { //资产转移
+    //     this.multSelectionTran = []
+    //     this.currentPage5 = val;
+    //     this.postpone()
+    //   },
+    //   handleSizeChange1(val) { //资产转移
+    //     this.multSelectionTran = []
+    //     this.currentSize1 = val;
+    //     this.postpone()
+    //   },
+    //   getStatistics() {
+    //     const url = 'desktop/cloudStatistics?online=1'
+    //     httpAjax(url).then((res) => {
+    //       if (res.cpu) {
+    //         this.total = res.merCnt
+    //         this.cpu = res.cpu
+    //         this.memory = res.memory
+    //         this.disk = res.disk
+    //       }
+    //     }).catch((err) => {
+    //       console.log(err)
+    //     })
+    //   },
       // patternState(obj) {
       //   let state = obj.opType
       //   return state == 'set' ? '维护模式' : '工作模式'

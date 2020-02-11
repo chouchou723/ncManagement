@@ -90,7 +90,8 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-export const webroot = '/api/'
+//export const webroot = 'http://172.16.1.156:6060/api/'//test
+ export const webroot = '/api/'
 
 export const httpAjax = (url, data) => {
   const params = data ? data : '';

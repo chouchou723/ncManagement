@@ -13,6 +13,9 @@
     </div> -->
     <div class="login-wrap">
       <div class="left-wrap">
+            <div class="gotoW" @click="gotoWiP">
+                <span style="font-size:18px;">点击前往WiPlus</span><i class="el-icon-back rotate180"></i>
+            </div>
         <div class="left-login">
           <img src="../../assets/img/logo1.jpeg" alt="" style="height:200px;">
           <div class='ms-title'>南昌陆院教学管理平台</div>
@@ -25,7 +28,7 @@
             </el-form-item>
           </el-form>
            <div class="ps-form-item">
-            <a @click="userLogin= true">用户注册</a>
+            <a @click="userLogin= true" style="cursor:pointer">用户注册</a>
           </div>
           <div class="login-btn">
             <el-button type="primary" @click="submitLogin('loginForm')">登录</el-button>
@@ -318,6 +321,9 @@
       // this.bannerMove();
     },
     methods: {
+        gotoWiP(){
+            this.$router.push('/wiplus')
+        },
       clearData() {
         removeToKen()
         this.$store.commit('removeTab') //移除tab
@@ -334,13 +340,13 @@
     //       this.loginType = 'password'
     //     }
     //   },
-      resetD() {
-        this.dform = {
-          name: '',
-          mail: ''
-        }
-        this.$refs.dform.resetFields()
-      },
+    //   resetD() {
+    //     this.dform = {
+    //       name: '',
+    //       mail: ''
+    //     }
+    //     this.$refs.dform.resetFields()
+    //   },
       resetL() {
         this.lform = {
           userName: '',
@@ -398,50 +404,50 @@
           }
         })
       },
-      forgetPass(form) {
-        this.$refs[form].validate((valid) => {
-          const params = {
-            ...this.dform
-          }
-          params.tenantDomain = this.domainNameList[0]
-          if (valid) {
-            this.btnLoading = true
-            httpAjax('user/resetPassword', params).then(res => {
-              this.resetPass = false
-              this.btnLoading = false
-              if (res.resultCode == 0) {
-                this.$message({
-                  type: 'success',
-                  message: res.resultDesc //'重置成功!'
-                })
-                // this.$alert('请在我的订单中查看审批结果!', '充值密码', {
-                //   confirmButtonText: '确定',
-                //   type: 'success',
-                //   callback: action => {
-                //     // this.multSelection = []
-                //     this.getVmList()
-                //   }
-                // });
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: res.resultDesc
-                })
-              }
-            }).catch(() => {
-              this.$message({
-                type: 'error',
-                message: '请求无法访问!'
-              })
-              this.resetPass = false
-              this.btnLoading = false
-            })
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
-      },
+    //   forgetPass(form) {
+    //     this.$refs[form].validate((valid) => {
+    //       const params = {
+    //         ...this.dform
+    //       }
+    //       params.tenantDomain = this.domainNameList[0]
+    //       if (valid) {
+    //         this.btnLoading = true
+    //         httpAjax('user/resetPassword', params).then(res => {
+    //           this.resetPass = false
+    //           this.btnLoading = false
+    //           if (res.resultCode == 0) {
+    //             this.$message({
+    //               type: 'success',
+    //               message: res.resultDesc //'重置成功!'
+    //             })
+    //             // this.$alert('请在我的订单中查看审批结果!', '充值密码', {
+    //             //   confirmButtonText: '确定',
+    //             //   type: 'success',
+    //             //   callback: action => {
+    //             //     // this.multSelection = []
+    //             //     this.getVmList()
+    //             //   }
+    //             // });
+    //           } else {
+    //             this.$message({
+    //               type: 'error',
+    //               message: res.resultDesc
+    //             })
+    //           }
+    //         }).catch(() => {
+    //           this.$message({
+    //             type: 'error',
+    //             message: '请求无法访问!'
+    //           })
+    //           this.resetPass = false
+    //           this.btnLoading = false
+    //         })
+    //       } else {
+    //         console.log('error submit!!')
+    //         return false
+    //       }
+    //     })
+    //   },
       // bannerMove() {
       //   var main = this.$refs.bannerWrap
       //   var banner = main.children
@@ -647,6 +653,7 @@
     border-bottom: 1px solid #ebedf2;
     color: #575962;
     border-radius: 0;
+    line-height: 1;
   }
 
 </style>
@@ -655,49 +662,75 @@
     position: relative;
     width: 100%;
     height: 100%;
-    display: flex;
+    /* display: flex; */
     overflow: hidden;
   }
 
   .left-wrap {
     background-color: #fff;
-    flex: 0 0 35%;
+    /* flex: 0 0 35%; */
     height: 100%;
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
+    float: left;
+    width: 35%;
+    position: relative;
   }
-
+.gotoW{
+    position: absolute;
+    bottom: 35px;
+    right: 35px;
+    color: #565f69;
+    cursor: pointer;
+    border-bottom: 2px solid #565f69;
+}
+.rotate180{
+    transform: rotate(180deg);
+    font-size: 24px;
+    vertical-align: bottom;
+}
   .left-login {
     /* width: 50%; */
     height: 550px;
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: center; */
+    position: absolute;
+    top:0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    width: 360px;
+    text-align: center;
   }
 
   .right-wrap {
     height: 100%;
-    background: url('../../assets/img/backg.jpg') no-repeat 40% 100%/cover;
-    flex: 1;
-
+    background: url('../../assets/img/backg.jpg') no-repeat 40% 100%;
+    background-size:cover;
+    /* flex: 1; */
+float: right;
+width: 65%;
   }
 
   .ms-title {
-    margin: 10px 0 30px;
+    margin: 0 0 30px;
     color: #565f69;
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: 600;
   }
 
   .ps-form-item {
     margin-top: 10px;
     text-align: right;
     font-size: 15px;
-    font-weight: 600;
-    text-decoration: underline;
+    /* font-weight: 600; */
+    /* text-decoration: underline; */
     color: #565f69;
-    cursor: pointer;
+    /* cursor: pointer; */
     width: 100%;
     /* padding-top: 25px; */
   }
@@ -1002,5 +1035,11 @@
   .noticeTitle .el-dialog__title {
     font-weight: 600
   } */
+@media screen and (max-width: 1280px) {
+    .gotoW {
+      bottom: 10px;
+    }
 
+
+  }
 </style>

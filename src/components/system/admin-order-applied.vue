@@ -3,7 +3,7 @@
     <div class="search-wrap">
       <!-- <el-input placeholder="请输入桌面名称" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
         @clear="clearData(1)"></el-input> -->
-      <el-date-picker v-model="createTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择创建时间" :editable="no"
+      <el-date-picker v-model="createTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择申请时间" :editable="no"
         clearable @change="clearDataD(2)" :picker-options="pickerOptions1">
       </el-date-picker>
       <!-- <el-select style="width:190px" placeholder="请选择业务类型" clearable v-model="businessType"
@@ -65,12 +65,12 @@
                   </div>
           </template>
         </el-table-column> -->
-        <el-table-column prop="createTime" label="创建时间" width="200">
-          <template slot-scope="scope">
+        <el-table-column prop="createTimeStr" label="申请时间" width="200">
+          <!-- <template slot-scope="scope">
             <div>
               {{new Date(scope.row.createTime).toLocaleString()}}
             </div>
-          </template>
+          </template> -->
         </el-table-column>
 
         <!-- <el-table-column label="操作" width="100">
@@ -112,7 +112,7 @@
         <div class="dialogRightContent">
           <div class="flexTwo">
             <div class="dialogDiv"><span class="dialogTitle">使用人:</span>{{logContent.userAccount}}</div>
-            <div class="dialogDiv"><span class="dialogTitle">创建时间:</span>{{logContent.createTime}}</div>
+            <div class="dialogDiv"><span class="dialogTitle">申请时间:</span>{{logContent.createTime}}</div>
           </div>
           <div class="flexTwo">
             <div class="dialogDiv"><span class="dialogTitle">vmId:</span>{{logContent.vmId}}</div>
@@ -565,10 +565,10 @@
         let para = {
           page: this.currentPage4,
           limit: this.currentSize,
-          name: this.applyUser,
+        //   name: this.applyUser,
           createTimeStr: this.createTime,
-          orderState: this.applyLoginState,
-          businessType: this.businessType
+        //   orderState: this.applyLoginState,
+        //   businessType: this.businessType
 
         }
         const url = `merchandise/adminDesktopList?${Math.random()}`

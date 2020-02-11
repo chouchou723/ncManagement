@@ -4,6 +4,9 @@
       <el-input placeholder="请输入用户名" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
         @clear="clearData(1)">
       </el-input>
+        <el-date-picker v-model="createTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择申请时间" :editable="no"
+        clearable @change="clearData(1)" :picker-options="pickerOptions1">
+      </el-date-picker>
       <el-button icon="el-icon-search" circle @click="searchData"></el-button>
       <!-- <el-button type="primary" @click="auditOrder" style="float:right;margin-right:10px;"
         :disabled="multSelection.length==0">审批</el-button> -->
@@ -43,7 +46,7 @@
         </el-table-column>
         <el-table-column prop="mail" label="邮箱" width="250">
         </el-table-column> -->
-        <el-table-column prop="createTimeStr" label="创建时间" min-width="200">
+        <el-table-column prop="createTimeStr" label="申请时间" min-width="200">
           <!-- <template slot-scope="scope">
             <div>
               {{new Date(scope.row.createTime).toLocaleString()}}
@@ -358,10 +361,10 @@
         let para = {
           page: this.currentPage4,
           limit: this.currentSize,
-          name: this.applyUser,
+          userName: this.applyUser,
           createTimeStr: this.createTime,
-          orderState: this.applyLoginState,
-          businessType: this.businessType
+        //   orderState: this.applyLoginState,
+        //   businessType: this.businessType
 
         }
         const url = `user/listNewUser?${Math.random()}`

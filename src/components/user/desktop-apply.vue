@@ -1,10 +1,9 @@
 <template>
   <div id="desktop-apply"  element-loading-text="正在提交 , 请稍后...">
-    <div class="search-wrap">
+    <!-- <div class="search-wrap">
       <el-input placeholder="请输入桌面名称" style="width:185px;" v-model="name" clearable @keyup.enter.native="searchData"
         @clear="searchData" />
       <el-button icon="el-icon-search" circle @click="searchData"></el-button>
-      <!-- <span class="hint">请点击以下桌面进行申请</span> -->
       <span class="fr">
         <span><i class="iconfont icon-liebiao1" :style="{color:displayType==='one'?'rgb(64, 158, 255)':''}"
             @click="changeType(1)"></i></span>
@@ -12,7 +11,7 @@
             :style="displayType==='mul'?'color:rgb(64, 158, 255);font-size:23px;':'font-size:23px;'"
             @click="changeType(2)"></i></span>
       </span>
-    </div>
+    </div> -->
     <div class="user-commodity-list-main table-wrap">
       <ul class="list" id="commodity-main">
         <el-card class="pcItem" @click.native="applyDesktop(item)" v-for="(item,index) in commodityData" :key="index"
@@ -522,7 +521,7 @@
 
   .user-commodity-list-main {
     background: #fff;
-    height: 89%;
+    height: 97%;
     /* margin-top: 15px; */
   }
 

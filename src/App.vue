@@ -1,6 +1,8 @@
 <template>
 	<div id="app">
+        <transition mode="out-in">
 		<router-view></router-view>
+        </transition>
 	</div>
 </template>
 
@@ -13,6 +15,24 @@ export default {
 <style>
 #app{
     background: white;
+}
+.v-enter{
+ opacity: 0;
+}
+.v-enter-active{
+ transition: 0.5s;
+}
+.v-enter-to{
+ opacity: 1;
+}
+.v-leave{
+ opacity: 1;
+}
+.v-leave-to{
+ opacity:0;
+}
+.v-leave-active{
+ transition: 0.5s;
 }
 body .el-zoom-in-top-enter-active{
     /* transform: none; */

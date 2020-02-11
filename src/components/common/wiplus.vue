@@ -1,11 +1,13 @@
 <template>
   <div class="hello" :style="{background:background}">
     <img src="../../assets/img/huawei.png" alt="" class="logo">
+    <img src="../../assets/img/logout.png" alt="" class="logout" @click="gotoB">
+
     <div class="promptText">{{prompt}}</div>
-    <div class="tip">点击上方桌面按钮进入</div>
-    <img src="../../assets/img/uu.png" alt="" class="tipImg tip1">
-    <img src="../../assets/img/uu.png" alt="" class="tipImg tip2">
-    <div class="wrap">
+    <div class="tip" v-if="type!==''">点击上方桌面按钮进入</div>
+    <img src="../../assets/img/uu.png" alt="" class="tipImg tip1" v-if="type!==''">
+    <img src="../../assets/img/uu.png" alt="" class="tipImg tip2" v-if="type!==''">
+    <div class="wrap" v-if="type!==''">
       <div class="item firstItem" :style="type==='all'?'margin-right:5%':''" v-if="type!=='personal'" @click="goto('teach')">
         <img src="../../assets/img/edu.png" alt="" class="itemImg firstImg">
         <div class="itemFont">
@@ -33,7 +35,7 @@
     data() {
       return {
         msg: 'Welcome to Your Vue.js App',
-        type: 'all',
+        type: '',
         background: '#296683',
         prompt: '',
         loginUrl:'',
@@ -42,6 +44,9 @@
       }
     },
     methods: {
+        gotoB(){
+            this.$router.push('/login')
+        },
       goto(type) {
         if (type === 'personal') {
           window.location.href = this.loginUrl
@@ -83,7 +88,7 @@
      // <div id="promptText" style="position: absolute;top: 36px;left:0;right:0;margin:0 auto;color:white;font-size:30px;text-align: center;display: none;"></div>
 
             //wip 修改/webui/default/js/src/dashboard.js 找到 webui.objects.dashbord.hdpclient.begin();
-             var host = 'http://172.16.1.156:6060'
+             var host = 'http://172.16.1.156:6060'//需要根据实际WIP的host进行配置
         $.ajax({//
           url: host + '/api/classroom/findIpSetting',
           type: 'GET',
@@ -111,7 +116,7 @@
   //    <div id="promptText" style="position: absolute;top: 36px;left:0;right:0;margin:0 auto;color:white;font-size:30px;text-align: center;display: none;"></div>
 
         //wip 修改/webui/default/js/src/explicit.js 找到clientMac = hdpclient.getClientMac();
-        var host = 'http://172.16.1.156:6060'
+        var host = 'http://172.16.1.156:6060'//需要根据实际WIP的host进行配置
         $.ajax({//
           url: host + '/api/classroom/findIpSetting',
           type: 'GET',
@@ -265,7 +270,7 @@
   .wrap {
     /* display: flex;
     justify-content: center; */
-    width: 50%;
+    width: 900px;
     height: 200px;
     /* border: 1px solid gainsboro; */
     padding: 20px 0;
@@ -387,7 +392,13 @@
     top: 5%;
     left: 2%;
   }
-
+.logout{
+     position: absolute;
+    top: 5%;
+    right: 2%;
+    cursor: pointer;
+    z-index: 1;
+}
   .tip {
     position: absolute;
     left: 0;
@@ -435,11 +446,11 @@
       transform: scale(1)
     }
   }
-@media screen and (max-width: 1280px) {
+/* @media screen and (max-width: 1280px) {
     .wrap {
       width: 70%;
     }
 
 
-  }
+  } */
 </style>
