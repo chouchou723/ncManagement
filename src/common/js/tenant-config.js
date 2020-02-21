@@ -1,14 +1,14 @@
 export default [
     {
         'id':'1',
-        'text':'学员管理',
-        'iconfont':'iconfont icon-1',
+        'text':'教学管理',
+        'iconfont':'iconfont icon-xiangmu',
         'url':'/cloudM',
         'children':[
             {
                 'id':'1-1',
-                'text':'学员界面管理',
-                'url':'/studentManagement',
+                'text':'教室管理',
+                'url':'/classroomManagementTeacher',
             },
             // {
             //     'id':'1-2',

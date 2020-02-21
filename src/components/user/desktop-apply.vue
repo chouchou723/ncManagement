@@ -1,5 +1,5 @@
 <template>
-  <div id="desktop-apply"  element-loading-text="正在提交 , 请稍后...">
+  <div id="desktop-apply"  element-loading-text="正在获取中 , 请稍后..."  v-loading="loadingState1">
     <!-- <div class="search-wrap">
       <el-input placeholder="请输入桌面名称" style="width:185px;" v-model="name" clearable @keyup.enter.native="searchData"
         @clear="searchData" />
@@ -185,6 +185,7 @@
         // modalState: false,
         // modalState1: false,
         // Tname: '',
+        loadingState1: false,
         loadingState: false,
         // queryUserName: '', //  查询用户名
         // minTime,
@@ -307,8 +308,10 @@
           name: this.name
         }
         let url = 'merchandise/desktopApplyList?' + Math.random()
+        this.loadingState1 = true;
         httpAjax(url, para).then((res) => {
           this.commodityData = res;
+        this.loadingState1 = false;
           this.setScroll('.user-commodity-list-main', true)
         }).catch((err) => {
           console.log(err)
@@ -378,7 +381,7 @@
             this.multSelection = [{
               disk: 0
             }]
-            this.getVmList()
+            this.getCommodityData()
           }).catch(() => {
             this.loadingState = false;
           })

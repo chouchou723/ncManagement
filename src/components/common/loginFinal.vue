@@ -24,7 +24,7 @@
               <el-input v-model="loginForm.username" placeholder="请输入用户名" clearable style="width:360px;" />
             </el-form-item>
             <el-form-item prop="password">
-              <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" clearable style="width:360px;" />
+              <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" clearable   @keyup.enter.native="submitLogin('loginForm')"  style="width:360px;" />
             </el-form-item>
           </el-form>
            <div class="ps-form-item">
@@ -558,7 +558,7 @@
             sessionStorage.setItem('domain', this.domainNameList[0]);
             if(res.role==='tenant'){
                 this.$router.push({
-                  path: '/studentManagement'
+                  path: '/classroomManagementTeacher'
                 })
 
             }else if(res.role==='admin'){

@@ -90,8 +90,8 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-//export const webroot = 'http://172.16.1.156:6060/api/'//test
- export const webroot = '/api/'
+export const webroot = 'https://172.16.6.18:6060/api/'//test
+//  export const webroot = '/api/'//打包修改
 
 export const httpAjax = (url, data) => {
   const params = data ? data : '';

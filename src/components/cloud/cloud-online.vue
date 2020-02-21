@@ -27,7 +27,7 @@
         <el-option v-for="(item,index) in selectLoginState" :key="index" :value="item.value" :label="item.label">
           {{item.label}}</el-option>
       </el-select> -->
-      <el-button icon="el-icon-search" circle @click="searchData"></el-button>
+      <!-- <el-button icon="el-icon-search" circle @click="searchData"></el-button> -->
     </div>
     <div class="table-wrap" id="table-wrap">
       <div class="newBtnWrap">
@@ -184,7 +184,7 @@
     <!-- 设置登录方式 -->
     <el-dialog title="设置登录页" :visible.sync="dialogFormVisible" :close-on-click-modal="no"
       custom-class='accountManageDialog' top='12%' width="40%" @close='resetD("aform")'>
-      <el-form :model="aform" ref="aform">
+      <el-form :model="aform" ref="aform" :rules="rules2">
         <el-form-item label="登录方式：" :label-width="formLabelWidth" prop="loginType">
           <el-checkbox-group v-model="aform.loginType">
             <el-checkbox-button v-for="login in loginLists" :label="login" :key="login">{{login}}</el-checkbox-button>
@@ -225,6 +225,13 @@
 //   } from 'api/resources'
   export default {
     data() {
+        var typecheck= (rule, value, callback) => {
+        if (value.length>0) {
+          callback()
+        } else {
+          callback('请选择登录方式')
+        }
+      }
     //   var nan16 = (rule, value, callback) => {
     //     if (value && value % 1 === 0 && value <= 16) {
     //       callback()
@@ -313,6 +320,13 @@
           '#1e90ff',
           '#c71585',
         ],
+        rules2:{
+               loginType: [{
+            required: true,
+            validator: typecheck,
+            trigger: 'change'
+          }],
+        },
         // rules2: {
         //   cpu: [{
         //     required: true,
@@ -629,7 +643,8 @@
       addAccount(formName) { //修改桌面方式
         this.$refs[formName].validate((valid) => {
         
-          this.btnLoading = true;
+        
+          if (valid) {
           let para = {
             ...this.aform
           };
@@ -640,14 +655,13 @@
           para.loginType = lt.join(',');
           para.ids = this.multSelection.map(item=>item.id).join(',')
           console.log(para)
-          if (valid) {
             this.btnLoading = true;
             httpAjax('classroom/updateIpsetting', para).then(res => {
               if (res.resultCode == "0") {
                 this.dialogFormVisible = false;
                 this.$message({
                   type: 'success',
-                  message: '修改成功,需要重启虚机!'
+                  message: '修改成功!'
                 });
                 // this.$alert('修改成功,需要重启虚机!', '修改规格', {
                 //   confirmButtonText: '确定',

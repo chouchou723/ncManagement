@@ -22,6 +22,8 @@
         <el-cascader v-model="applyOu" placeholder="请选择部门" change-on-select :options="ouSelectList"
         :show-all-levels="false" clearable @change="clearC" @visible-change="visibleChange"></el-cascader> -->
       <el-button icon="el-icon-search" circle @click="searchData"></el-button>
+      <el-button type="primary"
+       style="float:right;margin-right:10px;"   @click="refreshData" >同步用户</el-button>
       <!-- <el-button type="primary"
        style="float:right;margin-right:10px;"   @click="exportData" >导出</el-button>
     -->
@@ -1040,7 +1042,7 @@
         this.text = '正在同步,请稍后...';
         this.loadingState = true;
         httpAjax('user/synAllAdUsers').then(res => {
-          if (res.success == 'success') {
+          if (res.resultCode == '0') {
             this.$message({
               type: 'success',
               message: '同步成功!'

@@ -1,10 +1,10 @@
 export const tenantRouter = [{
-    path: '/studentManagement',
+    path: '/classroomManagementTeacher',
     name: '学员界面管理',
     meta: {
       role: ['tenant']
     },
-    component: () => import('~cloud/cloud-online'),
+    component: () => import('~cloud/classroomManagement'),
   },
 //   {
 //     path: '/cloudOnline',

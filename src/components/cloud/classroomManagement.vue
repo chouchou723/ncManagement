@@ -24,9 +24,9 @@
           {{item.label}}</el-option>
       </el-select> -->
       <!-- <el-button icon="el-icon-search" circle @click="searchData"></el-button> -->
-      <el-button type="primary" style="float:right;margin-right:10px;" @click="addClassroom"
+      <!-- <el-button type="primary" style="float:right;margin-right:10px;" @click="addClassroom"
         icon="el-icon-circle-plus-outline">新增教室
-      </el-button>
+      </el-button> -->
     </div>
     <div class="table-wrap" id="table-wrap">
       <!-- <div class="newBtnWrap">
@@ -89,9 +89,9 @@
           <template slot-scope="scope">
             <el-button @click="updateDesk(scope.row)" type="text" style="padding:0">修改</el-button>
             <!-- <el-button @click="assignDesk(scope.row)" type="text" style="padding:0;color:#42b983">分配</el-button> -->
-            <el-button @click="handleClick(scope.row)" type="text" style="color:#f10000;padding:0"
+            <!-- <el-button @click="handleClick(scope.row)" type="text" style="color:#f10000;padding:0"
               :loading="btnLoadingD&&(btnIndex===scope.row.id)">{{btnLoadingD&&(btnIndex===scope.row.id)?'删除中':'删除'}}
-            </el-button>
+            </el-button> -->
           </template>
         </el-table-column>
         <!-- <el-table-column prop="user" label="使用人">
@@ -218,21 +218,22 @@
     </el-dialog> -->
     <!-- 新增修改教室  -->
     <el-dialog :title="cform.id?'修改教室':'新增教室'" :visible.sync="transformForm" :close-on-click-modal="no"
-      custom-class='accountManageDialog' top='6%' @close='resetD("transformForm")'>
+      custom-class='accountManageDialog' top='13%' @close='resetD("transformForm")'>
       <el-form :model="cform" :rules="rules2" ref="cform">
 
         <!-- <el-form-item label="创建教室个数：" :label-width="formLabelWidth" prop="num">
           <el-input-number v-model="cform.num" controls-position="right" :min="1" :max="1024">
           </el-input-number>
         </el-form-item> -->
-        <el-form-item label="教室名称：" :label-width="formLabelWidth" prop="roomName">
-          <el-input v-model="cform.roomName" placeholder='请输入教室名称' :style='{width:"250px"}'></el-input>
+        <el-form-item label="教室名称：" :label-width="formLabelWidth" prop="roomName" >
+            <div>{{cform.roomName}}</div>
+          <!-- <el-input v-model="cform.roomName" placeholder='请输入教室名称' :style='{width:"250px"}' :readonly='true'></el-input> -->
         </el-form-item>
-        <el-form-item label="分配IP区间：" :label-width="formLabelWidth" prop="ipArea">
+        <!-- <el-form-item label="分配IP区间：" :label-width="formLabelWidth" prop="ipArea">
           <el-input v-model="cform.ipAreaF" placeholder='请输入起始的IP' :style='{width:"250px"}'></el-input>
           <span>~</span>
           <el-input v-model="cform.ipAreaL" placeholder='请输入结束的IP' :style='{width:"250px"}'></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <!-- <el-form-item label="教学老师：" :label-width="formLabelWidth" prop="teacher">
           <el-select placeholder="请选择教学老师" :style='{width:"250px"}' v-model="cform.teacher">
             <el-option v-for="(item,index) in teacherList" :key="index" :value="item.label" :label="item.label">
@@ -244,13 +245,13 @@
             <el-checkbox-button v-for="login in loginLists" :label="login" :key="login">{{login}}</el-checkbox-button>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="登录背景色：" :label-width="formLabelWidth" prop="background">
+        <!-- <el-form-item label="登录背景色：" :label-width="formLabelWidth" prop="background">
           <el-color-picker v-model="cform.background" :predefine="predefineColors">
           </el-color-picker>
         </el-form-item>
         <el-form-item label="登录页面文字：" :label-width="formLabelWidth" prop="prompt">
           <el-input v-model="cform.prompt" placeholder='请输入登录页面的文字' :style='{width:"250px"}'></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <!-- <el-form-item label="" :label-width="formLabelWidth">
           <div style="color:#f10000;text-align: left;font-size: 12px;line-height: 20px;">修改成功之后需要重启</div>
         </el-form-item> -->

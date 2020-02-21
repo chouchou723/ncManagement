@@ -247,7 +247,7 @@
       auditDesktop(para) { //审批拒绝
         this.btnLoading = true;
         httpAjax('user/approve', para).then(res => {
-          if (res.result == "success") {
+          if (res.resultCode == "0") {
             this.$message({
               type: 'success',
               message: '审批成功!'

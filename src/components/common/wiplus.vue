@@ -15,7 +15,7 @@
           <div class="smallFont">Teaching Desktop</div>
         </div>
       </div>
-      <div class="item secondItem" v-if="type!=='teacher'" @click="goto('personal')">
+      <div class="item secondItem" v-if="type!=='teaching'" @click="goto('personal')">
         <img src="../../assets/img/ind1.png" alt="" class="itemImg secImg">
         <div class="itemFont">
           <div class="bigFont">个人桌面</div>
@@ -281,16 +281,17 @@
     left: 0;
     right: 0;
     margin: auto;
+    text-align: center;
   }
 
   .promptText {
     position: absolute;
-    top: 5%;
+    top: 36px;
     left: 0;
     right: 0;
     margin: 0 auto;
     color: white;
-    font-size: 36px;
+    font-size: 30px;
     text-align: center;
     ;
   }
@@ -389,12 +390,12 @@
 
   .logo {
     position: absolute;
-    top: 5%;
+    top: 36px;
     left: 2%;
   }
 .logout{
      position: absolute;
-    top: 5%;
+    top: 36px;
     right: 2%;
     cursor: pointer;
     z-index: 1;

@@ -13,7 +13,7 @@
         <el-option value="postpone" label="延期申请">延期申请</el-option>
         <el-option value="modifyVMStandard" label="桌面规格申请">桌面规格申请</el-option>
       </el-select> -->
-      <el-button icon="el-icon-search" circle @click="searchData"></el-button>
+      <!-- <el-button icon="el-icon-search" circle @click="searchData"></el-button> -->
     </div>
     <!-- <div class="button-wrap">
       <el-button size="small" type="primary" @click="exportData">重新发起</el-button>
@@ -56,7 +56,7 @@
         </el-table-column> -->
         <!-- <el-table-column prop="description" label="描述" >
         </el-table-column> -->
-        <el-table-column prop="feature" label="CPU/内存/磁盘" width="150">
+        <el-table-column prop="feature" label="CPU/内存/磁盘">
         </el-table-column>
         <!-- <el-table-column prop="deadline" label="到期日"  width="110">
             <template slot-scope="scope">
@@ -65,7 +65,7 @@
                   </div>
           </template>
         </el-table-column> -->
-        <el-table-column prop="createTimeStr" label="申请时间" width="200">
+        <el-table-column prop="createTimeStr" label="申请时间">
           <!-- <template slot-scope="scope">
             <div>
               {{new Date(scope.row.createTime).toLocaleString()}}
