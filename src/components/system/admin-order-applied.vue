@@ -288,10 +288,10 @@
             this.btnLoading = false;
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消审批'
-          });
+        //   this.$message({
+        //     type: 'info',
+        //     message: '取消审批'
+        //   });
         });
       },
       //     resetD(name) {

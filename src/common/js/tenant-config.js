@@ -27,6 +27,33 @@ export default [
             // }
         ]
     },
+    {
+        'id': '1',
+        'text': '桌面管理',
+        'iconfont': 'el-icon-date',
+        'url': '/desktopM',
+        'children': [{
+            'id': '1-1',
+            'text': '桌面申请',
+            'url': '/desktopApply',
+          },
+        //    {
+        //     'id': '1-3',
+        //     'text': '我的申请',
+        //     'url': '/myOrder',
+        //   }, {
+        //     'id': '1-2',
+        //     'text': '我的桌面',
+        //     'url': '/myDesk',
+        //   },
+    
+        //   {
+        //     'id': '1-4',
+        //     'text': '回收站',
+        //     'url': '/deskRecycle',
+        //   },
+        ]
+      },
     // {
     //     'id': '12',
     //     'text': '桌面管理',

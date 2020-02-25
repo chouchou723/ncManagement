@@ -72,7 +72,7 @@
         </el-table-column> -->
         <el-table-column prop="loginType" label="WiPlus登录方式">
           <template slot-scope="scope">
-            {{scope.row.loginType.split(',').map(item=>{return loginObjR[item]}).join(',')}}
+            {{scope.row.loginType.split(',').length===2?'教学桌面,个人桌面':loginObjR[scope.row.loginType]}}
           </template>
         </el-table-column>
         <el-table-column prop="ip" label="WiPlus登录背景色">
@@ -217,7 +217,7 @@
       </div>
     </el-dialog> -->
     <!-- 新增修改教室  -->
-    <el-dialog :title="cform.id?'修改教室':'新增教室'" :visible.sync="transformForm" :close-on-click-modal="no"
+    <el-dialog title="修改教室" :visible.sync="transformForm" :close-on-click-modal="no"
       custom-class='accountManageDialog' top='13%' @close='resetD("transformForm")'>
       <el-form :model="cform" :rules="rules2" ref="cform">
 

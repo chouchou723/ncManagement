@@ -6,6 +6,14 @@ export const tenantRouter = [{
     },
     component: () => import('~cloud/classroomManagement'),
   },
+  {
+    path: '/desktopApply',
+    name: '桌面申请',
+    meta: {
+      role: ['user','support','troubleshooting','asset','tenant','tenant']
+    },
+    component: () => import('~user/desktop-apply'),
+  },
 //   {
 //     path: '/cloudOnline',
 //     name: '在线资源',

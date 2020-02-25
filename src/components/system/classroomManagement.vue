@@ -72,7 +72,8 @@
         </el-table-column> -->
         <el-table-column prop="loginType" label="WiPlus登录方式">
           <template slot-scope="scope">
-            {{scope.row.loginType.split(',').map(item=>{return loginObjR[item]}).join(',')}}
+              {{scope.row.loginType.split(',').length===2?'教学桌面,个人桌面':loginObjR[scope.row.loginType]}}
+            <!-- {{scope.row.loginType.split(',').map(item=>{return loginObjR[item]}).join(',')}} -->
           </template>
         </el-table-column>
         <el-table-column prop="ip" label="WiPlus登录背景色">
