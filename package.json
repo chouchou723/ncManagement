@@ -22,7 +22,7 @@
     "express": "^4.16.2",
     "imports-loader": "^0.7.1",
     "iview": "^2.14.2",
-    "jquery": "^2.2.2",
+    "jquery": "^3.5.0",
     "jquery-mousewheel": "^3.1.13",
     "js-cookie": "^2.2.0",
     "malihu-custom-scrollbar-plugin": "^3.1.5",
