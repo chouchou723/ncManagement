@@ -21,13 +21,13 @@
           <!-- <img src="../../assets/img/chat2.png"  v-if="localRole==='user'&&(!wsStatus)" alt="" title="在线帮助" style="width:35px;height:35px;cursor:pointer"> -->
       </div>
       <!-- <el-dropdown @command="handleCommand" @visible-change="statusChange" placement='top'> -->
-        <div class="el-dropdown-link" style="float:right;">
+        <div class="el-dropdown-link dropUser" >
           <!-- <i class="iconfont icon-admin"></i> -->
             <img src="~assets/img/avatar.png" alt="" width="30" height="30" class="userAvatar">
-          <div style="height: 100%;margin-right:15px;float:right;">
+          <div style="height: 100%;margin-right:15px;">
             <span class="user-name">{{username||''}}
               <span
-                style="color:#489e77;font-size:16px;">[{{localRole==='admin'?'系统管理员':localRole==='tenant'?'老师':localRole==='user'?'学员':localRole==='troubleshooting'?'故障报修组':localRole==='support'?'在线支持组':'资产管理员'}}]</span>
+                style="color:#489e77;font-size:16px;">[{{localRole==='admin'?'系统管理员':localRole==='tenant'?'教员':localRole==='user'?'学员':localRole==='troubleshooting'?'故障报修组':localRole==='support'?'在线支持组':'资产管理员'}}]</span>
 
             </span>
           </div>
@@ -671,10 +671,16 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-
+.dropUser{
+    height: 100%;
+float:right;
+display: flex;
+justify-content: center;
+align-items: center;
+}
   .userAvatar {
-    /* cursor: pointer; */
-margin-top: 12px;
+      display: block;
+/* margin-top: 12px; */
   }
 
   .skin-main {

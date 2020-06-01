@@ -3,7 +3,7 @@
     <img src="../../assets/img/huawei.png" alt="" class="logo">
     <img src="../../assets/img/logout.png" alt="" class="logout" @click="gotoB">
 
-    <div class="promptText">{{prompt}}</div>
+    <div class="promptText" :style="{fontSize:promptFontSize+'px'}">{{prompt}}</div>
     <div class="tip" v-if="type!==''">点击上方桌面按钮进入</div>
     <img src="../../assets/img/uu.png" alt="" class="tipImg tip1" v-if="type!==''">
     <img src="../../assets/img/uu.png" alt="" class="tipImg tip2" v-if="type!==''">
@@ -11,18 +11,21 @@
       <div class="item firstItem" :style="type==='all'?'margin-right:5%':''" v-if="type!=='personal'" @click="goto('teach')">
         <img src="../../assets/img/edu.png" alt="" class="itemImg firstImg">
         <div class="itemFont">
-          <div class="bigFont">教学桌面</div>
-          <div class="smallFont">Teaching Desktop</div>
+          <div class="bigFont">{{teacherTextCn}}</div>
+          <div class="smallFont">{{teacherTextEn}}</div>
         </div>
       </div>
       <div class="item secondItem" v-if="type!=='teaching'" @click="goto('personal')">
         <img src="../../assets/img/ind1.png" alt="" class="itemImg secImg">
         <div class="itemFont">
-          <div class="bigFont">个人桌面</div>
-          <div class="smallFont">Personal Desktop</div>
+          <div class="bigFont">{{personTextCn}}</div>
+          <div class="smallFont">{{personTextEn}}</div>
         </div>
       </div>
     </div>
+    <!-- <div class="loginUser">
+        <div>用户注册</div>
+    </div> -->
   </div>
 </template>
 
@@ -40,7 +43,12 @@
         prompt: '',
         loginUrl:'',
         uid:'',
-        pid:''
+        pid:'',
+        promptFontSize: 12,
+          teacherTextCn: '教学桌面',
+          teacherTextEn: 'Teaching Desktop',
+          personTextCn: '个人桌面',
+          personTextEn: 'Personal Desktop'
       }
     },
     methods: {
@@ -78,6 +86,11 @@
           this.loginUrl = res.wiLink
           this.uid = res.teachingName;
           this.pid = res.teachingPwd;
+           this.promptFontSize = res.promptFontSize||12;
+        this.teacherTextCn = res.teacherTextCn||'教学桌面';
+        this.teacherTextEn = res.teacherTextEn||'Teaching Desktop';
+        this.personTextCn = res.personTextCn||'个人桌面';
+        this.personTextEn = res.personTextEn||'Personal Desktop';
           //   this.getStatistics()
         }).catch((error) => {
           console.log(error)
@@ -282,6 +295,8 @@
     right: 0;
     margin: auto;
     text-align: center;
+    display: flex;
+    justify-content: center;
   }
 
   .promptText {
@@ -303,7 +318,9 @@
     flex: 0 0 45%; */
     width: 47%;
     height: 100%;
-    display: inline-block;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     background: #74bfaf;
     box-sizing: border-box;
     padding: 0 60px;
@@ -322,7 +339,9 @@
     flex: 0 0 45%; */
     width: 47%;
     height: 100%;
-    display: inline-block;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     box-sizing: border-box;
     padding: 0 60px;
     border-radius: 20px;
@@ -345,7 +364,7 @@
     border-radius: 10px;
     box-shadow: 0px 0px 5px white;
     transition: all linear .2s;
-    margin-top: 30px;
+    /* margin-top: 30px; */
     margin-right: 30px;
 
   }
@@ -353,7 +372,7 @@
   .secImg {
     border-radius: 10px;
     box-shadow: 0px 0px 5px white;
-    margin-top: 30px;
+    /* margin-top: 30px; */
     margin-right: 30px;
 
   }
@@ -366,8 +385,8 @@
 
   .itemFont {
     color: white;
-    float: right;
-    margin-top: 35px;
+    /* float: right; */
+    /* margin-top: 35px; */
     /* display: inline-block; */
   }
 
@@ -400,6 +419,13 @@
     cursor: pointer;
     z-index: 1;
 }
+/* .loginUser{
+    position: absolute;
+    top:36px;
+    right: 4%;
+    color: white;
+    font-size: 20px;
+} */
   .tip {
     position: absolute;
     left: 0;

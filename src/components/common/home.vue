@@ -44,7 +44,8 @@ export default {
 }
 #content{
     position: relative;
-    width: 100%;
+    /* width: 100%; */
+    flex: 1;
     /* left: 0; */
     /* top: 45px; */
     /* bottom: 0;   */

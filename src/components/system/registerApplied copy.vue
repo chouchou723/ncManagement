@@ -68,12 +68,12 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 选择OU -->
-    <!-- <el-dialog title="选择用户所在的部门" :visible.sync="dialogFormVisibleOu" :close-on-click-modal="no"
-      custom-class='accountManageDialog' top='9%' width="40%" @close='resetD("aform")'>
+    <!-- 选择角色 -->
+    <el-dialog title="选择角色" :visible.sync="dialogFormVisibleOu" :close-on-click-modal="no"
+      custom-class='accountManageDialog' top='12%' width="40%" @close='resetD("aform")'>
       <el-form :model="oform" ref="oform">
-        <el-form-item label="部门OU：" :label-width="formLabelWidth" prop="ou">
-          <el-select style="width:220px" placeholder="请选择部门OU" v-model="oform.ou">
+        <el-form-item label="角色：" :label-width="formLabelWidth" prop="role">
+          <el-select style="width:220px" placeholder="请选择角色" v-model="oform.role">
             <el-option v-for="(item,index) in ouSelectList" :key="index" :value="item.value" :label="item.label">
               {{item.label}}</el-option>
           </el-select>
@@ -83,7 +83,7 @@
         <el-button type="primary" :loading="btnLoading" @click="addAccount('oform')">确 定</el-button>
         <el-button @click="dialogFormVisibleOu = false">取 消</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
     <!-- 用户类型 -->
     <!-- <el-dialog title="用户类型" :visible.sync="dialogFormVisible" :close-on-click-modal="no" top='15%' width="30%"
       @close='resetD("aform")'>
@@ -130,7 +130,7 @@
     //   }
       return {
         backData: '',
-        ouSelectList: [],
+        ouSelectList: [{label:'学员',value:'user'},{label:'教员',value:'tenant'},],
         btnIndex: '',
         btnLoading: false,
         dialogFormVisibleOu: false,
@@ -142,7 +142,7 @@
           }
         },
         oform: {
-          ou: ''
+          role: 'user'
         },
         tableData: [],
         count: 0,
@@ -201,42 +201,43 @@
     //       console.log(err)
     //     })
     //   },
-    //   addAccount() {
-    //     // if (!this.oform.ou) {
-    //     //   this.$message.error('请选择部门OU');
-    //     //   return
-    //     // }
-    //     this.btnLoading = true;
-    //     let para = {
-    //       id: this.backData.id,
-    //       status: 'pass',
-    //     //   ou: this.oform.ou
-    //     }
-    //     httpAjax('user/approve', para).then(res => {
-    //       if (res.result == "success") {
-    //         this.$message({
-    //           type: 'success',
-    //           message: '审批成功!'
-    //         });
-    //         this.multSelection = [];
-    //         this.getVmList();
-    //       } else {
-    //         this.$message({
-    //           type: 'error',
-    //           message: res.resultDesc
-    //         });
-    //       }
-    //       this.btnLoading = false;
-    //       this.dialogFormVisibleOu = false;
-    //       //   this.getVmList()
-    //     }).catch(() => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '审批失败!'
-    //       });
-    //       this.btnLoading = false;
-    //     })
-    //   },
+      addAccount() {
+        // if (!this.oform.ou) {
+        //   this.$message.error('请选择部门OU');
+        //   return
+        // }
+        this.btnLoading = true;
+        let para = {
+          id: this.backData.id,
+          status: 'pass',
+          role:this.oform.role
+        //   ou: this.oform.ou
+        }
+        httpAjax('user/approve', para).then(res => {
+          if (res.resultCode == "0") {
+            this.$message({
+              type: 'success',
+              message: '审批成功!'
+            });
+            this.multSelection = [];
+            this.getVmList();
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.resultDesc
+            });
+          }
+          this.btnLoading = false;
+          this.dialogFormVisibleOu = false;
+          //   this.getVmList()
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '审批失败!'
+          });
+          this.btnLoading = false;
+        })
+      },
      auditReject(data) {
         this.btnIndex = data.id
         this.auditDesktop({
@@ -275,41 +276,42 @@
         this.btnLoading = true;
         this.backData = data;
         // this.getouSelectList();
-        // this.dialogFormVisibleOu = true;
+        this.dialogFormVisibleOu = true;
+      },
         // this.auditDesktop({
         //   id: data.id,
         //   status: 'pass'
         // });
-         let para = {
-          id: data.id,
-          status: 'pass',
-        //   ou: this.oform.ou
-        }
-        httpAjax('user/approve', para).then(res => {
-          if (res.resultCode == "0") {
-            this.$message({
-              type: 'success',
-              message: '审批成功!'
-            });
-            this.multSelection = [];
-            this.getVmList();
-          } else {
-            this.$message({
-              type: 'error',
-              message: res.resultDesc
-            });
-          }
-          this.btnLoading = false;
-        //   this.dialogFormVisibleOu = false;
-          //   this.getVmList()
-        }).catch(() => {
-          this.$message({
-            type: 'error',
-            message: '审批失败!'
-          });
-          this.btnLoading = false;
-        })
-      },
+    //      let para = {
+    //       id: data.id,
+    //       status: 'pass',
+    //     //   ou: this.oform.ou
+    //     }
+    //     httpAjax('user/approve', para).then(res => {
+    //       if (res.resultCode == "0") {
+    //         this.$message({
+    //           type: 'success',
+    //           message: '审批成功!'
+    //         });
+    //         this.multSelection = [];
+    //         this.getVmList();
+    //       } else {
+    //         this.$message({
+    //           type: 'error',
+    //           message: res.resultDesc
+    //         });
+    //       }
+    //       this.btnLoading = false;
+    //     //   this.dialogFormVisibleOu = false;
+    //       //   this.getVmList()
+    //     }).catch(() => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '审批失败!'
+    //       });
+    //       this.btnLoading = false;
+    //     })
+    //   },
      
     //   auditOrder() { //点击审批
     //     this.$confirm('请确认是否同意该申请?', '审批用户', {

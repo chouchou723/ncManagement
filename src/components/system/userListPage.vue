@@ -1,12 +1,12 @@
 <template>
   <div id="userListPage" v-loading.fullscreen="loadingState" :element-loading-text="text">
     <div class="search-wrap">
-      <el-input placeholder="请输入用户名" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
+      <el-input placeholder="请输入用户名" style="width:185px;" v-model="applyUser" @keyup.enter.native="clearData"
         @clear="clearData(1)">
       </el-input>
       <el-select style="width:190px;" placeholder="请选择角色" clearable v-model="applyState" @keyup.enter.native="clearData"
         @change="clearData(3)">
-        <el-option v-for="(item,index) in roleList" :key="index" :value="item.value" :label="item.label">
+        <el-option v-for="(item,index) in allroleList" :key="index" :value="item.value" :label="item.label">
           {{item.label}}</el-option>
       </el-select>
       <!-- <el-select style="width:190px;" placeholder="请选择角色" clearable v-model="applyState" @keyup.enter.native="clearData"
@@ -75,7 +75,7 @@
         </el-table-column>
         <el-table-column prop="role" label="角色" width="120">
           <template slot-scope="scope">
-            {{ scope.row.role==='tenant'?'老师':'学员'}}
+            {{ scope.row.role==='tenant'?'教员':'学员'}}
           </template>
         </el-table-column>
         <!-- <el-table-column prop="ou" label="部门OU">
@@ -375,7 +375,17 @@
           label: '学员'
         }, {
           value: 'tenant',
-          label: '老师'
+          label: '教员'
+        }],
+         allroleList: [{
+          value: '',
+          label: '全部'
+        }, {
+          value: 'user',
+          label: '学员'
+        }, {
+          value: 'tenant',
+          label: '教员'
         }],
         // tagList: [],
         // messageFormMul: false,
@@ -1252,14 +1262,14 @@
 </script>
 <style scoped>
   .bottomWrap {
-    position: absolute;
-    padding: 0 15px 0px 15px;
+      padding: 0 15px 0px 15px;
+    /* position: absolute;
     bottom: 0;
-    width: calc(100% - 60px);
+    width: calc(100% - 60px); */
     height: 40px;
     background: white;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     color: #606266;
   }

@@ -91,6 +91,7 @@ axios.interceptors.response.use(function (response) {
 });
 
 // export const webroot = 'https://172.16.6.18:6060/api/'//test
+// export const webroot = 'https://172.16.1.156:7070/api/'
  export const webroot = '/api/'//打包修改
 
 export const httpAjax = (url, data) => {

@@ -9,7 +9,7 @@
         <el-option v-for="(item,index) in roomlist" :key="index" :value="item.value" :label="item.label">
           {{item.label}}</el-option>
       </el-select>
-      <!-- <el-select style="width:190px;" placeholder="请选择老师" clearable v-model="applyUser" filterable
+      <!-- <el-select style="width:190px;" placeholder="请选择教员" clearable v-model="applyUser" filterable
         @change="clearData(3)">
         <el-option v-for="(item,index) in teacherList" :key="index" :value="item.label" :label="item.label">
           {{item.label}}</el-option>
@@ -68,11 +68,11 @@
             172.16.1.1~172.16.1.18(共18个)
           </template> -->
         </el-table-column>
-        <!-- <el-table-column prop="teacher" label="教学老师">
+        <!-- <el-table-column prop="teacher" label="教员">
         </el-table-column> -->
         <el-table-column prop="loginType" label="WiPlus登录方式">
           <template slot-scope="scope">
-              {{scope.row.loginType.split(',').length===2?'教学桌面,个人桌面':loginObjR[scope.row.loginType]}}
+            {{scope.row.loginType.split(',').length===2?'教学桌面,个人桌面':loginObjR[scope.row.loginType]}}
             <!-- {{scope.row.loginType.split(',').map(item=>{return loginObjR[item]}).join(',')}} -->
           </template>
         </el-table-column>
@@ -85,6 +85,31 @@
           <!-- <template slot-scope="scope">
             考试机器
           </template> -->
+        </el-table-column>
+           <el-table-column prop="promptFontSize" label="文字大小" width="80">
+          <!-- <template slot-scope="scope">
+            考试机器
+          </template> -->
+        </el-table-column>
+          <el-table-column prop="teacherText" label="教学桌面自定义文字">
+          <template slot-scope="scope">
+           <div>
+               <span>中文:</span><span>{{scope.row.teacherTextCn||'教学桌面(默认)'}}</span>
+           </div>
+           <div>
+               <span>英文:</span><span>{{scope.row.teacherTextEn||'Teaching Desktop(默认)'}}</span>
+           </div>
+          </template>
+        </el-table-column>
+          <el-table-column prop="personText" label="个人桌面自定义文字">
+          <template slot-scope="scope">
+           <div>
+               <span>中文:</span><span>{{scope.row.personTextCn||'个人桌面(默认)'}}</span>
+           </div>
+           <div>
+               <span>英文:</span><span>{{scope.row.personTextEn||'Personal Desktop(默认)'}}</span>
+           </div>
+          </template>
         </el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
@@ -219,7 +244,7 @@
     </el-dialog> -->
     <!-- 新增修改教室  -->
     <el-dialog :title="cform.id?'修改教室':'新增教室'" :visible.sync="transformForm" :close-on-click-modal="no"
-      custom-class='accountManageDialog' top='6%' @close='resetD("transformForm")'>
+      custom-class='accountManageDialog' top='4%' @close='resetD("transformForm")'>
       <el-form :model="cform" :rules="rules2" ref="cform">
 
         <!-- <el-form-item label="创建教室个数：" :label-width="formLabelWidth" prop="num">
@@ -234,8 +259,8 @@
           <span>~</span>
           <el-input v-model="cform.ipAreaL" placeholder='请输入结束的IP' :style='{width:"250px"}'></el-input>
         </el-form-item>
-        <!-- <el-form-item label="教学老师：" :label-width="formLabelWidth" prop="teacher">
-          <el-select placeholder="请选择教学老师" :style='{width:"250px"}' v-model="cform.teacher">
+        <!-- <el-form-item label="教员：" :label-width="formLabelWidth" prop="teacher">
+          <el-select placeholder="请选择教员" :style='{width:"250px"}' v-model="cform.teacher">
             <el-option v-for="(item,index) in teacherList" :key="index" :value="item.label" :label="item.label">
               {{item.label}}</el-option>
           </el-select>
@@ -249,8 +274,27 @@
           <el-color-picker v-model="cform.background" :predefine="predefineColors">
           </el-color-picker>
         </el-form-item>
-        <el-form-item label="登录页面文字：" :label-width="formLabelWidth" prop="prompt">
+        <!-- <div class="flext"> -->
+        <el-form-item label="登录页面文字自定义：" :label-width="formLabelWidth" prop="prompt">
           <el-input v-model="cform.prompt" placeholder='请输入登录页面的文字' :style='{width:"250px"}'></el-input>
+        </el-form-item>
+        <el-form-item label="登录页面文字大小：" :label-width="formLabelWidth" prop="prompt">
+          <el-input-number v-model="cform.promptFontSize" @change="handleChange" :min="12" label="请选择登录页面的文字大小">
+          </el-input-number>
+        </el-form-item>
+
+        <!-- </div> -->
+        <el-form-item label="教学桌面文字自定义：" :label-width="formLabelWidth" prop="prompt">
+          <el-input v-model="cform.teacherTextCn" placeholder='请输入教学桌面文字(中文)' :style='{width:"250px"}'></el-input>
+          <span>/</span>
+          <el-input v-model="cform.teacherTextEn" placeholder='请输入教学桌面文字(英文)' :style='{width:"250px"}'></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="教学桌面文字自定义(英文)：" :label-width="formLabelWidth" prop="prompt">
+        </el-form-item> -->
+        <el-form-item label="个人桌面文字自定义：" :label-width="formLabelWidth" prop="prompt">
+          <el-input v-model="cform.personTextCn" placeholder='请输入个人桌面文字(中文)' :style='{width:"250px"}'></el-input>
+          <span>/</span>
+          <el-input v-model="cform.personTextEn" placeholder='请输入个人桌面文字(英文)' :style='{width:"250px"}'></el-input>
         </el-form-item>
         <!-- <el-form-item label="" :label-width="formLabelWidth">
           <div style="color:#f10000;text-align: left;font-size: 12px;line-height: 20px;">修改成功之后需要重启</div>
@@ -348,8 +392,8 @@
           temp1 = ipLast.split('.')
           temp2 = ipFirst.split('.')
           for (var i = 0; i < 4; i++) {
-            if (temp1[i] - temp2[i] > 0) {//后面的比前面的大
-            // console.log(temp1[i] , temp2[i] )
+            if (temp1[i] - temp2[i] > 0) { //后面的比前面的大
+              // console.log(temp1[i] , temp2[i] )
               return 1
             } else if (temp1[i] - temp2[i] < 0) {
               return -1
@@ -358,7 +402,7 @@
         }
         if (!reg.test(this.cform.ipAreaF) || !reg.test(this.cform.ipAreaL)) {
           callback(new Error('请按对应规范输入正确的值'))
-        } else if (compareIP(this.cform.ipAreaL,this.cform.ipAreaF) === -1) {
+        } else if (compareIP(this.cform.ipAreaL, this.cform.ipAreaF) === -1) {
           callback(new Error('请按正确的IP起始结束值'))
         } else {
           let url = 'classroom/checkCrossIp'
@@ -443,10 +487,15 @@
           roomName: '',
           ipAreaF: '',
           ipAreaL: '',
-        //   teacher: '',
+          //   teacher: '',
           loginType: ['教学桌面'],
           background: '#296683',
-          prompt: ''
+          prompt: '',
+          promptFontSize: 12,
+          teacherTextCn: '',
+          teacherTextEn: '',
+          personTextCn: '',
+          personTextEn: ''
         },
         aform: {
           loginType: ['教学桌面'],
@@ -481,12 +530,12 @@
             validator: typecheck,
             trigger: 'change'
           }],
-        //   teacher: [{
-        //     required: true,
-        //     message: '请选择老师',
-        //     // validator: nan32,
-        //     trigger: 'change'
-        //   }],
+          //   teacher: [{
+          //     required: true,
+          //     message: '请选择教员',
+          //     // validator: nan32,
+          //     trigger: 'change'
+          //   }],
           //   prompt: [{
           //     // required: true,
           //     message: '请输入教室名称',
@@ -514,7 +563,7 @@
           //     trigger: 'blur'
           //   }]
         },
-        formLabelWidth: '130px',
+        formLabelWidth: '165px',
         inputLabelWidth: '300px',
         // dialogFormVisibleP: false,
         // postform: {
@@ -553,7 +602,7 @@
     },
     created() {
       this.getroomList()
-    //   this.getTeacherList()
+      //   this.getTeacherList()
       this.getVmList(1)
     },
     mounted() {
@@ -572,43 +621,48 @@
         }
         const url = `classroom/classroomList`
         httpGet(url, para).then((res) => {
-          this.roomlist = res.data.map(item => {
+          let a = res.data.map(item => {
             return {
               label: item.roomName,
               value: item.roomName
             }
-          });
+          })
+          a = [{
+            label: '全部教室',
+            value: ''
+          }, ...a]
+          this.roomlist = a;
 
           //   this.getStatistics()
         }).catch((error) => {
           console.log(error)
         })
       },
-    //   getTeacherList() {
-    //     let para = {
-    //       page: 1,
-    //       limit: 10000,
-    //       role: 'tenant',
-    //       //   tag: this.tagState,
-    //       //   ou: this.applyOu.length > 0 ? this.applyOu.slice(-1)[0] : ''
-    //       //   user: this.applyUser,
-    //       //   computerName: this.applyTable,
-    //       //   runState: this.applyState,
-    //       //   loginState: this.applyLoginState
-    //     }
-    //     const url = `user/adminUserList?${Math.random()}`
-    //     httpGet(url, para).then((res) => {
-    //       //   this.tableData = res.data;
-    //       this.teacherList = res.data.map(item => {
-    //         return {
-    //           label: item.name,
-    //           value: item.name
-    //         }
-    //       })
-    //     }).catch((error) => {
-    //       console.log(error)
-    //     })
-    //   },
+      //   getTeacherList() {
+      //     let para = {
+      //       page: 1,
+      //       limit: 10000,
+      //       role: 'tenant',
+      //       //   tag: this.tagState,
+      //       //   ou: this.applyOu.length > 0 ? this.applyOu.slice(-1)[0] : ''
+      //       //   user: this.applyUser,
+      //       //   computerName: this.applyTable,
+      //       //   runState: this.applyState,
+      //       //   loginState: this.applyLoginState
+      //     }
+      //     const url = `user/adminUserList?${Math.random()}`
+      //     httpGet(url, para).then((res) => {
+      //       //   this.tableData = res.data;
+      //       this.teacherList = res.data.map(item => {
+      //         return {
+      //           label: item.name,
+      //           value: item.name
+      //         }
+      //       })
+      //     }).catch((error) => {
+      //       console.log(error)
+      //     })
+      //   },
       //   queryUserList() {
       //     this.$refs.multipleTableTran.toggleRowSelection(this.multSelectionTran[0]);
       //     this.multSelectionTran = [];
@@ -783,10 +837,15 @@
               roomName: '',
               ipAreaF: '',
               ipAreaL: '',
-            //   teacher: '',
+              //   teacher: '',
               loginType: ['教学桌面'],
               background: '#296683',
-              prompt: ''
+              prompt: '',
+              promptFontSize: 12,
+              teacherTextCn: '',
+              teacherTextEn: '',
+              personTextCn: '',
+              personTextEn: ''
             }
             this.$refs['cform'].resetFields();
           default:
@@ -921,7 +980,7 @@
         this.transformForm = true;
 
       },
-      updateDesk(data) { //设置登录页
+      updateDesk(data) { //修改登录页
         // this.aform.cpu = this.multSelection[0].cpu;
         // this.aform.memory = this.multSelection[0].memory;
         // this.aform.disk = this.multSelection[0].disk;
@@ -935,6 +994,11 @@
         });
         this.cform.background = data.background;
         this.cform.prompt = data.prompt;
+        this.cform.promptFontSize = data.promptFontSize||12;
+        this.cform.teacherTextCn = data.teacherTextCn;
+        this.cform.teacherTextEn = data.teacherTextEn;
+        this.cform.personTextCn = data.personTextCn;
+        this.cform.personTextEn = data.personTextEn;
         this.transformForm = true;
       },
       //   start() { //启动
@@ -1236,7 +1300,7 @@
         let para = {
           page: this.currentPage4,
           limit: this.currentSize,
-        //   teacher: this.applyUser,
+          //   teacher: this.applyUser,
           roomName: this.applyTable
           //   computerName: this.applyTable,
           //   runState: this.applyState,
@@ -1305,11 +1369,11 @@
 </script>
 <style scoped>
   .bottomWrap {
-    position: absolute;
+    /* position: absolute; */
     padding: 0 15px 0px 15px;
-    bottom: 0;
-    width: calc(100% - 60px);
-    height: 40px;
+    /* bottom: 0; */
+    /* width:100%; */
+    height: 45px;
     background: white;
     display: flex;
     justify-content: center;
@@ -1321,6 +1385,11 @@
     height: 30px;
     width: 30px;
     margin: 0 auto;
+  }
+
+  .flext {
+    display: flex;
+
   }
 
 </style>

@@ -18,13 +18,25 @@
             </div>
         <div class="left-login">
           <img src="../../assets/img/logo1.jpeg" alt="" style="height:200px;">
-          <div class='ms-title'>南昌陆院教学管理平台</div>
+          <div class='ms-title'>陆军步兵学院教学管理平台</div>
           <el-form ref="loginForm" :model="loginForm">
             <el-form-item prop="username">
-              <el-input v-model="loginForm.username" placeholder="请输入用户名" clearable style="width:360px;" />
+              <el-input v-model="loginForm.username" placeholder="请输入用户名" style="width:360px;">
+                <i
+    class="el-icon-error el-input__icon"
+    slot="suffix" v-if="loginForm.username"
+    @click="clearInput('username')">
+  </i>
+              </el-input>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" clearable   @keyup.enter.native="submitLogin('loginForm')"  style="width:360px;" />
+              <el-input v-model="loginForm.password" type="password" placeholder="请输入密码"   @keyup.enter.native="submitLogin('loginForm')"  style="width:360px;">
+                              <i
+    class="el-icon-error el-input__icon"
+    slot="suffix" v-if="loginForm.password"
+    @click="clearInput('password')">
+  </i>
+              </el-input>
             </el-form-item>
           </el-form>
            <div class="ps-form-item">
@@ -65,7 +77,7 @@
         </el-form-item> -->
         <el-form-item label="账号   :" :label-width="formLabelWidth" prop="userName">
           <!-- <span style="margin-right:5px;">{{lform.type==='intern'?'sx':'wb'}}</span> -->
-          <el-input v-model="lform.userName" placeholder="请输入账号" :style="{width:inputLabelWidth}" :maxlength="22">
+          <el-input v-model="lform.userName" placeholder="请输入账号" :style="{width:inputLabelWidth}" :maxlength="22" @blur="changelow">
             <!-- <template slot="prepend">{{lform.type==='intern'?'sx':'wb'}}</template> -->
           </el-input>
         </el-form-item>
@@ -321,6 +333,12 @@
       // this.bannerMove();
     },
     methods: {
+        changelow(e){
+            this.lform.userName = this.lform.userName.toLowerCase();
+        },
+        clearInput(type){
+            this.loginForm[type] = ''
+        },
         gotoWiP(){
             this.$router.push('/wiplus')
         },

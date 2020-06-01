@@ -3,7 +3,7 @@
     <div class="search-wrap">
       <!-- <el-input placeholder="请输入桌面名称" style="width:185px;" clearable v-model="applyUser" @keyup.enter.native="clearData"
         @clear="clearData(1)"></el-input> -->
-      <el-date-picker v-model="createTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择申请时间" :editable="no"
+      <el-date-picker v-model="createTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择申请时间" editable
         clearable @change="clearDataD(2)" :picker-options="pickerOptions1">
       </el-date-picker>
       <!-- <el-select style="width:190px" placeholder="请选择业务类型" clearable v-model="businessType"
@@ -621,14 +621,14 @@
 </script>
 <style scoped>
   .bottomWrap {
-    position: absolute;
-    padding: 0 15px 0px 15px;
+      padding: 0 15px 0px 15px;
+    /* position: absolute;
     bottom: 0;
-    width: calc(100% - 60px);
+    width: calc(100% - 60px); */
     height: 40px;
     background: white;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     color: #606266;
   }

@@ -48,7 +48,7 @@
 
 /* 表格盒子 */
 
-.table-wrap{margin-top: 10px;margin-bottom: 10px;box-shadow: 0 0 10px #e4dede;}
+.table-wrap{margin-top: 10px;margin-bottom: 5px;box-shadow: 0 0 10px #e4dede;}
 /* .ivu-table-wrapper{position:static !important;border-width:0px;background: #fff;}
 .ivu-table .ivu-table-header th{background: #fff;}
 .ivu-table td, 
@@ -104,7 +104,7 @@
 /* .page-wrap{
     margin-right: 150px;
 } */
-
+.el-input__inner{line-height: 1;}
 
 
 
