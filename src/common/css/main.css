@@ -69,6 +69,7 @@
     line-height: 50px;
     padding-left: 15px;
     border-bottom: 1px solid rgba(0,0,0,0.1);
+    background: #fff;
 }
 /* 分页  */
 /* .page-wrap{text-align: right;} */

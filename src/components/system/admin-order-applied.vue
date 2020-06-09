@@ -19,22 +19,27 @@
       <el-button size="small" type="primary" @click="exportData">重新发起</el-button>
     </div> -->
     <div class="table-wrap" id="table-wrap">
-      <el-table :data="tableData" v-loading="vmTableLoadingState" :height="tableHeight" @select="checkSelect" stripe
-        ref="multipleTable" :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}">
-        <!-- <el-table-column type="selection" width="55">
-        </el-table-column> -->
-        <el-table-column label="审批" width="200">
-          <template slot-scope="scope">
-            <el-button @click="auditPass(scope.row)" type="primary" size="small"
-              :loading="btnLoading&&(btnIndex===scope.row.id)">同意</el-button>
-            <el-button @click="auditReject(scope.row)" type="danger" size="small"
-              :loading="btnLoading&&(btnIndex===scope.row.id)">拒绝</el-button>
-          </template>
+      <div class="newBtnWrap">
+        <el-button-group>
+          <el-button size="small" type="primary" :disabled="multSelection.length===0" @click="batchPass"
+            icon="el-icon-success">批量同意</el-button>
+          <el-button size="small" type="danger" :disabled="multSelection.length===0" @click="batchReject"
+            icon="el-icon-error">批量拒绝</el-button>
+        </el-button-group>
+      </div>
+      <el-table :data="tableData" v-loading="vmTableLoadingState" :height="tableHeight" stripe @row-click="rowClick"
+        @selection-change="handleSelectionChangeMerge" ref="multipleTable" :header-cell-style="{'text-align':'center'}"
+        :cell-style="{'text-align':'center'}" :row-key="rowKey">
+        <el-table-column type="selection" width="55" :reserve-selection="true">
         </el-table-column>
+
         <el-table-column prop="name" label="桌面名称">
           <template slot-scope="scope">
             <!-- <el-button @click="handleClick(scope.row)" type="text" > -->
+                 <div style="padding:7px 0">
             {{scope.row.computerName||scope.row.name}}
+                     
+                     </div>
             <!-- </el-button> -->
           </template>
         </el-table-column>
@@ -72,7 +77,14 @@
             </div>
           </template> -->
         </el-table-column>
-
+        <el-table-column label="操作" width="200">
+          <template slot-scope="scope">
+            <el-button @click="auditPass(scope.row)" type="text" size="small"
+              :loading="btnLoading&&(btnIndex===scope.row.id)">同意</el-button>
+            <el-button @click="auditReject(scope.row)" type="text" size="small"
+              :loading="btnLoading&&(btnIndex===scope.row.id)" style="color:#F56C6C">拒绝</el-button>
+          </template>
+        </el-table-column>
         <!-- <el-table-column label="操作" width="100">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
@@ -169,15 +181,15 @@
   } from 'api/common'
   export default {
     data() {
-    //   var nan32 = (rule, value, callback) => {
-    //     var reg =
-    //       /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
-    //     if (!reg.test(value)) {
-    //       callback('请按规范输入 IP 地址, 例如: 192.168.3.5')
-    //     } else {
-    //       callback()
-    //     }
-    //   }
+      //   var nan32 = (rule, value, callback) => {
+      //     var reg =
+      //       /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+      //     if (!reg.test(value)) {
+      //       callback('请按规范输入 IP 地址, 例如: 192.168.3.5')
+      //     } else {
+      //       callback()
+      //     }
+      //   }
       return {
         btnIndex: '',
         btnLoading: false,
@@ -239,6 +251,106 @@
     //   })
     // },
     methods: {
+      rowKey(row) {
+        return row.id
+      },
+      batchPass() { //批量同意
+        this.$confirm('确定批量同意该些申请', '批量同意申请', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({
+          value
+        }) => {
+          let params = {};
+          params.ids = this.multSelection.map(item => item.id).join(",");
+          params.orderState = 'approved';
+          httpAjax('merchandise/auditDesktop', params).then(res => {
+            //   if (res.result == "success") {
+            this.$refs.multipleTable.clearSelection();
+            this.multSelection = [];
+            this.getVmList();
+            this.$message({
+              type: 'success',
+              message: '操作成功,ita执行中,请稍等!'
+            });
+            //   } else {
+            //     this.$message({
+            //       type: 'error',
+            //       message: '已经提交过，正在审核中!'
+            //     });
+            //   }
+          }).catch(() => {
+            this.$message({
+              type: 'error',
+              message: '审批失败!'
+            });
+          })
+        }).catch(() => {
+          //   this.$message({
+          //     type: 'info',
+          //     message: '取消审批'
+          //   });
+        });
+      },
+      batchReject() { //批量拒绝
+        this.$confirm('确定批量拒绝该些申请', '批量拒绝申请', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          confirmButtonClass: 'el-button--danger',
+        }).then(({
+          value
+        }) => {
+          let params = {};
+          params.ids = this.multSelection.map(item => item.id).join(",");
+          params.orderState = 'reject';
+          httpAjax('merchandise/auditDesktop', params).then(res => {
+            //   if (res.result == "success") {
+            this.$refs.multipleTable.clearSelection();
+            this.multSelection = [];
+            this.getVmList();
+            this.$message({
+              type: 'success',
+              message: '审批成功'
+            });
+            //   } else {
+            //     this.$message({
+            //       type: 'error',
+            //       message: '已经提交过，正在审核中!'
+            //     });
+            //   }
+          }).catch(() => {
+            this.$message({
+              type: 'error',
+              message: '审批失败!'
+            });
+          })
+        }).catch(() => {
+          //   this.$message({
+          //     type: 'info',
+          //     message: '取消审批'
+          //   });
+        });
+      },
+      rowClick(row, column, event) {
+        // console.log(event)
+        if (event.target.localName === 'button' || event.target.parentNode.localName === 'button') {
+          return
+        }
+        if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length === 0) {//点击了不一样的条目
+          //   this.$refs.multipleTable.toggleRowSelection(row);
+          this.multSelection = [...this.multSelection, row];
+        } else if (this.multSelection.length > 0 && this.multSelection.filter(item => item.id === row.id).length ===//点击了同一条,取消该条
+          1) {
+          this.multSelection = this.multSelection.filter(item => item.id !== row.id);
+        } else {
+          this.multSelection = [row];
+        }
+        console.log(  this.multSelection)
+        this.$refs.multipleTable.toggleRowSelection(row);
+      },
+      handleSelectionChangeMerge(val) {
+        this.multSelection = val;
+      },
       auditPass(data) {
         this.btnIndex = data.id;
         //   this.aform.ipDistri = data.ipDistri;
@@ -262,12 +374,13 @@
           value
         }) => {
           let params = {};
-          params.id = data.id;
+          params.ids = data.id;
           params.orderState = 'reject';
           this.btnLoading = true;
           httpAjax('merchandise/auditDesktop', params).then(res => {
             //   if (res.result == "success") {
             this.getVmList();
+            this.$refs.multipleTable.clearSelection();
             this.multSelection = [];
             this.btnLoading = false;
             this.$message({
@@ -288,10 +401,10 @@
             this.btnLoading = false;
           })
         }).catch(() => {
-        //   this.$message({
-        //     type: 'info',
-        //     message: '取消审批'
-        //   });
+          //   this.$message({
+          //     type: 'info',
+          //     message: '取消审批'
+          //   });
         });
       },
       //     resetD(name) {
@@ -306,7 +419,7 @@
       //   auditO() {//桌面申请的时候的同意
       //     this.$refs['aform'].validate((valid) => {
       //       let params = {};
-      //       params.id = this.backData.id;
+      //       params.ids = this.backData.id;
       //     //   params.namePolicy = this.aform.namePolicy
       //     //   if (this.backData.ipDistri === 'static') { //静态ip时
       //     //     params.IpAddress = this.aform.IpAddress;
@@ -340,8 +453,8 @@
       auditDesktop() { //审批同意
         this.btnLoading = true;
         let para = {
-          id: this.backData.id,
-          orderState:'approved'
+          ids: this.backData.id,
+          orderState: 'approved'
         }
         httpAjax('merchandise/auditDesktop', para).then(res => {
           if (res.resultCode == "0") {
@@ -349,6 +462,7 @@
               type: 'success',
               message: '操作成功,ita执行中,请稍等!'
             });
+            this.$refs.multipleTable.clearSelection();
             this.multSelection = [];
             this.getVmList()
           } else {
@@ -368,96 +482,96 @@
 
         })
       },
-    //   getNameList(faIp) { //获取命名空间
-    //     let params = {};
-    //     params.faIp = faIp;
-    //     this.dialogFormVisibleAudit = true;
-    //     httpAjax('desktop/findNamePolicies', params).then(res => {
-    //       this.nameList = res;
-    //     })
-    //   },
-    //   auditOrder() { //点击审批
-    //     this.$confirm('请确认是否同意该申请?', '审批订单', {
-    //       confirmButtonText: '同意',
-    //       confirmButtonClass: 'el-button--primary',
-    //       cancelButtonText: '拒绝',
-    //       cancelButtonClass: 'el-button--danger',
-    //       distinguishCancelAndClose: true,
-    //       type: 'warning'
-    //     }).then(() => {
-    //       this.aform.ipDistri = this.multSelection[0].ipDistri;
-    //       this.aform.ipScope = this.multSelection[0].ipScope;
-    //       if (this.multSelection[0].businessType == "provide") { //桌面申请时
-    //         this.getNameList();
-    //       } else { //非桌面申请时,比如增加磁盘之类
-    //         this.auditDesktop({
-    //           id: this.multSelection[0].id
-    //         });
-    //       }
+      //   getNameList(faIp) { //获取命名空间
+      //     let params = {};
+      //     params.faIp = faIp;
+      //     this.dialogFormVisibleAudit = true;
+      //     httpAjax('desktop/findNamePolicies', params).then(res => {
+      //       this.nameList = res;
+      //     })
+      //   },
+      //   auditOrder() { //点击审批
+      //     this.$confirm('请确认是否同意该申请?', '审批订单', {
+      //       confirmButtonText: '同意',
+      //       confirmButtonClass: 'el-button--primary',
+      //       cancelButtonText: '拒绝',
+      //       cancelButtonClass: 'el-button--danger',
+      //       distinguishCancelAndClose: true,
+      //       type: 'warning'
+      //     }).then(() => {
+      //       this.aform.ipDistri = this.multSelection[0].ipDistri;
+      //       this.aform.ipScope = this.multSelection[0].ipScope;
+      //       if (this.multSelection[0].businessType == "provide") { //桌面申请时
+      //         this.getNameList();
+      //       } else { //非桌面申请时,比如增加磁盘之类
+      //         this.auditDesktop({
+      //           id: this.multSelection[0].id
+      //         });
+      //       }
 
-    //     }).catch((action) => {
-    //       if (action === 'cancel') {
-    //         this.$prompt('请输入拒绝原因', '拒绝', {
-    //           confirmButtonText: '确定',
-    //           cancelButtonText: '取消',
-    //           inputPlaceholder: '请输入拒绝原因',
-    //           inputPattern: /.+/,
-    //           inputErrorMessage: '请输入拒绝原因'
-    //         }).then(({
-    //           value
-    //         }) => {
-    //           let params = {};
-    //           params.id = this.multSelection[0].id;
-    //           params.description = value;
-    //           httpAjax('desktop/refuse', params).then(res => {
-    //             //   if (res.result == "success") {
-    //             this.getVmList();
-    //             this.multSelection = [];
-    //             this.$message({
-    //               type: 'success',
-    //               message: '审批成功'
-    //             });
-    //             //   } else {
-    //             //     this.$message({
-    //             //       type: 'error',
-    //             //       message: '已经提交过，正在审核中!'
-    //             //     });
-    //             //   }
-    //           }).catch(() => {
-    //             this.$message({
-    //               type: 'error',
-    //               message: '审批失败!'
-    //             });
-    //           })
-    //         }).catch(() => {
-    //           this.$message({
-    //             type: 'info',
-    //             message: '取消审批'
-    //           });
-    //         });
+      //     }).catch((action) => {
+      //       if (action === 'cancel') {
+      //         this.$prompt('请输入拒绝原因', '拒绝', {
+      //           confirmButtonText: '确定',
+      //           cancelButtonText: '取消',
+      //           inputPlaceholder: '请输入拒绝原因',
+      //           inputPattern: /.+/,
+      //           inputErrorMessage: '请输入拒绝原因'
+      //         }).then(({
+      //           value
+      //         }) => {
+      //           let params = {};
+      //           params.ids = this.multSelection[0].id;
+      //           params.description = value;
+      //           httpAjax('desktop/refuse', params).then(res => {
+      //             //   if (res.result == "success") {
+      //             this.getVmList();
+      //             this.multSelection = [];
+      //             this.$message({
+      //               type: 'success',
+      //               message: '审批成功'
+      //             });
+      //             //   } else {
+      //             //     this.$message({
+      //             //       type: 'error',
+      //             //       message: '已经提交过，正在审核中!'
+      //             //     });
+      //             //   }
+      //           }).catch(() => {
+      //             this.$message({
+      //               type: 'error',
+      //               message: '审批失败!'
+      //             });
+      //           })
+      //         }).catch(() => {
+      //           this.$message({
+      //             type: 'info',
+      //             message: '取消审批'
+      //           });
+      //         });
 
-    //       }
+      //       }
 
-    //     });
-    //   },
-    //   handleClick(data) {
-    //     this.taskID = data.id;
-    //     this.dialogFormVisible = true;
-    //     let params = {
-    //       orderId: data.id
-    //     }
-    //     httpAjax('desktop/findOrderLog', params).then(res => {
-    //       // console.log(res)
-    //       this.activities = res.res;
-    //       this.logContent = res.order
-    //     }).catch(() => {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '发起失败!'
-    //       });
-    //     })
+      //     });
+      //   },
+      //   handleClick(data) {
+      //     this.taskID = data.id;
+      //     this.dialogFormVisible = true;
+      //     let params = {
+      //       orderId: data.id
+      //     }
+      //     httpAjax('desktop/findOrderLog', params).then(res => {
+      //       // console.log(res)
+      //       this.activities = res.res;
+      //       this.logContent = res.order
+      //     }).catch(() => {
+      //       this.$message({
+      //         type: 'error',
+      //         message: '发起失败!'
+      //       });
+      //     })
 
-    //   },
+      //   },
       searchData() {
         this.getVmList('', 1)
       },
@@ -471,104 +585,105 @@
       },
       // handleSelectionChange(val) {
       //   },
-    //   checkSelect(selection, row) {
-    //     if (selection.length > 1) {
-    //       this.$refs.multipleTable.toggleRowSelection(selection[0]);
-    //     }
-    //     this.multSelection = selection;
-    //   },
-    //   clouldType(deskType) {
-    //     if (deskType == 'copyClone') {
-    //       return '完整复制'
-    //     } else if (deskType == 'linkedClone') {
-    //       return '链接克隆'
-    //     } else if (deskType == 'memoryClone') {
-    //       return '全内存'
-    //     }
-    //   },
-    //   orderStateTplD(status) {
-    //     if (status == 'applied') {
-    //       return '待审批';
-    //     } else if (status == 'oa_applied') {
-    //       return 'OA审批中';
-    //     } else if (status == 'oa_approved') {
-    //       return 'OA审批通过';
-    //     } else if (status == 'reject') {
-    //       return '已拒绝';
-    //     } else if (status == 'approved') {
-    //       return '审批通过';
-    //     }
-    //   },
-    //   bizTypeTplD(taskType) {
-    //     if (taskType == 'provide') {
-    //       return '桌面申请';
-    //     } else if (taskType == 'detach') {
-    //       return '桌面清退';
-    //     } else if (taskType == 'attachVolume') {
-    //       return '修改桌面磁盘';
-    //     } else if (taskType == 'start') {
-    //       return '启动桌面';
-    //     } else if (taskType == 'restart') {
-    //       return '重启桌面';
-    //     } else if (taskType == 'stop') {
-    //       return '停止桌面';
-    //     } else if (taskType == 'addUser') {
-    //       return '添加用户';
-    //     } else if (taskType == 'postpone') {
-    //       return '延期申请';
-    //     } else if (taskType == 'modifyVMStandard') {
-    //       return '桌面规格申请';
-    //     } else if (taskType == 'renameDesktop') {
-    //       return '修改桌面名称';
-    //     }
-    //   },
-    //   bizTypeTpl(params) {
-    //     let taskType = params.row.businessType
-    //     if (taskType == 'provide') {
-    //       return '桌面申请';
-    //     } else if (taskType == 'detach') {
-    //       return '桌面清退';
-    //     } else if (taskType == 'attachVolume') {
-    //       return '修改桌面磁盘';
-    //     } else if (taskType == 'start') {
-    //       return '启动桌面';
-    //     } else if (taskType == 'restart') {
-    //       return '重启桌面';
-    //     } else if (taskType == 'stop') {
-    //       return '停止桌面';
-    //     } else if (taskType == 'addUser') {
-    //       return '添加用户';
-    //     } else if (taskType == 'postpone') {
-    //       return '延期申请';
-    //     } else if (taskType == 'modifyVMStandard') {
-    //       return '桌面规格申请';
-    //     } else if (taskType == 'renameDesktop') {
-    //       return '修改桌面名称';
-    //     }
-    //   },
-    //   orderStateTpl(params) {
-    //     let orderState = params.row.orderState
-    //     if (orderState == 'applied') {
-    //       return '待审批';
-    //     } else if (orderState == 'oa_applied') {
-    //       return 'OA审批中';
-    //     } else if (orderState == 'oa_approved') {
-    //       return 'OA审批通过';
-    //     } else if (orderState == 'reject') {
-    //       return '已拒绝';
-    //     } else if (orderState == 'approved') {
-    //       return '审批通过';
-    //     }
-    //   },
+      //   checkSelect(selection, row) {
+      //     if (selection.length > 1) {
+      //       this.$refs.multipleTable.toggleRowSelection(selection[0]);
+      //     }
+      //     this.multSelection = selection;
+      //   },
+      //   clouldType(deskType) {
+      //     if (deskType == 'copyClone') {
+      //       return '完整复制'
+      //     } else if (deskType == 'linkedClone') {
+      //       return '链接克隆'
+      //     } else if (deskType == 'memoryClone') {
+      //       return '全内存'
+      //     }
+      //   },
+      //   orderStateTplD(status) {
+      //     if (status == 'applied') {
+      //       return '待审批';
+      //     } else if (status == 'oa_applied') {
+      //       return 'OA审批中';
+      //     } else if (status == 'oa_approved') {
+      //       return 'OA审批通过';
+      //     } else if (status == 'reject') {
+      //       return '已拒绝';
+      //     } else if (status == 'approved') {
+      //       return '审批通过';
+      //     }
+      //   },
+      //   bizTypeTplD(taskType) {
+      //     if (taskType == 'provide') {
+      //       return '桌面申请';
+      //     } else if (taskType == 'detach') {
+      //       return '桌面清退';
+      //     } else if (taskType == 'attachVolume') {
+      //       return '修改桌面磁盘';
+      //     } else if (taskType == 'start') {
+      //       return '启动桌面';
+      //     } else if (taskType == 'restart') {
+      //       return '重启桌面';
+      //     } else if (taskType == 'stop') {
+      //       return '停止桌面';
+      //     } else if (taskType == 'addUser') {
+      //       return '添加用户';
+      //     } else if (taskType == 'postpone') {
+      //       return '延期申请';
+      //     } else if (taskType == 'modifyVMStandard') {
+      //       return '桌面规格申请';
+      //     } else if (taskType == 'renameDesktop') {
+      //       return '修改桌面名称';
+      //     }
+      //   },
+      //   bizTypeTpl(params) {
+      //     let taskType = params.row.businessType
+      //     if (taskType == 'provide') {
+      //       return '桌面申请';
+      //     } else if (taskType == 'detach') {
+      //       return '桌面清退';
+      //     } else if (taskType == 'attachVolume') {
+      //       return '修改桌面磁盘';
+      //     } else if (taskType == 'start') {
+      //       return '启动桌面';
+      //     } else if (taskType == 'restart') {
+      //       return '重启桌面';
+      //     } else if (taskType == 'stop') {
+      //       return '停止桌面';
+      //     } else if (taskType == 'addUser') {
+      //       return '添加用户';
+      //     } else if (taskType == 'postpone') {
+      //       return '延期申请';
+      //     } else if (taskType == 'modifyVMStandard') {
+      //       return '桌面规格申请';
+      //     } else if (taskType == 'renameDesktop') {
+      //       return '修改桌面名称';
+      //     }
+      //   },
+      //   orderStateTpl(params) {
+      //     let orderState = params.row.orderState
+      //     if (orderState == 'applied') {
+      //       return '待审批';
+      //     } else if (orderState == 'oa_applied') {
+      //       return 'OA审批中';
+      //     } else if (orderState == 'oa_approved') {
+      //       return 'OA审批通过';
+      //     } else if (orderState == 'reject') {
+      //       return '已拒绝';
+      //     } else if (orderState == 'approved') {
+      //       return '审批通过';
+      //     }
+      //   },
       getVmList(first, page) {
+        // this.multSelection = [];
         page ? this.currentPage4 = page : '';
         let para = {
           page: this.currentPage4,
           limit: this.currentSize,
-        //   name: this.applyUser,
+          //   name: this.applyUser,
           createTimeStr: this.createTime,
-        //   orderState: this.applyLoginState,
-        //   businessType: this.businessType
+          //   orderState: this.applyLoginState,
+          //   businessType: this.businessType
 
         }
         const url = `merchandise/adminDesktopList?${Math.random()}`
@@ -587,7 +702,8 @@
       },
       handleCurrentChange(val) {
         this.currentPage4 = val;
-        this.getVmList()
+        this.getVmList();
+        console.log(this.multSelection)
       },
       handleSizeChange(val) {
         this.currentSize = val;
@@ -621,7 +737,7 @@
 </script>
 <style scoped>
   .bottomWrap {
-      padding: 0 15px 0px 15px;
+    padding: 0 15px 0px 15px;
     /* position: absolute;
     bottom: 0;
     width: calc(100% - 60px); */
@@ -663,6 +779,12 @@
     font-size: 15px;
     font-weight: 600;
     margin-right: 5px;
+  }
+
+</style>
+<style>
+  #adminApplied .el-table-column--selection.is-leaf .cell {
+    display: inline-block;
   }
 
 </style>
