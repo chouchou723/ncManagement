@@ -28,8 +28,8 @@
         </el-button-group>
       </div>
       <el-table :data="tableData" v-loading="vmTableLoadingState" :height="tableHeight" stripe @row-click="rowClick"
-        @selection-change="handleSelectionChangeMerge" ref="multipleTable" :header-cell-style="{'text-align':'center'}"
-        :cell-style="{'text-align':'center'}" :row-key="rowKey">
+        @selection-change="handleSelectionChangeMerge" :row-key="rowKey"ref="multipleTable" :header-cell-style="{'text-align':'center'}"
+        :cell-style="{'text-align':'center'}" >
         <el-table-column type="selection" width="55" :reserve-selection="true">
         </el-table-column>
 
@@ -251,9 +251,7 @@
     //   })
     // },
     methods: {
-      rowKey(row) {
-        return row.id
-      },
+     
       batchPass() { //批量同意
         this.$confirm('确定批量同意该些申请', '批量同意申请', {
           confirmButtonText: '确定',
@@ -330,6 +328,9 @@
           //     message: '取消审批'
           //   });
         });
+      },
+       rowKey(row) {
+        return row.id
       },
       rowClick(row, column, event) {
         // console.log(event)
